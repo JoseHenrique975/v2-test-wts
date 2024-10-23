@@ -558,8 +558,9 @@ export class WtsChat implements INodeType {
 						});
 					}
 					const newFile: File = inputData[0].binary[file];
+					console.log(newFile);
 					
-					const responseSaveFile = await WtsChatService.saveFile(newFile, token);
+					const responseSaveFile = await WtsChatService.saveFile(this, newFile, token);
 					body.body.fileId = responseSaveFile.data.id;
 					body.body.fileUrl = null;
 				}
@@ -652,7 +653,7 @@ export class WtsChat implements INodeType {
 					}
 					const newFile: File = inputData[0].binary[file];
 
-					const responseSaveFile = await WtsChatService.saveFile(newFile, token);
+					const responseSaveFile = await WtsChatService.saveFile(this, newFile, token);
 					fileId = responseSaveFile.data.id;
 					fileUrl = null;
 				}
@@ -1032,7 +1033,7 @@ export class WtsChat implements INodeType {
 					}
 					const newFile: File = inputData[0].binary[file];
                      
-					const responseSaveFile = await WtsChatService.saveFile(newFile, token);
+					const responseSaveFile = await WtsChatService.saveFile(this, newFile, token);
 					body.fileId = responseSaveFile.data.id;
 					body.fileUrl = null
 				}
@@ -1111,7 +1112,7 @@ export class WtsChat implements INodeType {
 					}
 					
 					const newFile: File = inputData[0].binary[file];
-					const responseSaveFile = await WtsChatService.saveFile(newFile, token);
+					const responseSaveFile = await WtsChatService.saveFile(this, newFile, token);
 					body.fileId = responseSaveFile.data.id;
 					body.fileUrl = null;
 				}

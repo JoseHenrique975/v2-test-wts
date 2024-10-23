@@ -1,4 +1,4 @@
-import { ILoadOptionsFunctions } from 'n8n-workflow';
+import { IExecuteFunctions, ILoadOptionsFunctions, NodeApiError } from 'n8n-workflow';
 
 import axios from 'axios';
 import { Constants, notSend } from './constants.types';
@@ -481,24 +481,32 @@ export class WtsChatService {
     }
   }
 
-  static async saveFile(file: File, token: string): Promise<any> {
+  static async saveFile(tes:IExecuteFunctions, file: File, token: string): Promise<any> {
     try {
       const fileDefine: any = file;
+      console.log("File Define");
+      console.log(fileDefine);
 
       const contentFile = fileDefine?.data;
     
       const dataUrl = await WtsChatService.getUrlFile({ mimeType: fileDefine.mimeType, name: fileDefine.fileName }, token);
 
       const urlFile = dataUrl.urlUpload;
+      console.log(urlFile);
+      console.log("uRL FILE");
     
       await WtsChatService.updateFileS3(urlFile, contentFile, fileDefine.mimeType);
      
       const result = await WtsChatService.saveFileS3(fileDefine, dataUrl.keyS3, token);
-     
+      console.log("Result")
+      console.log(result);
       return result;
     }
     catch (error) {
-      throw new Error(error);
+      throw new NodeApiError(tes.getNode(), {
+        message: error,
+        description: 'Error send file ' + error.message,
+      });
     }
   }
 
@@ -786,7 +794,7 @@ export class WtsChatService {
           },
         }
       )
-
+      
       return result;
     } catch (error) {
       throw new Error(`API request failed: ${error.response.data.text}`);
