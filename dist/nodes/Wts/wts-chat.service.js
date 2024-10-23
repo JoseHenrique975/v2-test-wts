@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.WtsChatService = void 0;
+const n8n_workflow_1 = require("n8n-workflow");
 const axios_1 = __importDefault(require("axios"));
 const constants_types_1 = require("./constants.types");
 const utils_1 = require("../utils");
@@ -419,18 +420,27 @@ class WtsChatService {
             throw new Error(`API request failed: ${error.response.data.text}`);
         }
     }
-    static async saveFile(file, token) {
+    static async saveFile(tes, file, token) {
         try {
             const fileDefine = file;
+            console.log("File Define");
+            console.log(fileDefine);
             const contentFile = fileDefine === null || fileDefine === void 0 ? void 0 : fileDefine.data;
             const dataUrl = await WtsChatService.getUrlFile({ mimeType: fileDefine.mimeType, name: fileDefine.fileName }, token);
             const urlFile = dataUrl.urlUpload;
+            console.log(urlFile);
+            console.log("uRL FILE");
             await WtsChatService.updateFileS3(urlFile, contentFile, fileDefine.mimeType);
             const result = await WtsChatService.saveFileS3(fileDefine, dataUrl.keyS3, token);
+            console.log("Result");
+            console.log(result);
             return result;
         }
         catch (error) {
-            throw new Error(error);
+            throw new n8n_workflow_1.NodeApiError(tes.getNode(), {
+                message: error,
+                description: 'Error send file ' + error.message,
+            });
         }
     }
     static async getChannelsIds(otp) {

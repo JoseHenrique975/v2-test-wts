@@ -461,7 +461,8 @@ class WtsChat {
                         });
                     }
                     const newFile = inputData[0].binary[file];
-                    const responseSaveFile = await wts_chat_service_1.WtsChatService.saveFile(newFile, token);
+                    console.log(newFile);
+                    const responseSaveFile = await wts_chat_service_1.WtsChatService.saveFile(this, newFile, token);
                     body.body.fileId = responseSaveFile.data.id;
                     body.body.fileUrl = null;
                 }
@@ -538,7 +539,7 @@ class WtsChat {
                         });
                     }
                     const newFile = inputData[0].binary[file];
-                    const responseSaveFile = await wts_chat_service_1.WtsChatService.saveFile(newFile, token);
+                    const responseSaveFile = await wts_chat_service_1.WtsChatService.saveFile(this, newFile, token);
                     fileId = responseSaveFile.data.id;
                     fileUrl = null;
                 }
@@ -837,7 +838,7 @@ class WtsChat {
                         });
                     }
                     const newFile = inputData[0].binary[file];
-                    const responseSaveFile = await wts_chat_service_1.WtsChatService.saveFile(newFile, token);
+                    const responseSaveFile = await wts_chat_service_1.WtsChatService.saveFile(this, newFile, token);
                     body.fileId = responseSaveFile.data.id;
                     body.fileUrl = null;
                 }
@@ -908,7 +909,7 @@ class WtsChat {
                         });
                     }
                     const newFile = inputData[0].binary[file];
-                    const responseSaveFile = await wts_chat_service_1.WtsChatService.saveFile(newFile, token);
+                    const responseSaveFile = await wts_chat_service_1.WtsChatService.saveFile(this, newFile, token);
                     body.fileId = responseSaveFile.data.id;
                     body.fileUrl = null;
                 }

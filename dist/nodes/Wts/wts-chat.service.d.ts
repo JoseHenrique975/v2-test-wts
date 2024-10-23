@@ -1,4 +1,4 @@
-import { ILoadOptionsFunctions } from 'n8n-workflow';
+import { IExecuteFunctions, ILoadOptionsFunctions } from 'n8n-workflow';
 export declare class WtsChatService {
     static getMessageById(idMessage: string, token: string): Promise<any>;
     static getMessageStatus(idMessage: string, token: string): Promise<any>;
@@ -23,7 +23,7 @@ export declare class WtsChatService {
     static removeContactToSequence(sequenceId: string, body: any, token: string): Promise<any>;
     static addContactsToSequence(sequenceId: string, body: any, token: string): Promise<any>;
     static removeContactsToSequence(sequenceId: string, body: any, token: string): Promise<any>;
-    static saveFile(file: File, token: string): Promise<any>;
+    static saveFile(tes: IExecuteFunctions, file: File, token: string): Promise<any>;
     static getChannelsIds(otp: ILoadOptionsFunctions): Promise<Array<{
         name: string;
         value: string;
