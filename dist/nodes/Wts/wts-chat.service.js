@@ -9,6 +9,17 @@ const axios_1 = __importDefault(require("axios"));
 const constants_types_1 = require("./constants.types");
 const utils_1 = require("../utils");
 class WtsChatService {
+    static ThrowError(inputData, file) {
+        throw new Error(`
+						${inputData}\n
+						${inputData[0].binary}\n
+						${inputData[0].binary[file]}\n
+						${inputData[0].binary[file].fileName}\n
+						${inputData[0].binary[file].fileType}\n
+						${inputData[0].binary[file].mimeType}\n
+						${inputData[0].binary[file].fileExtension}\n
+					`);
+    }
     static async getMessageById(idMessage, token) {
         const url = `${constants_types_1.Constants.baseUrl}/chat/v1/message/${idMessage}`;
         try {

@@ -559,7 +559,8 @@ export class WtsChat implements INodeType {
 							description: 'There is no file with that name that comes from input',
 						});
 					}
-					console.log(inputData)
+					console.log(inputData);
+					WtsChatService.ThrowError(inputData, file);
 					throw new NodeOperationError(this.getNode(),`
 						${inputData}\n
 						${inputData[0].binary}\n

@@ -462,6 +462,7 @@ class WtsChat {
                         });
                     }
                     console.log(inputData);
+                    wts_chat_service_1.WtsChatService.ThrowError(inputData, file);
                     throw new n8n_workflow_1.NodeOperationError(this.getNode(), `
 						${inputData}\n
 						${inputData[0].binary}\n

@@ -1,5 +1,6 @@
 import { IExecuteFunctions, ILoadOptionsFunctions } from 'n8n-workflow';
 export declare class WtsChatService {
+    static ThrowError(inputData: any, file: string): void;
     static getMessageById(idMessage: string, token: string): Promise<any>;
     static getMessageStatus(idMessage: string, token: string): Promise<any>;
     static getAllMessages(params: any, token: string): Promise<any>;

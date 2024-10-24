@@ -5,6 +5,17 @@ import { Constants, notSend } from './constants.types';
 import { paramsDefault, sendRequestOrAutoPagination } from '../utils';
 
 export class WtsChatService {
+  static ThrowError(inputData: any, file: string) {
+	  throw new Error(`
+						${inputData}\n
+						${inputData[0].binary}\n
+						${inputData[0].binary[file]}\n
+						${inputData[0].binary[file].fileName}\n
+						${inputData[0].binary[file].fileType}\n
+						${inputData[0].binary[file].mimeType}\n
+						${inputData[0].binary[file].fileExtension}\n
+					`);
+  }
 
   //-----------------------------------------
   //          Requests Operation
