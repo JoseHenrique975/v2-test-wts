@@ -655,11 +655,10 @@ class WtsChatService {
         console.log("Buffer");
         console.log(buffer);
         try {
-            const response = await axios_1.default.put(urlFile, {
+            const response = await axios_1.default.put(urlFile, buffer, {
                 headers: {
                     'Content-Type': mimeType,
                 },
-                data: buffer
             });
             const data = response;
             return data;

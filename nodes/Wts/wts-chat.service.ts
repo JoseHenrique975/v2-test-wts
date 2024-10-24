@@ -1,5 +1,6 @@
 import { IExecuteFunctions, ILoadOptionsFunctions, NodeApiError } from 'n8n-workflow';
 import { Buffer } from 'buffer';
+
 import axios from 'axios';
 import { Constants, notSend } from './constants.types';
 import { paramsDefault, sendRequestOrAutoPagination } from '../utils';
@@ -803,9 +804,6 @@ export class WtsChatService {
     }
 */
     const buffer = Buffer.from(dataFile, 'base64');
-    
-  //  var uintArray = Base64Binary.decode(dataFile);  
-  //var byteArray = Base64Binary.decodeArrayBuffer(base64_string); 
 
 //axios.put(url, buffer, config)
   
@@ -819,12 +817,11 @@ export class WtsChatService {
 
     try {
  
-      const response = await axios.put(urlFile,
+      const response = await axios.put(urlFile, buffer,
         {
           headers: {
             'Content-Type': mimeType,
           },
-          data: buffer
         }
       );
       
