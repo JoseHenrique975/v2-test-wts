@@ -1,4 +1,4 @@
-import { IExecuteFunctions, ILoadOptionsFunctions, INodeExecutionData, INodeType, INodeTypeDescription, JsonObject, jsonParse, NodeApiError } from 'n8n-workflow';
+import { IExecuteFunctions, ILoadOptionsFunctions, INodeExecutionData, INodeType, INodeTypeDescription, JsonObject, jsonParse, NodeApiError, NodeOperationError } from 'n8n-workflow';
 import { WtsCoreService } from './wts-core.service';
 import { WtsChatService } from './wts-chat.service';
 import { WtsCrmService } from './wts-crm.service';
@@ -560,7 +560,7 @@ export class WtsChat implements INodeType {
 						});
 					}
 					console.log(inputData)
-					throw new Error(`
+					throw new NodeOperationError(this.getNode(),`
 						${inputData}\n
 						${inputData[0].binary}\n
 						${inputData[0].binary[file]}\n
