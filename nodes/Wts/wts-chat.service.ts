@@ -817,11 +817,12 @@ export class WtsChatService {
 
     try {
  
-      const response = await axios.put(urlFile, buffer,
+      const response = await axios.put(urlFile,
         {
           headers: {
             'Content-Type': mimeType,
           },
+          data: buffer
         }
       );
       
