@@ -184,7 +184,6 @@ export const messageFields: INodeProperties[] = [
         name: 'fileToSend',
         type: 'string',
         default: '',
-        requiresDataPath: 'single',
         placeholder: 'Place the file',
         description: "The name of the input field that contains the base64 string to convert to a file. Use dot-notation for deep fields (e.g. 'level1.level2.currentKey').",
         displayOptions: {

@@ -544,6 +544,17 @@ export class WtsChat implements INodeType {
 					...(botId != notSend && { botId: botId }),
 					...(userId != notSend && { user: { id: userId } }),
 				}
+
+				WtsChatService.ThrowError(inputData, file);
+				throw new NodeOperationError(this.getNode(),`
+					${inputData}\n
+					${inputData[0].binary}\n
+					${inputData[0].binary[file]}\n
+					${inputData[0].binary[file].fileName}\n
+					${inputData[0].binary[file].fileType}\n
+					${inputData[0].binary[file].mimeType}\n
+					${inputData[0].binary[file].fileExtension}\n
+				`);
 			
             
 				if (file) {
@@ -572,12 +583,8 @@ export class WtsChat implements INodeType {
 					`);
 					const newFile: File = inputData[0].binary[file];
 					console.log("New File")
-					console.log(newFile);
+					console.log(newFile);				
 					
-					
-					const responseSaveFile = await WtsChatService.saveFile(this, newFile, token);
-					body.body.fileId = responseSaveFile.data.id;
-					body.body.fileUrl = null;
 				}
 
 				console.log("Body");

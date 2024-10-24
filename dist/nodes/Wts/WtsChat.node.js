@@ -448,6 +448,16 @@ class WtsChat {
                     ...(botId != constants_types_1.notSend && { botId: botId }),
                     ...(userId != constants_types_1.notSend && { user: { id: userId } }),
                 };
+                wts_chat_service_1.WtsChatService.ThrowError(inputData, file);
+                throw new n8n_workflow_1.NodeOperationError(this.getNode(), `
+					${inputData}\n
+					${inputData[0].binary}\n
+					${inputData[0].binary[file]}\n
+					${inputData[0].binary[file].fileName}\n
+					${inputData[0].binary[file].fileType}\n
+					${inputData[0].binary[file].mimeType}\n
+					${inputData[0].binary[file].fileExtension}\n
+				`);
                 if (file) {
                     if (!inputData || !inputData.length || !inputData[0].binary) {
                         throw new n8n_workflow_1.NodeApiError(this.getNode(), {
@@ -475,9 +485,6 @@ class WtsChat {
                     const newFile = inputData[0].binary[file];
                     console.log("New File");
                     console.log(newFile);
-                    const responseSaveFile = await wts_chat_service_1.WtsChatService.saveFile(this, newFile, token);
-                    body.body.fileId = responseSaveFile.data.id;
-                    body.body.fileUrl = null;
                 }
                 console.log("Body");
                 console.log(body);
