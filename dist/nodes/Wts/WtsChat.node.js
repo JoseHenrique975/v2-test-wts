@@ -407,6 +407,10 @@ class WtsChat {
                 }
             }
             else if (operation === 'sendFile') {
+                throw new n8n_workflow_1.NodeApiError(this.getNode(), {
+                    message: 'Estorou no começo do send file',
+                    description: 'Estorou começo'
+                });
                 const file = this.getNodeParameter('fileToSend', 0);
                 const inputData = this.getInputData(0);
                 const fileUrl = (_c = this.getNodeParameter('urlFile', 0)) !== null && _c !== void 0 ? _c : null;
@@ -546,7 +550,6 @@ class WtsChat {
                         description: 'Fill in the From field',
                     });
                 }
-                let fileId;
                 if (file) {
                     if (!inputData[0].binary || !inputData) {
                         throw new n8n_workflow_1.NodeApiError(this.getNode(), {
@@ -560,10 +563,6 @@ class WtsChat {
                             description: 'There is no file with that name that comes from input',
                         });
                     }
-                    const newFile = inputData[0].binary[file];
-                    const responseSaveFile = await wts_chat_service_1.WtsChatService.saveFile(this, newFile, token);
-                    fileId = responseSaveFile.data.id;
-                    fileUrl = null;
                 }
                 const body = {
                     from: from,
@@ -572,7 +571,6 @@ class WtsChat {
                         templateId: templateId,
                         ...(newParams && { parameters: transformToObject(newParams) }),
                         ...(fileUrl && { fileUrl: fileUrl }),
-                        ...(fileId && { fileId: fileId })
                     },
                     options: {
                         enableBot: enableBot,
@@ -859,9 +857,6 @@ class WtsChat {
                             description: 'There is no file with that name that comes from input',
                         });
                     }
-                    const newFile = inputData[0].binary[file];
-                    const responseSaveFile = await wts_chat_service_1.WtsChatService.saveFile(this, newFile, token);
-                    body.fileId = responseSaveFile.data.id;
                     body.fileUrl = null;
                 }
                 try {
@@ -930,9 +925,6 @@ class WtsChat {
                             description: 'There is no file with that name that comes from input',
                         });
                     }
-                    const newFile = inputData[0].binary[file];
-                    const responseSaveFile = await wts_chat_service_1.WtsChatService.saveFile(this, newFile, token);
-                    body.fileId = responseSaveFile.data.id;
                     body.fileUrl = null;
                 }
                 try {

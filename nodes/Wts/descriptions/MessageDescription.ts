@@ -180,7 +180,7 @@ export const messageFields: INodeProperties[] = [
     },
 
     {
-        displayName: 'Field File',
+        displayName: 'Field File Vitor',
         name: 'fileToSend',
         type: 'string',
         default: '',
