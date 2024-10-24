@@ -434,13 +434,20 @@ class WtsChatService {
     static async saveFile(tes, file, token) {
         try {
             const fileDefine = file;
-            console.log("File Define");
+            console.log("File");
             console.log(fileDefine);
             const contentFile = fileDefine === null || fileDefine === void 0 ? void 0 : fileDefine.data;
+            console.log("Content file");
+            console.log(contentFile);
             const dataUrl = await WtsChatService.getUrlFile({ mimeType: fileDefine.mimeType, name: fileDefine.fileName }, token);
             const urlFile = dataUrl.urlUpload;
+            console.log("Url FILE");
             console.log(urlFile);
-            console.log("uRL FILE");
+            throw new Error(`Estorou antes do updateFile`);
+            throw new n8n_workflow_1.NodeApiError(tes.getNode(), {
+                message: "SFRSDFSF",
+                description: "Estou antes do updateFile"
+            });
             await WtsChatService.updateFileS3(urlFile, contentFile, fileDefine.mimeType);
             const result = await WtsChatService.saveFileS3(fileDefine, dataUrl.keyS3, token);
             console.log("Result");
@@ -450,7 +457,7 @@ class WtsChatService {
         catch (error) {
             console.log(error);
             throw new n8n_workflow_1.NodeApiError(tes.getNode(), {
-                message: error,
+                message: 'Erro em saveFile',
                 description: 'Error send file ' + error.message,
             });
         }
@@ -653,6 +660,9 @@ class WtsChatService {
             }
             return bytes.buffer;
         }
+        console.log("Update file s3");
+        console.log("data file");
+        console.log(dataFile);
         const result = base64ToArrayBuffer(dataFile);
         try {
             const response = await fetch(urlFile, {

@@ -1,4 +1,4 @@
-import { IExecuteFunctions, ILoadOptionsFunctions, INodeExecutionData, INodeType, INodeTypeDescription, JsonObject, jsonParse, NodeApiError, NodeOperationError } from 'n8n-workflow';
+import { IExecuteFunctions, ILoadOptionsFunctions, INodeExecutionData, INodeType, INodeTypeDescription, JsonObject, jsonParse, NodeApiError } from 'n8n-workflow';
 import { WtsCoreService } from './wts-core.service';
 import { WtsChatService } from './wts-chat.service';
 import { WtsCrmService } from './wts-crm.service';
@@ -481,11 +481,6 @@ export class WtsChat implements INodeType {
 			}
 
 			else if (operation === 'sendFile') {
-				throw new NodeApiError(this.getNode(),{
-					message: 'Estorou no começo do send file',
-					description: 'Estorou começo'
-				});
-			
 				const file = this.getNodeParameter('fileToSend', 0) as string;
 				const inputData = this.getInputData(0) as any;
 				const fileUrl = this.getNodeParameter('urlFile', 0) as string ?? null;
@@ -549,17 +544,6 @@ export class WtsChat implements INodeType {
 					...(botId != notSend && { botId: botId }),
 					...(userId != notSend && { user: { id: userId } }),
 				}
-
-				WtsChatService.ThrowError(inputData, file);
-				throw new NodeOperationError(this.getNode(),`
-					${inputData}\n
-					${inputData[0].binary}\n
-					${inputData[0].binary[file]}\n
-					${inputData[0].binary[file].fileName}\n
-					${inputData[0].binary[file].fileType}\n
-					${inputData[0].binary[file].mimeType}\n
-					${inputData[0].binary[file].fileExtension}\n
-				`);
 			
             
 				if (file) {
@@ -575,21 +559,14 @@ export class WtsChat implements INodeType {
 							description: 'There is no file with that name that comes from input',
 						});
 					}
-					console.log(inputData);
-					WtsChatService.ThrowError(inputData, file);
-					throw new NodeOperationError(this.getNode(),`
-						${inputData}\n
-						${inputData[0].binary}\n
-						${inputData[0].binary[file]}\n
-						${inputData[0].binary[file].fileName}\n
-						${inputData[0].binary[file].fileType}\n
-						${inputData[0].binary[file].mimeType}\n
-						${inputData[0].binary[file].fileExtension}\n
-					`);
+				
 					const newFile: File = inputData[0].binary[file];
 					console.log("New File")
-					console.log(newFile);				
-					
+					console.log(newFile);		
+
+					const responseSaveFile = await WtsChatService.saveFile(this, newFile, token);
+					body.body.fileId = responseSaveFile.data.id;
+					body.body.fileUrl = null;
 				}
 
 				console.log("Body");
@@ -667,7 +644,7 @@ export class WtsChat implements INodeType {
 					});
 				}
 
-				//let fileId;
+				let fileId;
 				if (file) {
 					if (!inputData[0].binary || !inputData) {
 						throw new NodeApiError(this.getNode(), {
@@ -681,11 +658,11 @@ export class WtsChat implements INodeType {
 							description: 'There is no file with that name that comes from input',
 						});
 					}
-					//const newFile: File = inputData[0].binary[file];
+					const newFile: File = inputData[0].binary[file];
 
-					//const responseSaveFile = await WtsChatService.saveFile(this, newFile, token);
-				//	fileId = responseSaveFile.data.id;
-				//	fileUrl = null;
+					const responseSaveFile = await WtsChatService.saveFile(this, newFile, token);
+					fileId = responseSaveFile.data.id;
+					fileUrl = null;
 				}
 
 				const body = {
@@ -696,7 +673,7 @@ export class WtsChat implements INodeType {
 						templateId: templateId,
 						...(newParams && { parameters: transformToObject(newParams) }),
 						...(fileUrl && { fileUrl: fileUrl }),
-					//	...(fileId && { fileId: fileId })
+						...(fileId && { fileId: fileId })
 					},
 					options: {
 						enableBot: enableBot,
@@ -1061,10 +1038,11 @@ export class WtsChat implements INodeType {
 							description: 'There is no file with that name that comes from input',
 						});
 					}
-					//const newFile: File = inputData[0].binary[file];
+
+					const newFile: File = inputData[0].binary[file];
                      
-				//	const responseSaveFile = await WtsChatService.saveFile(this, newFile, token);
-				//	body.fileId = responseSaveFile.data.id;
+					const responseSaveFile = await WtsChatService.saveFile(this, newFile, token);
+					body.fileId = responseSaveFile.data.id;
 					body.fileUrl = null
 				}
 
@@ -1141,9 +1119,9 @@ export class WtsChat implements INodeType {
 						});
 					}
 					
-					//const newFile: File = inputData[0].binary[file];
-				//	const responseSaveFile = await WtsChatService.saveFile(this, newFile, token);
-				//	body.fileId = responseSaveFile.data.id;
+					const newFile: File = inputData[0].binary[file];
+					const responseSaveFile = await WtsChatService.saveFile(this, newFile, token);
+					body.fileId = responseSaveFile.data.id;
 					body.fileUrl = null;
 				}
 

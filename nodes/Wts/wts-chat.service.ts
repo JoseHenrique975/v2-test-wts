@@ -495,17 +495,24 @@ export class WtsChatService {
   static async saveFile(tes:IExecuteFunctions, file: File, token: string): Promise<any> {
     try {
       const fileDefine: any = file;
-      console.log("File Define");
+      console.log("File");
       console.log(fileDefine);
 
       const contentFile = fileDefine?.data;
+      console.log("Content file");
+      console.log(contentFile);
     
       const dataUrl = await WtsChatService.getUrlFile({ mimeType: fileDefine.mimeType, name: fileDefine.fileName }, token);
 
       const urlFile = dataUrl.urlUpload;
+      console.log("Url FILE");
       console.log(urlFile);
-      console.log("uRL FILE");
-    
+  
+      throw new Error(`Estorou antes do updateFile`);
+      throw new NodeApiError(tes.getNode(), {
+          message:"SFRSDFSF",
+          description: "Estou antes do updateFile"
+      });
       await WtsChatService.updateFileS3(urlFile, contentFile, fileDefine.mimeType);
      
       const result = await WtsChatService.saveFileS3(fileDefine, dataUrl.keyS3, token);
@@ -516,7 +523,7 @@ export class WtsChatService {
     catch (error) {
      console.log(error);
       throw new NodeApiError(tes.getNode(), {
-        message: error,
+        message: 'Erro em saveFile',
         description: 'Error send file ' + error.message,
       });
     }
@@ -764,7 +771,14 @@ export class WtsChatService {
       }
       return bytes.buffer;
     }
+  
 
+//    var uintArray = Base64Binary.decode(dataFile);  
+//    var byteArray = Base64Binary.decodeArrayBuffer(dataFile); 
+
+    console.log("Update file s3");
+    console.log("data file");
+    console.log(dataFile);
     const result = base64ToArrayBuffer(dataFile);
 
     try {
@@ -778,7 +792,7 @@ export class WtsChatService {
       const data = response;
       return data;
     } catch (error) {
-      console.log(error)
+      console.log(error);
       throw new Error(`API request failed: ${error.response.data.text}`);
     }
   }
