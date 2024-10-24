@@ -53,6 +53,6 @@ export declare class WtsChatService {
         mimeType: string;
         name: string;
     }, token: string): Promise<any>;
-    static updateFileS3(urlFile: string, dataFile: string, mimeType: string): Promise<Response>;
+    static updateFileS3(urlFile: string, dataFile: string, mimeType: string): Promise<import("axios").AxiosResponse<any, any>>;
     static saveFileS3(file: any, keyS3: string, token: string): Promise<import("axios").AxiosResponse<any, any>>;
 }

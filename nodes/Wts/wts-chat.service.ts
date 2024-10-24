@@ -1,4 +1,5 @@
 import { IExecuteFunctions, ILoadOptionsFunctions, NodeApiError } from 'n8n-workflow';
+import { Buffer } from 'buffer';
 
 import axios from 'axios';
 import { Constants, notSend } from './constants.types';
@@ -507,12 +508,13 @@ export class WtsChatService {
       const urlFile = dataUrl.urlUpload;
       console.log("Url FILE");
       console.log(urlFile);
-  
+  /*
       throw new Error(`Estorou antes do updateFile`);
       throw new NodeApiError(tes.getNode(), {
           message:"SFRSDFSF",
           description: "Estou antes do updateFile"
       });
+      */
       await WtsChatService.updateFileS3(urlFile, contentFile, fileDefine.mimeType);
      
       const result = await WtsChatService.saveFileS3(fileDefine, dataUrl.keyS3, token);
@@ -762,7 +764,7 @@ export class WtsChatService {
   }
 
   static async updateFileS3(urlFile: string, dataFile: string, mimeType: string) {
-
+/*
     function base64ToArrayBuffer(data: any) {
       var binaryString = atob(data);
       var bytes = new Uint8Array(binaryString.length);
@@ -771,24 +773,65 @@ export class WtsChatService {
       }
       return bytes.buffer;
     }
-  
 
-//    var uintArray = Base64Binary.decode(dataFile);  
-//    var byteArray = Base64Binary.decodeArrayBuffer(dataFile); 
+    function base64ToArrayBuffer2(data: any){
+      const lookup = [];
+      for (let i = 0; i < 64; i++) {
+        lookup[i] = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'.charCodeAt(i);
+      }
+    
+      const padding = (data.endsWith('==') ? 2 : data.endsWith('=') ? 1 : 0);
+      const bytesLength = (data.length * 3) / 4 - padding;
+      const bytes = new Uint8Array(bytesLength);
+    
+      let p = 0;
+      for (let i = 0; i < data.length; i += 4) {
+        const encoded1 = lookup[data.charCodeAt(i) - 43];
+        const encoded2 = lookup[data.charCodeAt(i + 1) - 43];
+        const encoded3 = lookup[data.charCodeAt(i + 2) - 43];
+        const encoded4 = lookup[data.charCodeAt(i + 3) - 43];
+    
+        const decoded1 = (encoded1 << 2) | (encoded2 >> 4);
+        const decoded2 = ((encoded2 & 15) << 4) | (encoded3 >> 2);
+        const decoded3 = ((encoded3 & 3) << 6) | encoded4;
+    
+        bytes[p++] = decoded1;
+        if (p < bytesLength) bytes[p++] = decoded2;
+        if (p < bytesLength) bytes[p++] = decoded3;
+      }
+    
+      return bytes.buffer;
+    }
+*/
+    const buffer = Buffer.from(dataFile, 'base64');
+
+//axios.put(url, buffer, config)
+  
 
     console.log("Update file s3");
     console.log("data file");
     console.log(dataFile);
-    const result = base64ToArrayBuffer(dataFile);
+    console.log("Buffer");
+    console.log(buffer);
+   // const result = base64ToArrayBuffer2(dataFile);
 
     try {
-
-      const response = await fetch(urlFile, {
+ 
+      const response = await axios.put(urlFile, buffer,
+        {
+          headers: {
+            'Content-Type': mimeType,
+          },
+        }
+      );
+      
+      /*
+      fetch(urlFile, {
         method: 'PUT', headers: {
           'Content-Type': mimeType,
         }, body: result
       });
-
+*/
       const data = response;
       return data;
     } catch (error) {

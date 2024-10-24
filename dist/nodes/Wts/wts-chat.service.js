@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.WtsChatService = void 0;
 const n8n_workflow_1 = require("n8n-workflow");
+const buffer_1 = require("buffer");
 const axios_1 = __importDefault(require("axios"));
 const constants_types_1 = require("./constants.types");
 const utils_1 = require("../utils");
@@ -443,11 +444,6 @@ class WtsChatService {
             const urlFile = dataUrl.urlUpload;
             console.log("Url FILE");
             console.log(urlFile);
-            throw new Error(`Estorou antes do updateFile`);
-            throw new n8n_workflow_1.NodeApiError(tes.getNode(), {
-                message: "SFRSDFSF",
-                description: "Estou antes do updateFile"
-            });
             await WtsChatService.updateFileS3(urlFile, contentFile, fileDefine.mimeType);
             const result = await WtsChatService.saveFileS3(fileDefine, dataUrl.keyS3, token);
             console.log("Result");
@@ -652,23 +648,17 @@ class WtsChatService {
         }
     }
     static async updateFileS3(urlFile, dataFile, mimeType) {
-        function base64ToArrayBuffer(data) {
-            var binaryString = atob(data);
-            var bytes = new Uint8Array(binaryString.length);
-            for (var i = 0; i < binaryString.length; i++) {
-                bytes[i] = binaryString.charCodeAt(i);
-            }
-            return bytes.buffer;
-        }
+        const buffer = buffer_1.Buffer.from(dataFile, 'base64');
         console.log("Update file s3");
         console.log("data file");
         console.log(dataFile);
-        const result = base64ToArrayBuffer(dataFile);
+        console.log("Buffer");
+        console.log(buffer);
         try {
-            const response = await fetch(urlFile, {
-                method: 'PUT', headers: {
+            const response = await axios_1.default.put(urlFile, buffer, {
+                headers: {
                     'Content-Type': mimeType,
-                }, body: result
+                },
             });
             const data = response;
             return data;
