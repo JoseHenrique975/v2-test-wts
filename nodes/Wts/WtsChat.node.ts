@@ -511,6 +511,8 @@ export class WtsChat implements INodeType {
 								}
 				*/
 
+				console.log("Iniciou a operação");
+
 				if (!file && !fileUrl) {
 					throw new NodeApiError(this.getNode(), {
 						message: 'Fill in any of the fields, whether Url or File!',
@@ -545,7 +547,7 @@ export class WtsChat implements INodeType {
 			
             
 				if (file) {
-					if (!inputData[0].binary || !inputData) {
+					if (!inputData || !inputData.length || !inputData[0].binary) {
 						throw new NodeApiError(this.getNode(), {
 							message: 'There is no data in the input',
 							description: 'There is no data in the input',
@@ -557,13 +559,28 @@ export class WtsChat implements INodeType {
 							description: 'There is no file with that name that comes from input',
 						});
 					}
+					console.log(inputData)
+					throw new Error(`
+						${inputData}\n
+						${inputData[0].binary}\n
+						${inputData[0].binary[file]}\n
+						${inputData[0].binary[file].fileName}\n
+						${inputData[0].binary[file].fileType}\n
+						${inputData[0].binary[file].mimeType}\n
+						${inputData[0].binary[file].fileExtension}\n
+					`);
 					const newFile: File = inputData[0].binary[file];
+					console.log("New File")
 					console.log(newFile);
+					
 					
 					const responseSaveFile = await WtsChatService.saveFile(this, newFile, token);
 					body.body.fileId = responseSaveFile.data.id;
 					body.body.fileUrl = null;
 				}
+
+				console.log("Body");
+				console.log(body);
 
 				try {
 					const data = await WtsChatService.sendMessageFile(body, token, synchronous);

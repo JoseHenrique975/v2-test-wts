@@ -437,6 +437,7 @@ class WtsChatService {
             return result;
         }
         catch (error) {
+            console.log(error);
             throw new n8n_workflow_1.NodeApiError(tes.getNode(), {
                 message: error,
                 description: 'Error send file ' + error.message,
@@ -629,7 +630,7 @@ class WtsChatService {
             return data;
         }
         catch (error) {
-            throw new Error(error);
+            throw new Error(`API request failed get url file:  ${error.response.data.text}`);
         }
     }
     static async updateFileS3(urlFile, dataFile, mimeType) {
@@ -652,6 +653,7 @@ class WtsChatService {
             return data;
         }
         catch (error) {
+            console.log(error);
             throw new Error(`API request failed: ${error.response.data.text}`);
         }
     }

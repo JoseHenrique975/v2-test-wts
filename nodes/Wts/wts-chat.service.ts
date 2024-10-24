@@ -503,6 +503,7 @@ export class WtsChatService {
       return result;
     }
     catch (error) {
+     console.log(error);
       throw new NodeApiError(tes.getNode(), {
         message: error,
         description: 'Error send file ' + error.message,
@@ -738,7 +739,7 @@ export class WtsChatService {
       const data = response.data;
       return data;
     } catch (error) {
-      throw new Error(error);
+      throw new Error(`API request failed get url file:  ${error.response.data.text}`);
     }
   }
 
@@ -766,6 +767,7 @@ export class WtsChatService {
       const data = response;
       return data;
     } catch (error) {
+      console.log(error)
       throw new Error(`API request failed: ${error.response.data.text}`);
     }
   }
