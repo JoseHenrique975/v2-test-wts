@@ -5,7 +5,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.WtsChatService = void 0;
 const n8n_workflow_1 = require("n8n-workflow");
-const buffer_1 = require("buffer");
 const axios_1 = __importDefault(require("axios"));
 const constants_types_1 = require("./constants.types");
 const utils_1 = require("../utils");
@@ -432,20 +431,15 @@ class WtsChatService {
             throw new Error(`API request failed: ${error.response.data.text}`);
         }
     }
-    static async saveFile(tes, file, token) {
+    static async saveFile(tes, file, mimetype, filename, contentLength, token) {
         try {
-            const fileDefine = file;
-            console.log("File");
-            console.log(fileDefine);
-            const contentFile = fileDefine === null || fileDefine === void 0 ? void 0 : fileDefine.data;
-            console.log("Content file");
-            console.log(contentFile);
-            const dataUrl = await WtsChatService.getUrlFile({ mimeType: fileDefine.mimeType, name: fileDefine.fileName }, token);
+            console.log("Buffer", file);
+            const dataUrl = await WtsChatService.getUrlFile({ mimeType: mimetype, name: filename }, token);
             const urlFile = dataUrl.urlUpload;
             console.log("Url FILE");
             console.log(urlFile);
-            await WtsChatService.updateFileS3(urlFile, contentFile, fileDefine.mimeType);
-            const result = await WtsChatService.saveFileS3(fileDefine, dataUrl.keyS3, token);
+            await WtsChatService.updateFileS3(urlFile, file, mimetype, contentLength);
+            const result = await WtsChatService.saveFileS3(filename, mimetype, dataUrl.keyS3, token);
             console.log("Result");
             console.log(result);
             return result;
@@ -647,24 +641,12 @@ class WtsChatService {
             throw new Error(`API request failed get url file:  ${error.response.data.text}`);
         }
     }
-    static async updateFileS3(urlFile, dataFile, mimeType) {
-        let buf;
-        if (typeof buffer_1.Buffer.from === "function") {
-            buf = buffer_1.Buffer.from(dataFile, 'base64');
-        }
-        else {
-            buf = new buffer_1.Buffer(dataFile, 'base64');
-        }
-        console.log(buf);
-        console.log("Update file s3");
-        console.log("data file");
-        console.log(dataFile);
-        console.log("Buffer");
-        console.log(buf);
+    static async updateFileS3(urlFile, dataFile, mimeType, contentLength) {
         try {
-            const response = await axios_1.default.put(urlFile, buf, {
+            const response = await axios_1.default.put(urlFile, dataFile, {
                 headers: {
                     'Content-Type': mimeType,
+                    'Content-length': contentLength
                 }
             });
             const data = response;
@@ -675,14 +657,12 @@ class WtsChatService {
             throw new Error(`API request failed: ${error.response.data.text}`);
         }
     }
-    static async saveFileS3(file, keyS3, token) {
+    static async saveFileS3(filename, mimetype, keyS3, token) {
         const url = `${constants_types_1.Constants.baseUrl}/core/v1/file`;
         const bodyRequest = {
-            type: ['image', 'video'].includes(file.fileType) ? file.fileType : 'UNDEFINED',
-            name: file.fileName,
-            extension: file.fileExtension,
+            name: filename,
             keyS3: keyS3,
-            mimeType: file.mimeType,
+            mimeType: mimetype,
             generateThumb: false
         };
         try {

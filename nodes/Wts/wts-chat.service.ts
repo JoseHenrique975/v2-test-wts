@@ -4,6 +4,7 @@ import { Buffer } from 'buffer';
 import axios from 'axios';
 import { Constants, notSend } from './constants.types';
 import { paramsDefault, sendRequestOrAutoPagination } from '../utils';
+import { Readable } from 'stream';
 
 export class WtsChatService {
   static ThrowError(inputData: any, file: string) {
@@ -493,31 +494,20 @@ export class WtsChatService {
     }
   }
 
-  static async saveFile(tes:IExecuteFunctions, file: File, token: string): Promise<any> {
+  static async saveFile(tes:IExecuteFunctions, file: Buffer | Readable, mimetype:string, filename:string, contentLength: number, token: string): Promise<any> {
     try {
-      const fileDefine: any = file;
-      console.log("File");
-      console.log(fileDefine);
-
-      const contentFile = fileDefine?.data;
-      console.log("Content file");
-      console.log(contentFile);
-    
-      const dataUrl = await WtsChatService.getUrlFile({ mimeType: fileDefine.mimeType, name: fileDefine.fileName }, token);
+      console.log("Buffer", file);
+      const dataUrl = await WtsChatService.getUrlFile({ mimeType: mimetype, name: filename }, token);
 
       const urlFile = dataUrl.urlUpload;
       console.log("Url FILE");
       console.log(urlFile);
-  /*
-      throw new Error(`Estorou antes do updateFile`);
-      throw new NodeApiError(tes.getNode(), {
-          message:"SFRSDFSF",
-          description: "Estou antes do updateFile"
-      });
-      */
-      await WtsChatService.updateFileS3(urlFile, contentFile, fileDefine.mimeType);
-     
-      const result = await WtsChatService.saveFileS3(fileDefine, dataUrl.keyS3, token);
+      
+      await WtsChatService.updateFileS3(urlFile, file, mimetype, contentLength);
+      
+    //  let fileDefine = { };
+
+      const result = await WtsChatService.saveFileS3(filename, mimetype, dataUrl.keyS3, token);
       console.log("Result")
       console.log(result);
       return result;
@@ -763,73 +753,14 @@ export class WtsChatService {
     }
   }
 
-  static async updateFileS3(urlFile: string, dataFile: string, mimeType: string) {
-/*
-    function base64ToArrayBuffer(data: any) {
-      var binaryString = atob(data);
-      var bytes = new Uint8Array(binaryString.length);
-      for (var i = 0; i < binaryString.length; i++) {
-        bytes[i] = binaryString.charCodeAt(i);
-      }
-      return bytes.buffer;
-    }
-
-    function base64ToArrayBuffer2(data: any){
-      const lookup = [];
-      for (let i = 0; i < 64; i++) {
-        lookup[i] = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'.charCodeAt(i);
-      }
-    
-      const padding = (data.endsWith('==') ? 2 : data.endsWith('=') ? 1 : 0);
-      const bytesLength = (data.length * 3) / 4 - padding;
-      const bytes = new Uint8Array(bytesLength);
-    
-      let p = 0;
-      for (let i = 0; i < data.length; i += 4) {
-        const encoded1 = lookup[data.charCodeAt(i) - 43];
-        const encoded2 = lookup[data.charCodeAt(i + 1) - 43];
-        const encoded3 = lookup[data.charCodeAt(i + 2) - 43];
-        const encoded4 = lookup[data.charCodeAt(i + 3) - 43];
-    
-        const decoded1 = (encoded1 << 2) | (encoded2 >> 4);
-        const decoded2 = ((encoded2 & 15) << 4) | (encoded3 >> 2);
-        const decoded3 = ((encoded3 & 3) << 6) | encoded4;
-    
-        bytes[p++] = decoded1;
-        if (p < bytesLength) bytes[p++] = decoded2;
-        if (p < bytesLength) bytes[p++] = decoded3;
-      }
-    
-      return bytes.buffer;
-    }
-*/
-    let buf; 
-    if (typeof Buffer.from === "function") {
- 
-      buf = Buffer.from(dataFile, 'base64'); 
-  } else {
-      buf = new Buffer(dataFile, 'base64'); 
-  }
-
-
-    console.log(buf);
-    //Essa merda tá retornando um Uint8Array Buffer
-//axios.put(url, buffer, config)
-  
-
-    console.log("Update file s3");
-    console.log("data file");
-    console.log(dataFile);
-    console.log("Buffer");
-    console.log(buf);
-   // const result = base64ToArrayBuffer2(dataFile);
-
+  static async updateFileS3(urlFile: string, dataFile: Buffer | Readable, mimeType: string, contentLength:number) {
     try {
  
-      const response = await axios.put(urlFile, buf,
+      const response = await axios.put(urlFile, dataFile,
         {
           headers: {
             'Content-Type': mimeType,
+            'Content-length': contentLength
           }
         }
       );
@@ -849,15 +780,13 @@ export class WtsChatService {
     }
   }
 
-  static async saveFileS3(file: any, keyS3: string, token: string) {
+  static async saveFileS3(filename:string, mimetype: string, keyS3: string, token: string) {
     const url = `${Constants.baseUrl}/core/v1/file`;
 
-    const bodyRequest = {
-      type: ['image', 'video'].includes(file.fileType) ? file.fileType : 'UNDEFINED',
-      name: file.fileName,
-      extension: file.fileExtension,
+    const bodyRequest = {      
+      name: filename,
       keyS3: keyS3,
-      mimeType: file.mimeType,
+      mimeType: mimetype,
       generateThumb: false
     }
 

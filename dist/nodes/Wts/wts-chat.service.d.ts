@@ -1,4 +1,6 @@
 import { IExecuteFunctions, ILoadOptionsFunctions } from 'n8n-workflow';
+import { Buffer } from 'buffer';
+import { Readable } from 'stream';
 export declare class WtsChatService {
     static ThrowError(inputData: any, file: string): void;
     static getMessageById(idMessage: string, token: string): Promise<any>;
@@ -24,7 +26,7 @@ export declare class WtsChatService {
     static removeContactToSequence(sequenceId: string, body: any, token: string): Promise<any>;
     static addContactsToSequence(sequenceId: string, body: any, token: string): Promise<any>;
     static removeContactsToSequence(sequenceId: string, body: any, token: string): Promise<any>;
-    static saveFile(tes: IExecuteFunctions, file: File, token: string): Promise<any>;
+    static saveFile(tes: IExecuteFunctions, file: Buffer | Readable, mimetype: string, filename: string, contentLength: number, token: string): Promise<any>;
     static getChannelsIds(otp: ILoadOptionsFunctions): Promise<Array<{
         name: string;
         value: string;
@@ -53,6 +55,6 @@ export declare class WtsChatService {
         mimeType: string;
         name: string;
     }, token: string): Promise<any>;
-    static updateFileS3(urlFile: string, dataFile: string, mimeType: string): Promise<import("axios").AxiosResponse<any, any>>;
-    static saveFileS3(file: any, keyS3: string, token: string): Promise<import("axios").AxiosResponse<any, any>>;
+    static updateFileS3(urlFile: string, dataFile: Buffer | Readable, mimeType: string, contentLength: number): Promise<import("axios").AxiosResponse<any, any>>;
+    static saveFileS3(filename: string, mimetype: string, keyS3: string, token: string): Promise<import("axios").AxiosResponse<any, any>>;
 }
