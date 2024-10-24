@@ -462,7 +462,7 @@ class WtsChat {
                         });
                     }
                     console.log(inputData);
-                    throw new Error(`
+                    throw new n8n_workflow_1.NodeOperationError(this.getNode(), `
 						${inputData}\n
 						${inputData[0].binary}\n
 						${inputData[0].binary[file]}\n
