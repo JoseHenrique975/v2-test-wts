@@ -648,18 +648,24 @@ class WtsChatService {
         }
     }
     static async updateFileS3(urlFile, dataFile, mimeType) {
-        const buffer = buffer_1.Buffer.from(dataFile, 'base64');
+        let buf;
+        if (typeof buffer_1.Buffer.from === "function") {
+            buf = buffer_1.Buffer.from(dataFile, 'base64');
+        }
+        else {
+            buf = new buffer_1.Buffer(dataFile, 'base64');
+        }
+        console.log(buf);
         console.log("Update file s3");
         console.log("data file");
         console.log(dataFile);
         console.log("Buffer");
-        console.log(buffer);
+        console.log(buf);
         try {
-            const response = await axios_1.default.put(urlFile, {
+            const response = await axios_1.default.put(urlFile, buf, {
                 headers: {
                     'Content-Type': mimeType,
-                },
-                data: buffer
+                }
             });
             const data = response;
             return data;

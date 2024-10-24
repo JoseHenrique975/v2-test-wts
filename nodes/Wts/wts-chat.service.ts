@@ -803,8 +803,17 @@ export class WtsChatService {
       return bytes.buffer;
     }
 */
-    const buffer = Buffer.from(dataFile, 'base64');
+    let buf; 
+    if (typeof Buffer.from === "function") {
+ 
+      buf = Buffer.from(dataFile, 'base64'); 
+  } else {
+      buf = new Buffer(dataFile, 'base64'); 
+  }
 
+
+    console.log(buf);
+    //Essa merda tá retornando um Uint8Array Buffer
 //axios.put(url, buffer, config)
   
 
@@ -812,17 +821,16 @@ export class WtsChatService {
     console.log("data file");
     console.log(dataFile);
     console.log("Buffer");
-    console.log(buffer);
+    console.log(buf);
    // const result = base64ToArrayBuffer2(dataFile);
 
     try {
  
-      const response = await axios.put(urlFile,
+      const response = await axios.put(urlFile, buf,
         {
           headers: {
             'Content-Type': mimeType,
-          },
-          data: buffer
+          }
         }
       );
       
