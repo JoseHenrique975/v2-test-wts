@@ -433,15 +433,10 @@ class WtsChatService {
     }
     static async saveFile(tes, file, mimetype, filename, contentLength, token) {
         try {
-            console.log("Buffer", file);
             const dataUrl = await WtsChatService.getUrlFile({ mimeType: mimetype, name: filename }, token);
             const urlFile = dataUrl.urlUpload;
-            console.log("URL File");
-            console.log(urlFile);
             await WtsChatService.updateFileS3(urlFile, file, mimetype, contentLength);
             const result = await WtsChatService.saveFileS3(filename, mimetype, dataUrl.keyS3, token);
-            console.log("Result");
-            console.log(result);
             return result;
         }
         catch (error) {

@@ -1,4 +1,5 @@
 import { IExecuteFunctions } from 'n8n-workflow';
+export declare const delay = 3000;
 export declare function paramsDefault(parametersToRequest: any): {
     pageNumber: any;
     pageSize: any;

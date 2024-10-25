@@ -3,11 +3,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.delay = void 0;
 exports.paramsDefault = paramsDefault;
 exports.sendRequestOrAutoPagination = sendRequestOrAutoPagination;
 exports.getParamsGenerics = getParamsGenerics;
 const axios_1 = __importDefault(require("axios"));
-const delay = 3000;
+exports.delay = 3000;
 const defaultAutoPageSize = 100;
 function paramsDefault(parametersToRequest) {
     return {
@@ -91,7 +92,7 @@ async function sendRequestOrAutoPagination(params, url, token) {
                 passRequestValues(result, data);
                 break;
             }
-            const seconds = count <= 10 ? delay : ((count % 10) + 1) * delay;
+            const seconds = count <= 10 ? exports.delay : ((count % 10) + 1) * exports.delay;
             await new Promise(resolve => setTimeout(resolve, seconds));
             pageNumber += 1;
         }

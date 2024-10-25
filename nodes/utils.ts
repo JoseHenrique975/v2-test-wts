@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { IExecuteFunctions } from 'n8n-workflow';
 
-const delay = 3000;
+export const delay = 3000;
 const defaultAutoPageSize = 100;
 
 export function paramsDefault(parametersToRequest: any) {
