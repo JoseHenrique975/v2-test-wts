@@ -1,6 +1,6 @@
 {
     "name": "n8n-nodes-test-wts-v2",
-    "version": "0.0.13",
+    "version": "0.0.14",
     "description": "n8n node to call wts services",
     "keywords": [
         "n8n-community-node-package"
