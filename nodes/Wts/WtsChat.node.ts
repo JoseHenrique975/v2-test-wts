@@ -499,6 +499,7 @@ export class WtsChat implements INodeType {
 				const enableBot = this.getNodeParameter('enableBot', 0) as boolean;
 				const hiddenSession = this.getNodeParameter('hiddenSession', 0) as boolean;
 				const forceStartSession = this.getNodeParameter('forceStartSession', 0) as boolean;
+
 				/*
 								if(fileUrl){
 									const regex = /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$/;
@@ -512,8 +513,6 @@ export class WtsChat implements INodeType {
 									}
 								}
 				*/
-
-				console.log("Iniciou a operação");
 
 				if (!fileInputFieldName && !fileUrl) {
 					throw new NodeApiError(this.getNode(), {
@@ -560,25 +559,11 @@ export class WtsChat implements INodeType {
 							message: 'There is no file with that name that comes from input',
 							description: 'There is no file with that name that comes from input',
 						});
-					}		
+					}	
+                   
+					const paramsRequest = await dataFileInput(this, fileInputFieldName, inputData);
 
-					const binaryData = this.helpers.assertBinaryData(0, fileInputFieldName);
-					let filename = binaryData.fileName ?? 'file';
-					let contentType = binaryData.mimeType;
-					let contentLength = 0;
-					const itemBinaryData = inputData[0].binary![fileInputFieldName];
-					let uploadData: Buffer | Readable;
-					if (itemBinaryData.id){
-						uploadData = await this.helpers.getBinaryStream(itemBinaryData.id);
-						const metadata = await this.helpers.getBinaryMetadata(itemBinaryData.id);
-						contentLength = metadata.fileSize;
-					}
-					else{
-						uploadData = Buffer.from(itemBinaryData.data, BINARY_ENCODING);
-						contentLength = uploadData.length;
-					}
-
-					const responseSaveFile = await WtsChatService.saveFile(this, uploadData, contentType, filename, contentLength, token);
+					const responseSaveFile = await WtsChatService.saveFile(this, paramsRequest.uploadData, paramsRequest.contentType, paramsRequest.filename, paramsRequest.contentLength, token);
 					body.body.fileId = responseSaveFile.data.id;
 					body.body.fileUrl = null;
 				}
@@ -615,8 +600,8 @@ export class WtsChat implements INodeType {
 				const templateObj: any = jsonParse(template);
 
 				let fileUrl = templateObj.fileType != "UNDEFINED" ? this.getNodeParameter('urlFile', 0) as string : null;
-				const file = templateObj.fileType != "UNDEFINED" ? this.getNodeParameter('fileToSend', 0) as string : null;
-				const inputData = file ? this.getInputData(0) as any : null;
+				const fileInputFieldName = templateObj.fileType != "UNDEFINED" ? this.getNodeParameter('fileToSend', 0) as string : null;
+				const inputData = fileInputFieldName ? this.getInputData(0) as any : null;
 
 				const templateId = templateObj.id;
 
@@ -659,23 +644,41 @@ export class WtsChat implements INodeType {
 				}
 
 				let fileId;
-				if (file) {
-					if (!inputData[0].binary || !inputData) {
+				if (fileInputFieldName) {
+					if (!inputData || !inputData.length || !inputData[0].binary) {
 						throw new NodeApiError(this.getNode(), {
 							message: 'There is no data in the input',
 							description: 'There is no data in the input',
 						});
 					}
-					if(!inputData[0].binary[file]){
+					if(!inputData[0].binary[fileInputFieldName]){
 						throw new NodeApiError(this.getNode(), {
 							message: 'There is no file with that name that comes from input',
 							description: 'There is no file with that name that comes from input',
 						});
 					}
-					//const newFile: File = inputData[0].binary[file];
 
-					//const responseSaveFile = await WtsChatService.saveFile(this, newFile, token);
-					fileId = '';//responseSaveFile.data.id;
+					const paramsRequest = await dataFileInput(this, fileInputFieldName, inputData);
+/*
+					const binaryData = this.helpers.assertBinaryData(0, fileInputFieldName);
+					let filename = binaryData.fileName ?? 'file';
+					let contentType = binaryData.mimeType;
+					let contentLength = 0;
+					const itemBinaryData = inputData[0].binary![fileInputFieldName];
+					let uploadData: Buffer | Readable;
+					if (itemBinaryData.id){
+						uploadData = await this.helpers.getBinaryStream(itemBinaryData.id);
+						const metadata = await this.helpers.getBinaryMetadata(itemBinaryData.id);
+						contentLength = metadata.fileSize;
+					}
+					else{
+						//Converte os dados binários em um Buffer a partir do que vem do input, utilizando uma codificação binária BINARY_ENCODING
+						uploadData = Buffer.from(itemBinaryData.data, BINARY_ENCODING);
+						contentLength = uploadData.length;
+					}
+*/
+					const responseSaveFile = await WtsChatService.saveFile(this, paramsRequest.uploadData, paramsRequest.contentType, paramsRequest.filename, paramsRequest.contentLength, token);
+					fileId = responseSaveFile.data.id;
 					fileUrl = null;
 				}
 
@@ -1017,8 +1020,8 @@ export class WtsChat implements INodeType {
 			else if (operation === 'sendMessageFileSession') {
 				const sessionId = this.getNodeParameter('sessionId', 0) as string;
 				const fileUrl = this.getNodeParameter('urlFile', 0) as string ?? null;
-				const file = this.getNodeParameter('fileToSend', 0) as string ?? null;
-				const inputData = file ? this.getInputData(0) as any : null;
+				const fileInputFieldName = this.getNodeParameter('fileToSend', 0) as string ?? null;
+				const inputData = fileInputFieldName ? this.getInputData(0) as any : null;
 
 				if (!sessionId || sessionId.trim() === '') {
 					throw new NodeApiError(this.getNode(), {
@@ -1027,7 +1030,7 @@ export class WtsChat implements INodeType {
 					});
 				}
 
-				if (!fileUrl && !file) {
+				if (!fileUrl && !fileInputFieldName) {
 					throw new NodeApiError(this.getNode(), {
 						message: 'Fill in any of the fields',
 						description: 'Fill in the file or url'
@@ -1039,26 +1042,48 @@ export class WtsChat implements INodeType {
 					fileId: null
 				}
 
-				if (file) {
-					if (!inputData[0].binary || !inputData) {
+				if (fileInputFieldName) {
+					if (!inputData || !inputData.length || !inputData[0].binary) {
 						throw new NodeApiError(this.getNode(), {
 							message: 'There is no data in the input',
 							description: 'There is no data in the input',
 						});
 					}
-					if(!inputData[0].binary[file]){
+					if(!inputData[0].binary[fileInputFieldName]){
 						throw new NodeApiError(this.getNode(), {
 							message: 'There is no file with that name that comes from input',
 							description: 'There is no file with that name that comes from input',
 						});
 					}
 
+					const paramsRequest = await dataFileInput(this, fileInputFieldName, inputData);
 					//const newFile: File = inputData[0].binary[file];
                      /*
 					const responseSaveFile = await WtsChatService.saveFile(this, newFile, token);
 					body.fileId = responseSaveFile.data.id;
 					body.fileUrl = null
 					*/
+					/*
+					const binaryData = this.helpers.assertBinaryData(0, fileInputFieldName);
+					let filename = binaryData.fileName ?? 'file';
+					let contentType = binaryData.mimeType;
+					let contentLength = 0;
+					const itemBinaryData = inputData[0].binary![fileInputFieldName];
+					let uploadData: Buffer | Readable;
+					if (itemBinaryData.id){
+						uploadData = await this.helpers.getBinaryStream(itemBinaryData.id);
+						const metadata = await this.helpers.getBinaryMetadata(itemBinaryData.id);
+						contentLength = metadata.fileSize;
+					}
+					else{
+						uploadData = Buffer.from(itemBinaryData.data, BINARY_ENCODING);
+						contentLength = uploadData.length;
+					}
+*/
+
+					const responseSaveFile = await WtsChatService.saveFile(this, paramsRequest.uploadData, paramsRequest.contentType, paramsRequest.filename, paramsRequest.contentLength, token);
+					body.fileId = responseSaveFile.data.id;
+					body.fileUrl = null;
 				}
 
 				try {
@@ -1092,8 +1117,8 @@ export class WtsChat implements INodeType {
 				const obj: any = jsonParse(template);
 
 				let fileUrl = obj.fileType != "UNDEFINED" ? this.getNodeParameter('urlFile', 0) as string : null;
-				const file = obj.fileType != "UNDEFINED" ? this.getNodeParameter('fileToSend', 0) as string : null;
-				const inputData = file ? this.getInputData(0) as any : null;
+				const fileInputFieldName = obj.fileType != "UNDEFINED" ? this.getNodeParameter('fileToSend', 0) as string : null;
+				const inputData = fileInputFieldName ? this.getInputData(0) as any : null;
 
 				const paramsArray = params?.paramsTemplatesValues;
 				const paramsName = paramsArray?.map(p => p.name);
@@ -1120,25 +1145,42 @@ export class WtsChat implements INodeType {
 					fileUrl: fileUrl
 				}
 
-				if (file) {
-					if (!inputData[0].binary || !inputData) {
+				if (fileInputFieldName) {
+					if (!inputData || !inputData.length || !inputData[0].binary) {
 						throw new NodeApiError(this.getNode(), {
 							message: 'There is no data in the input',
 							description: 'There is no data in the input',
 						});
 					}
-					if(!inputData[0].binary[file]){
+					if(!inputData[0].binary[fileInputFieldName]){
 						throw new NodeApiError(this.getNode(), {
 							message: 'There is no file with that name that comes from input',
 							description: 'There is no file with that name that comes from input',
 						});
 					}
-					/*
-					const newFile: File = inputData[0].binary[file];
-					const responseSaveFile = await WtsChatService.saveFile(this, newFile, token);
+
+				    const paramRequest = await dataFileInput(this, fileInputFieldName, inputData);
+/*
+					const binaryData = this.helpers.assertBinaryData(0, fileInputFieldName);
+					let filename = binaryData.fileName ?? 'file';
+					let contentType = binaryData.mimeType;
+					let contentLength = 0;
+					const itemBinaryData = inputData[0].binary![fileInputFieldName];
+					let uploadData: Buffer | Readable;
+					if (itemBinaryData.id){
+						uploadData = await this.helpers.getBinaryStream(itemBinaryData.id);
+						const metadata = await this.helpers.getBinaryMetadata(itemBinaryData.id);
+						contentLength = metadata.fileSize;
+					}
+					else{
+						uploadData = Buffer.from(itemBinaryData.data, BINARY_ENCODING);
+						contentLength = uploadData.length;
+					}
+*/
+
+					const responseSaveFile = await WtsChatService.saveFile(this, paramRequest.uploadData, paramRequest.contentType, paramRequest.filename, paramRequest.contentLength, token);
 					body.fileId = responseSaveFile.data.id;
 					body.fileUrl = null;
-					*/
 				}
 
 				try {
@@ -1808,5 +1850,31 @@ export class WtsChat implements INodeType {
 		}
 
 		return results;
-	}
+
+		async function dataFileInput(context:IExecuteFunctions, fileInputName: string, inputData: any){				
+			const binaryData = context.helpers.assertBinaryData(0, fileInputName);
+			let filename = binaryData.fileName ?? 'file';
+			let contentType = binaryData.mimeType;
+			let contentLength = 0;
+			const itemBinaryData = inputData[0].binary![fileInputName];
+			let uploadData: Buffer | Readable;
+			if (itemBinaryData.id){
+				uploadData = await context.helpers.getBinaryStream(itemBinaryData.id);
+				const metadata = await context.helpers.getBinaryMetadata(itemBinaryData.id);
+				contentLength = metadata.fileSize;
+			}
+			else{
+				//Converte os dados binários em um Buffer a partir do que vem do input, utilizando uma codificação binária BINARY_ENCODING
+				uploadData = Buffer.from(itemBinaryData.data, BINARY_ENCODING);
+				contentLength = uploadData.length;
+			}
+			const result = {
+				filename, contentType,
+				contentLength, uploadData
+			}
+		
+			return result;
+		}
+	}	
+	
 }

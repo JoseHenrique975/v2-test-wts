@@ -184,7 +184,7 @@ class WtsChat {
         };
     }
     async execute() {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
         const results = [[]];
         const resource = this.getNodeParameter('resource', 0);
         const operation = this.getNodeParameter('operation', 0);
@@ -420,7 +420,6 @@ class WtsChat {
                 const enableBot = this.getNodeParameter('enableBot', 0);
                 const hiddenSession = this.getNodeParameter('hiddenSession', 0);
                 const forceStartSession = this.getNodeParameter('forceStartSession', 0);
-                console.log("Iniciou a operação");
                 if (!fileInputFieldName && !fileUrl) {
                     throw new n8n_workflow_1.NodeApiError(this.getNode(), {
                         message: 'Fill in any of the fields, whether Url or File!',
@@ -462,22 +461,8 @@ class WtsChat {
                             description: 'There is no file with that name that comes from input',
                         });
                     }
-                    const binaryData = this.helpers.assertBinaryData(0, fileInputFieldName);
-                    let filename = (_d = binaryData.fileName) !== null && _d !== void 0 ? _d : 'file';
-                    let contentType = binaryData.mimeType;
-                    let contentLength = 0;
-                    const itemBinaryData = inputData[0].binary[fileInputFieldName];
-                    let uploadData;
-                    if (itemBinaryData.id) {
-                        uploadData = await this.helpers.getBinaryStream(itemBinaryData.id);
-                        const metadata = await this.helpers.getBinaryMetadata(itemBinaryData.id);
-                        contentLength = metadata.fileSize;
-                    }
-                    else {
-                        uploadData = buffer_1.Buffer.from(itemBinaryData.data, n8n_workflow_1.BINARY_ENCODING);
-                        contentLength = uploadData.length;
-                    }
-                    const responseSaveFile = await wts_chat_service_1.WtsChatService.saveFile(this, uploadData, contentType, filename, contentLength, token);
+                    const paramsRequest = await dataFileInput(this, fileInputFieldName, inputData);
+                    const responseSaveFile = await wts_chat_service_1.WtsChatService.saveFile(this, paramsRequest.uploadData, paramsRequest.contentType, paramsRequest.filename, paramsRequest.contentLength, token);
                     body.body.fileId = responseSaveFile.data.id;
                     body.body.fileUrl = null;
                 }
@@ -506,8 +491,8 @@ class WtsChat {
                 }
                 const templateObj = (0, n8n_workflow_1.jsonParse)(template);
                 let fileUrl = templateObj.fileType != "UNDEFINED" ? this.getNodeParameter('urlFile', 0) : null;
-                const file = templateObj.fileType != "UNDEFINED" ? this.getNodeParameter('fileToSend', 0) : null;
-                const inputData = file ? this.getInputData(0) : null;
+                const fileInputFieldName = templateObj.fileType != "UNDEFINED" ? this.getNodeParameter('fileToSend', 0) : null;
+                const inputData = fileInputFieldName ? this.getInputData(0) : null;
                 const templateId = templateObj.id;
                 const paramsTemplates = this.getNodeParameter('paramsTemplates', 0);
                 const paramsArray = paramsTemplates.paramsTemplatesValues;
@@ -542,20 +527,22 @@ class WtsChat {
                     });
                 }
                 let fileId;
-                if (file) {
-                    if (!inputData[0].binary || !inputData) {
+                if (fileInputFieldName) {
+                    if (!inputData || !inputData.length || !inputData[0].binary) {
                         throw new n8n_workflow_1.NodeApiError(this.getNode(), {
                             message: 'There is no data in the input',
                             description: 'There is no data in the input',
                         });
                     }
-                    if (!inputData[0].binary[file]) {
+                    if (!inputData[0].binary[fileInputFieldName]) {
                         throw new n8n_workflow_1.NodeApiError(this.getNode(), {
                             message: 'There is no file with that name that comes from input',
                             description: 'There is no file with that name that comes from input',
                         });
                     }
-                    fileId = '';
+                    const paramsRequest = await dataFileInput(this, fileInputFieldName, inputData);
+                    const responseSaveFile = await wts_chat_service_1.WtsChatService.saveFile(this, paramsRequest.uploadData, paramsRequest.contentType, paramsRequest.filename, paramsRequest.contentLength, token);
+                    fileId = responseSaveFile.data.id;
                     fileUrl = null;
                 }
                 const body = {
@@ -776,7 +763,7 @@ class WtsChat {
                 const departmentId = (fields.includes('DepartmentId') || fields.includes('UserId')) ? this.getNodeParameter('departmentIdUpdatedSession', 0) : null;
                 const userId = fields.includes('UserId') ? this.getNodeParameter('userIdByDepartmentUpdateSession', 0) : null;
                 const metadata = fields.includes('Metadata') ? this.getNodeParameter('metadataUpdateSession', 0) : null;
-                const metadataObject = (_e = metadata === null || metadata === void 0 ? void 0 : metadata.metadata) === null || _e === void 0 ? void 0 : _e.reduce((acc, metadata) => {
+                const metadataObject = (_d = metadata === null || metadata === void 0 ? void 0 : metadata.metadata) === null || _d === void 0 ? void 0 : _d.reduce((acc, metadata) => {
                     acc[metadata.key] = metadata.value;
                     return acc;
                 }, {});
@@ -820,16 +807,16 @@ class WtsChat {
             }
             else if (operation === 'sendMessageFileSession') {
                 const sessionId = this.getNodeParameter('sessionId', 0);
-                const fileUrl = (_f = this.getNodeParameter('urlFile', 0)) !== null && _f !== void 0 ? _f : null;
-                const file = (_g = this.getNodeParameter('fileToSend', 0)) !== null && _g !== void 0 ? _g : null;
-                const inputData = file ? this.getInputData(0) : null;
+                const fileUrl = (_e = this.getNodeParameter('urlFile', 0)) !== null && _e !== void 0 ? _e : null;
+                const fileInputFieldName = (_f = this.getNodeParameter('fileToSend', 0)) !== null && _f !== void 0 ? _f : null;
+                const inputData = fileInputFieldName ? this.getInputData(0) : null;
                 if (!sessionId || sessionId.trim() === '') {
                     throw new n8n_workflow_1.NodeApiError(this.getNode(), {
                         message: 'SessionID is empty!',
                         description: 'Fill in the SessionID field'
                     });
                 }
-                if (!fileUrl && !file) {
+                if (!fileUrl && !fileInputFieldName) {
                     throw new n8n_workflow_1.NodeApiError(this.getNode(), {
                         message: 'Fill in any of the fields',
                         description: 'Fill in the file or url'
@@ -839,19 +826,23 @@ class WtsChat {
                     fileUrl: fileUrl || null,
                     fileId: null
                 };
-                if (file) {
-                    if (!inputData[0].binary || !inputData) {
+                if (fileInputFieldName) {
+                    if (!inputData || !inputData.length || !inputData[0].binary) {
                         throw new n8n_workflow_1.NodeApiError(this.getNode(), {
                             message: 'There is no data in the input',
                             description: 'There is no data in the input',
                         });
                     }
-                    if (!inputData[0].binary[file]) {
+                    if (!inputData[0].binary[fileInputFieldName]) {
                         throw new n8n_workflow_1.NodeApiError(this.getNode(), {
                             message: 'There is no file with that name that comes from input',
                             description: 'There is no file with that name that comes from input',
                         });
                     }
+                    const paramsRequest = await dataFileInput(this, fileInputFieldName, inputData);
+                    const responseSaveFile = await wts_chat_service_1.WtsChatService.saveFile(this, paramsRequest.uploadData, paramsRequest.contentType, paramsRequest.filename, paramsRequest.contentLength, token);
+                    body.fileId = responseSaveFile.data.id;
+                    body.fileUrl = null;
                 }
                 try {
                     const data = await wts_chat_service_1.WtsChatService.sendMessageFileUrlSession(sessionId, body, token);
@@ -880,8 +871,8 @@ class WtsChat {
                 }
                 const obj = (0, n8n_workflow_1.jsonParse)(template);
                 let fileUrl = obj.fileType != "UNDEFINED" ? this.getNodeParameter('urlFile', 0) : null;
-                const file = obj.fileType != "UNDEFINED" ? this.getNodeParameter('fileToSend', 0) : null;
-                const inputData = file ? this.getInputData(0) : null;
+                const fileInputFieldName = obj.fileType != "UNDEFINED" ? this.getNodeParameter('fileToSend', 0) : null;
+                const inputData = fileInputFieldName ? this.getInputData(0) : null;
                 const paramsArray = params === null || params === void 0 ? void 0 : params.paramsTemplatesValues;
                 const paramsName = paramsArray === null || paramsArray === void 0 ? void 0 : paramsArray.map(p => p.name);
                 const paramSet = new Set(paramsName);
@@ -906,19 +897,23 @@ class WtsChat {
                     fileId: null,
                     fileUrl: fileUrl
                 };
-                if (file) {
-                    if (!inputData[0].binary || !inputData) {
+                if (fileInputFieldName) {
+                    if (!inputData || !inputData.length || !inputData[0].binary) {
                         throw new n8n_workflow_1.NodeApiError(this.getNode(), {
                             message: 'There is no data in the input',
                             description: 'There is no data in the input',
                         });
                     }
-                    if (!inputData[0].binary[file]) {
+                    if (!inputData[0].binary[fileInputFieldName]) {
                         throw new n8n_workflow_1.NodeApiError(this.getNode(), {
                             message: 'There is no file with that name that comes from input',
                             description: 'There is no file with that name that comes from input',
                         });
                     }
+                    const paramRequest = await dataFileInput(this, fileInputFieldName, inputData);
+                    const responseSaveFile = await wts_chat_service_1.WtsChatService.saveFile(this, paramRequest.uploadData, paramRequest.contentType, paramRequest.filename, paramRequest.contentLength, token);
+                    body.fileId = responseSaveFile.data.id;
+                    body.fileUrl = null;
                 }
                 try {
                     const data = await wts_chat_service_1.WtsChatService.sendMessageTemplateSession(sessionId, body, token);
@@ -963,11 +958,11 @@ class WtsChat {
                 const monetaryAmount = this.getNodeParameter('monetaryAmount', 0);
                 const customFields = this.getNodeParameter('customFieldsPanel', 0);
                 const metadata = this.getNodeParameter('metadata', 0);
-                const customFieldsObject = (_h = customFields === null || customFields === void 0 ? void 0 : customFields.customFields) === null || _h === void 0 ? void 0 : _h.reduce((acc, field) => {
+                const customFieldsObject = (_g = customFields === null || customFields === void 0 ? void 0 : customFields.customFields) === null || _g === void 0 ? void 0 : _g.reduce((acc, field) => {
                     acc[field.key] = field.value;
                     return acc;
                 }, {});
-                const metadataObject = (_j = metadata === null || metadata === void 0 ? void 0 : metadata.metadata) === null || _j === void 0 ? void 0 : _j.reduce((acc, metadata) => {
+                const metadataObject = (_h = metadata === null || metadata === void 0 ? void 0 : metadata.metadata) === null || _h === void 0 ? void 0 : _h.reduce((acc, metadata) => {
                     acc[metadata.key] = metadata.value;
                     return acc;
                 }, {});
@@ -1204,11 +1199,11 @@ class WtsChat {
                 const userId = fields.includes('ResponsibleUserId') ? this.getNodeParameter('userIdUpdateCard', 0) : null;
                 const metadata = this.getNodeParameter('metadata', 0);
                 const customFields = fields.includes('CustomFields') ? this.getNodeParameter('customFieldsCardUpdateCard', 0) : null;
-                const customFieldsObject = (_k = customFields === null || customFields === void 0 ? void 0 : customFields.customFields) === null || _k === void 0 ? void 0 : _k.reduce((acc, field) => {
+                const customFieldsObject = (_j = customFields === null || customFields === void 0 ? void 0 : customFields.customFields) === null || _j === void 0 ? void 0 : _j.reduce((acc, field) => {
                     acc[field.key] = field.value;
                     return acc;
                 }, {});
-                const metadataObject = (_l = metadata === null || metadata === void 0 ? void 0 : metadata.metadata) === null || _l === void 0 ? void 0 : _l.reduce((acc, metadata) => {
+                const metadataObject = (_k = metadata === null || metadata === void 0 ? void 0 : metadata.metadata) === null || _k === void 0 ? void 0 : _k.reduce((acc, metadata) => {
                     acc[metadata.key] = metadata.value;
                     return acc;
                 }, {});
@@ -1279,11 +1274,11 @@ class WtsChat {
                         description: 'Fill in the From field'
                     });
                 }
-                const sessionMetadata = (_m = sessionMetadatas === null || sessionMetadatas === void 0 ? void 0 : sessionMetadatas.sessionMetadata) === null || _m === void 0 ? void 0 : _m.reduce((acc, field) => {
+                const sessionMetadata = (_l = sessionMetadatas === null || sessionMetadatas === void 0 ? void 0 : sessionMetadatas.sessionMetadata) === null || _l === void 0 ? void 0 : _l.reduce((acc, field) => {
                     acc[field.key] = field.value;
                     return acc;
                 }, {});
-                const contactMetadata = (_o = contactMetadatas === null || contactMetadatas === void 0 ? void 0 : contactMetadatas.contactMetadata) === null || _o === void 0 ? void 0 : _o.reduce((acc, field) => {
+                const contactMetadata = (_m = contactMetadatas === null || contactMetadatas === void 0 ? void 0 : contactMetadatas.contactMetadata) === null || _m === void 0 ? void 0 : _m.reduce((acc, field) => {
                     acc[field.key] = field.value;
                     return acc;
                 }, {});
@@ -1442,6 +1437,29 @@ class WtsChat {
             }
         }
         return results;
+        async function dataFileInput(context, fileInputName, inputData) {
+            var _a;
+            const binaryData = context.helpers.assertBinaryData(0, fileInputName);
+            let filename = (_a = binaryData.fileName) !== null && _a !== void 0 ? _a : 'file';
+            let contentType = binaryData.mimeType;
+            let contentLength = 0;
+            const itemBinaryData = inputData[0].binary[fileInputName];
+            let uploadData;
+            if (itemBinaryData.id) {
+                uploadData = await context.helpers.getBinaryStream(itemBinaryData.id);
+                const metadata = await context.helpers.getBinaryMetadata(itemBinaryData.id);
+                contentLength = metadata.fileSize;
+            }
+            else {
+                uploadData = buffer_1.Buffer.from(itemBinaryData.data, n8n_workflow_1.BINARY_ENCODING);
+                contentLength = uploadData.length;
+            }
+            const result = {
+                filename, contentType,
+                contentLength, uploadData
+            };
+            return result;
+        }
     }
 }
 exports.WtsChat = WtsChat;

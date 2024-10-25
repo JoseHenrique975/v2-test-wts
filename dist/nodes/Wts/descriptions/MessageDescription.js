@@ -172,7 +172,7 @@ exports.messageFields = [
         },
     },
     {
-        displayName: 'Field File Vitor',
+        displayName: 'Input Field File Name',
         name: 'fileToSend',
         type: 'string',
         default: '',

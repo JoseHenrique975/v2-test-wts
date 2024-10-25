@@ -436,7 +436,7 @@ class WtsChatService {
             console.log("Buffer", file);
             const dataUrl = await WtsChatService.getUrlFile({ mimeType: mimetype, name: filename }, token);
             const urlFile = dataUrl.urlUpload;
-            console.log("Url FILE");
+            console.log("URL File");
             console.log(urlFile);
             await WtsChatService.updateFileS3(urlFile, file, mimetype, contentLength);
             const result = await WtsChatService.saveFileS3(filename, mimetype, dataUrl.keyS3, token);
@@ -447,8 +447,8 @@ class WtsChatService {
         catch (error) {
             console.log(error);
             throw new n8n_workflow_1.NodeApiError(tes.getNode(), {
-                message: 'Erro em saveFile',
-                description: 'Error send file ' + error.message,
+                message: 'Error in save file',
+                description: 'Save File Error: ' + error.message,
             });
         }
     }
