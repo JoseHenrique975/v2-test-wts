@@ -20,8 +20,9 @@ class WtsChatService {
 						${inputData[0].binary[file].fileExtension}\n
 					`);
     }
-    static async getMessageById(idMessage, token) {
-        const url = `${constants_types_1.Constants.baseUrl}/chat/v1/message/${idMessage}`;
+    static async getMessageById(idMessage, receivedToken) {
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/chat/v1/message/${idMessage}`;
         try {
             const response = await axios_1.default.get(url, {
                 headers: {
@@ -37,8 +38,9 @@ class WtsChatService {
             throw new Error(`API request failed: ${error.response.data.text}`);
         }
     }
-    static async getMessageStatus(idMessage, token) {
-        const url = `${constants_types_1.Constants.baseUrl}/chat/v1/message/${idMessage}/status`;
+    static async getMessageStatus(idMessage, receivedToken) {
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/chat/v1/message/${idMessage}/status`;
         try {
             const response = await axios_1.default.get(url, {
                 headers: {
@@ -54,8 +56,9 @@ class WtsChatService {
             throw new Error(`API request failed: ${error.response.data.text}`);
         }
     }
-    static async getAllMessages(params, token) {
-        const url = `${constants_types_1.Constants.baseUrl}/chat/v1/message`;
+    static async getAllMessages(params, receivedToken) {
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/chat/v1/message`;
         try {
             const response = await (0, utils_1.sendRequestOrAutoPagination)(params, url, token);
             return response;
@@ -64,8 +67,9 @@ class WtsChatService {
             throw new Error(`API request failed: ${error.response.data.text}`);
         }
     }
-    static async sendMessageText(body, token, synchronous) {
-        const url = synchronous ? `${constants_types_1.Constants.baseUrl}/chat/v1/message/send-sync` : `${constants_types_1.Constants.baseUrl}/chat/v1/message/send`;
+    static async sendMessageText(body, receivedToken, synchronous) {
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = synchronous ? `${baseUrl}/chat/v1/message/send-sync` : `${baseUrl}/chat/v1/message/send`;
         try {
             const response = await axios_1.default.post(url, body, {
                 headers: {
@@ -81,8 +85,9 @@ class WtsChatService {
             throw new Error(`API request failed: ${error.response.data.text}`);
         }
     }
-    static async sendMessageFile(body, token, synchronous) {
-        const url = synchronous ? `${constants_types_1.Constants.baseUrl}/chat/v1/message/send-sync` : `${constants_types_1.Constants.baseUrl}/chat/v1/message/send`;
+    static async sendMessageFile(body, receivedToken, synchronous) {
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = synchronous ? `${baseUrl}/chat/v1/message/send-sync` : `${baseUrl}/chat/v1/message/send`;
         try {
             const response = await axios_1.default.post(url, body, {
                 headers: {
@@ -98,8 +103,9 @@ class WtsChatService {
             throw new Error(`API request failed: ${error.response.data.text}`);
         }
     }
-    static async sendMessageTemplate(body, token, synchronous) {
-        const url = synchronous ? `${constants_types_1.Constants.baseUrl}/chat/v1/message/send-sync` : `${constants_types_1.Constants.baseUrl}/chat/v1/message/send`;
+    static async sendMessageTemplate(body, receivedToken, synchronous) {
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = synchronous ? `${baseUrl}/chat/v1/message/send-sync` : `${baseUrl}/chat/v1/message/send`;
         try {
             const response = await axios_1.default.post(url, body, {
                 headers: {
@@ -115,7 +121,8 @@ class WtsChatService {
             throw new Error(`API request failed: ${error.response.data.text}`);
         }
     }
-    static async getAllSessions(params, token, urlWithParams) {
+    static async getAllSessions(params, receivedToken, urlWithParams) {
+        const { token } = constants_types_1.Constants.getRequesConfig(receivedToken);
         const parameters = {
             ...params,
             ...(0, utils_1.paramsDefault)(params)
@@ -128,8 +135,10 @@ class WtsChatService {
             throw new Error(`API request failed: ${error.response.data.text}`);
         }
     }
-    static async getSessionById(body, token) {
-        let url = `${constants_types_1.Constants.baseUrl}/chat/v1/session/${body.sessionId}`;
+    static async getSessionById(body, receivedToken) {
+        var _a, _b, _c;
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        let url = `${baseUrl}/chat/v1/session/${body.sessionId}`;
         const params = new URLSearchParams({});
         if (body.includeDetails) {
             body.includeDetails.forEach((details) => params.append('includeDetails', details));
@@ -147,11 +156,13 @@ class WtsChatService {
             return data;
         }
         catch (error) {
-            throw new Error(`API request failed: ${error}`);
+            console.log(error);
+            throw new Error(`API request failed: ${(_c = (_b = (_a = error === null || error === void 0 ? void 0 : error.response) === null || _a === void 0 ? void 0 : _a.data) === null || _b === void 0 ? void 0 : _b.text) !== null && _c !== void 0 ? _c : error}`);
         }
     }
-    static async updateTransfer(sessionId, body, token) {
-        const url = `${constants_types_1.Constants.baseUrl}/chat/v1/session/${sessionId}/transfer`;
+    static async updateTransfer(sessionId, body, receivedToken) {
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/chat/v1/session/${sessionId}/transfer`;
         try {
             const response = await axios_1.default.put(url, body, {
                 headers: {
@@ -167,8 +178,9 @@ class WtsChatService {
             throw new Error(`API request failed: ${error.response.data.text}`);
         }
     }
-    static async updateStatusSession(sessionId, body, token) {
-        const url = `${constants_types_1.Constants.baseUrl}/chat/v1/session/${sessionId}/status`;
+    static async updateStatusSession(sessionId, body, receivedToken) {
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/chat/v1/session/${sessionId}/status`;
         try {
             const response = await axios_1.default.put(url, body, {
                 headers: {
@@ -184,8 +196,9 @@ class WtsChatService {
             throw new Error(`API request failed: ${error.response.data.text}`);
         }
     }
-    static async assignUserToSession(sessionId, body, token) {
-        const url = `${constants_types_1.Constants.baseUrl}/chat/v1/session/${sessionId}/assignee`;
+    static async assignUserToSession(sessionId, body, receivedToken) {
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/chat/v1/session/${sessionId}/assignee`;
         try {
             const response = await axios_1.default.put(url, body, {
                 headers: {
@@ -201,8 +214,9 @@ class WtsChatService {
             throw new Error(`API request failed: ${error.response.data.text}`);
         }
     }
-    static async concludeSession(sessionId, body, token) {
-        const url = `${constants_types_1.Constants.baseUrl}/chat/v1/session/${sessionId}/complete`;
+    static async concludeSession(sessionId, body, receivedToken) {
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/chat/v1/session/${sessionId}/complete`;
         try {
             const response = await axios_1.default.put(url, body, {
                 headers: {
@@ -218,8 +232,9 @@ class WtsChatService {
             throw new Error(`API request failed: ${error.response.data.text}`);
         }
     }
-    static async updateSession(sessionId, body, token) {
-        const url = `${constants_types_1.Constants.baseUrl}/chat/v2/session/${sessionId}/partial`;
+    static async updateSession(sessionId, body, receivedToken) {
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/chat/v2/session/${sessionId}/partial`;
         const bodyRequest = {
             ...(body.companyId && { companyId: body.companyId }),
             ...(body.statusSessionUpdate && { status: body.statusSessionUpdate }),
@@ -245,8 +260,9 @@ class WtsChatService {
             throw new Error(`API request failed: ${error.response.data.text}`);
         }
     }
-    static async sendChatbot(body, token) {
-        const url = `${constants_types_1.Constants.baseUrl}/chat/v1/chatbot/send`;
+    static async sendChatbot(body, receivedToken) {
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/chat/v1/chatbot/send`;
         const bodyRequest = {
             ...(body.botId && { botId: body.botId }),
             ...(body.from && { from: body.from }),
@@ -275,8 +291,9 @@ class WtsChatService {
             throw new Error(`API request failed: ${error.response.data.text}`);
         }
     }
-    static async sendMessageTextSession(sessionId, text, token) {
-        const url = `${constants_types_1.Constants.baseUrl}/chat/v1/session/${sessionId}/message`;
+    static async sendMessageTextSession(sessionId, text, receivedToken) {
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/chat/v1/session/${sessionId}/message`;
         const body = {
             text
         };
@@ -295,8 +312,9 @@ class WtsChatService {
             throw new Error(`API request failed: ${error.response.data.text}`);
         }
     }
-    static async sendMessageFileUrlSession(sessionId, body, token) {
-        const url = `${constants_types_1.Constants.baseUrl}/chat/v1/session/${sessionId}/message`;
+    static async sendMessageFileUrlSession(sessionId, body, receivedToken) {
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/chat/v1/session/${sessionId}/message`;
         try {
             const response = await axios_1.default.post(url, body, {
                 headers: {
@@ -312,8 +330,9 @@ class WtsChatService {
             throw new Error(`API request failed: ${error.response.data.text}`);
         }
     }
-    static async sendMessageTemplateSession(sessionId, body, token) {
-        const url = `${constants_types_1.Constants.baseUrl}/chat/v1/session/${sessionId}/message`;
+    static async sendMessageTemplateSession(sessionId, body, receivedToken) {
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/chat/v1/session/${sessionId}/message`;
         try {
             const response = await axios_1.default.post(url, body, {
                 headers: {
@@ -329,8 +348,9 @@ class WtsChatService {
             throw new Error(`API request failed: ${error.response.data.text}`);
         }
     }
-    static async getAllSequences(params, token) {
-        let url = `${constants_types_1.Constants.baseUrl}/chat/v1/sequence`;
+    static async getAllSequences(params, receivedToken) {
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        let url = `${baseUrl}/chat/v1/sequence`;
         const queryParams = new URLSearchParams({});
         if (params.includeDetailsSequence) {
             params.includeDetailsSequence.forEach((details) => { queryParams.append('IncludeDetails', details); });
@@ -344,8 +364,9 @@ class WtsChatService {
             throw new Error(`API request failed: ${error.response.data.text}`);
         }
     }
-    static async getContactsBySequence(sequenceId, token) {
-        const url = `${constants_types_1.Constants.baseUrl}/chat/v1/sequence/${sequenceId}/contact`;
+    static async getContactsBySequence(sequenceId, receivedToken) {
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/chat/v1/sequence/${sequenceId}/contact`;
         try {
             const response = await axios_1.default.get(url, {
                 headers: {
@@ -361,8 +382,9 @@ class WtsChatService {
             throw new Error(`API request failed: ${error.response.data.text}`);
         }
     }
-    static async addContactToSequence(sequenceId, body, token) {
-        const url = `${constants_types_1.Constants.baseUrl}/chat/v1/sequence/${sequenceId}/contact`;
+    static async addContactToSequence(sequenceId, body, receivedToken) {
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/chat/v1/sequence/${sequenceId}/contact`;
         try {
             const response = await axios_1.default.post(url, body, {
                 headers: {
@@ -378,8 +400,9 @@ class WtsChatService {
             throw new Error(`API request failed: ${error.response.data.text}`);
         }
     }
-    static async removeContactToSequence(sequenceId, body, token) {
-        const url = `${constants_types_1.Constants.baseUrl}/chat/v1/sequence/${sequenceId}/contact`;
+    static async removeContactToSequence(sequenceId, body, receivedToken) {
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/chat/v1/sequence/${sequenceId}/contact`;
         try {
             const response = await axios_1.default.delete(url, {
                 headers: {
@@ -396,8 +419,9 @@ class WtsChatService {
             throw new Error(`API request failed: ${error.response.data.text}`);
         }
     }
-    static async addContactsToSequence(sequenceId, body, token) {
-        const url = `${constants_types_1.Constants.baseUrl}/chat/v1/sequence/${sequenceId}/contact/batch`;
+    static async addContactsToSequence(sequenceId, body, receivedToken) {
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/chat/v1/sequence/${sequenceId}/contact/batch`;
         try {
             const response = await axios_1.default.post(url, body, {
                 headers: {
@@ -413,8 +437,9 @@ class WtsChatService {
             throw new Error(`API request failed: ${error.response.data.text}`);
         }
     }
-    static async removeContactsToSequence(sequenceId, body, token) {
-        const url = `${constants_types_1.Constants.baseUrl}/chat/v1/sequence/${sequenceId}/contact/batch`;
+    static async removeContactsToSequence(sequenceId, body, receivedToken) {
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/chat/v1/sequence/${sequenceId}/contact/batch`;
         try {
             const response = await axios_1.default.delete(url, {
                 headers: {
@@ -448,9 +473,10 @@ class WtsChatService {
         }
     }
     static async getChannelsIds(otp) {
-        const url = `${constants_types_1.Constants.baseUrl}/chat/v1/channel`;
         const credentials = await otp.getCredentials('wtsApi');
-        const token = credentials === null || credentials === void 0 ? void 0 : credentials.apiKey;
+        const receivedToken = credentials === null || credentials === void 0 ? void 0 : credentials.apiKey;
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/chat/v1/channel`;
         try {
             const response = await axios_1.default.get(url, {
                 headers: {
@@ -472,9 +498,10 @@ class WtsChatService {
     }
     static async getBots(otp) {
         var _a;
-        const url = `${constants_types_1.Constants.baseUrl}/chat/v1/chatbot`;
         const credentials = await otp.getCredentials('wtsApi');
-        const token = credentials === null || credentials === void 0 ? void 0 : credentials.apiKey;
+        const receivedToken = credentials === null || credentials === void 0 ? void 0 : credentials.apiKey;
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/chat/v1/chatbot`;
         try {
             const response = await axios_1.default.get(url, {
                 headers: {
@@ -496,8 +523,9 @@ class WtsChatService {
     }
     static async getTemplates(channelId, ild) {
         const credentials = await ild.getCredentials('wtsApi');
-        const token = credentials === null || credentials === void 0 ? void 0 : credentials.apiKey;
-        const url = `${constants_types_1.Constants.baseUrl}/chat/v1/template?ChannelId=${channelId}&IncludeDetails=Params`;
+        const receivedToken = credentials === null || credentials === void 0 ? void 0 : credentials.apiKey;
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/chat/v1/template?ChannelId=${channelId}&IncludeDetails=Params`;
         const result = [];
         let hasMore = true;
         let pageNumber = 0;
@@ -535,8 +563,9 @@ class WtsChatService {
             };
         }).concat([{ name: 'Undefined', value: constants_types_1.notSend }]);
     }
-    static async getTemplateIds(channelId, token, nameTemplate) {
-        const url = `${constants_types_1.Constants.baseUrl}/chat/v1/template?ChannelId=${channelId}`;
+    static async getTemplateIds(channelId, receivedToken, nameTemplate) {
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/chat/v1/template?ChannelId=${channelId}`;
         const result = [];
         let hasMore = true;
         let pageNumber = 0;
@@ -566,8 +595,9 @@ class WtsChatService {
         const resultObj = result.find((item) => item.name === nameTemplate);
         return resultObj;
     }
-    static async getNameTemplates(templateName, channelId, token) {
-        const url = `${constants_types_1.Constants.baseUrl}/chat/v1/template?ChannelId=${channelId}&IncludeDetails=Params&PageSize=100`;
+    static async getNameTemplates(templateName, channelId, receivedToken) {
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/chat/v1/template?ChannelId=${channelId}&IncludeDetails=Params&PageSize=100`;
         try {
             const response = await axios_1.default.get(url, {
                 headers: {
@@ -615,8 +645,9 @@ class WtsChatService {
         result.pageNumber = data.pageNumber;
         result.hasMorePages = data.hasMorePages;
     }
-    static async getUrlFile(bodyFile, token) {
-        const url = `${constants_types_1.Constants.baseUrl}/core/v1/file/upload`;
+    static async getUrlFile(bodyFile, receivedToken) {
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/core/v1/file/upload`;
         const fileRequest = {
             mimeType: bodyFile.mimeType,
             name: bodyFile.name
@@ -652,8 +683,9 @@ class WtsChatService {
             throw new Error(`API request failed: ${error.response.data.text}`);
         }
     }
-    static async saveFileS3(filename, mimetype, keyS3, token) {
-        const url = `${constants_types_1.Constants.baseUrl}/core/v1/file`;
+    static async saveFileS3(filename, mimetype, keyS3, receivedToken) {
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/core/v1/file`;
         const bodyRequest = {
             name: filename,
             keyS3: keyS3,

@@ -10,9 +10,10 @@ export class WtsCoreService {
 	//------------------------------------------
 
 	static async getCustomFields(otp: ILoadOptionsFunctions): Promise<Array<{ name: string; value: string }>> {
-		const url = `${Constants.baseUrl}/core/v1/contact/custom-field`;
 		const credentials = await otp.getCredentials('wtsApi');
-		const token = credentials?.apiKey as string;
+		const receivedToken = credentials?.apiKey as string;
+		const { token, baseUrl } = Constants.getRequesConfig(receivedToken);
+		const url = `${baseUrl}/core/v1/contact/custom-field`;
 
 		try {
 			const response = await axios.get(url, {
@@ -35,9 +36,10 @@ export class WtsCoreService {
 	}
 
 	static async getTagsIds(otp: ILoadOptionsFunctions): Promise<Array<{ name: string; value: string }>> {
-		const url = `${Constants.baseUrl}/core/v1/tag`;
 		const credentials = await otp.getCredentials('wtsApi');
-		const token = credentials?.apiKey as string;
+		const receivedToken = credentials?.apiKey as string;
+		const { token, baseUrl } = Constants.getRequesConfig(receivedToken);
+		const url = `${baseUrl}/core/v1/tag`;
 
 		try {
 			const response = await axios.get(url, {
@@ -60,9 +62,11 @@ export class WtsCoreService {
 	}
 
 	static async getUsersIds(otp: ILoadOptionsFunctions): Promise<Array<{ name: string; value: string }>> {
-		const url = `${Constants.baseUrl}/core/v1/agent`;
 		const credentials = await otp.getCredentials('wtsApi');
-		const token = credentials?.apiKey as string;
+		const receivedToken = credentials?.apiKey as string;
+
+		const { token, baseUrl } = Constants.getRequesConfig(receivedToken);
+		const url = `${baseUrl}/core/v1/agent`;
 
 		try {
 			const response = await axios.get(url, {
@@ -75,7 +79,6 @@ export class WtsCoreService {
 
 			const users = response.data;
 			
-
 			const mappedResult = users.map((user: any) => ({
 				name: user.name,
 				value: user.userId,
@@ -88,9 +91,11 @@ export class WtsCoreService {
 	}
 
 	static async getDepartmentsIds(otp: ILoadOptionsFunctions): Promise<Array<{ name: string; value: string }>> {
-		const url = `${Constants.baseUrl}/core/v1/department`;
 		const credentials = await otp.getCredentials('wtsApi');
-		const token = credentials?.apiKey as string;
+		const receivedToken = credentials?.apiKey as string;
+
+		const { token, baseUrl } = Constants.getRequesConfig(receivedToken);
+		const url = `${baseUrl}/core/v1/department`;
 
 		try {
 			const response = await axios.get(url, {
@@ -116,8 +121,9 @@ export class WtsCoreService {
 
 	static async getUsersByDepartments(departmentId: string, ild: ILoadOptionsFunctions): Promise<Array<{ name: string; value: string }>> {
 		const credentials = await ild.getCredentials('wtsApi');
-		const token = credentials?.apiKey as string;
-		const url = `${Constants.baseUrl}/core/v1/agent`;
+		const receivedToken = credentials?.apiKey as string;
+		const { token, baseUrl } = Constants.getRequesConfig(receivedToken);
+		const url = `${baseUrl}/core/v1/agent`;
 
 		if (!departmentId) {
 			throw new Error(`Choose department`);
@@ -157,8 +163,9 @@ export class WtsCoreService {
 	//          Requests Operation
 	//-----------------------------------------
 
-	static async getAllContacts(params: any, token: string): Promise<any> {
-		let url = `${Constants.baseUrl}/core/v1/contact`;
+	static async getAllContacts(params: any, receivedToken: string): Promise<any> {
+		const { token, baseUrl } = Constants.getRequesConfig(receivedToken);
+		let url = `${baseUrl}/core/v1/contact`;
 
 		if(params.includeDetails){
 			const parameters = new URLSearchParams({});
@@ -177,8 +184,9 @@ export class WtsCoreService {
 		}
 	}
 
-	static async getContactById(contactId: string, includeDetails: Array<string>, token: string): Promise<any> {
-		let urlContact = `${Constants.baseUrl}/core/v1/contact/${contactId}`;
+	static async getContactById(contactId: string, includeDetails: Array<string>, receivedToken: string): Promise<any> {
+		const { token, baseUrl } = Constants.getRequesConfig(receivedToken);
+		let urlContact = `${baseUrl}/core/v1/contact/${contactId}`;
 
 		if(includeDetails.length){
 			const parameters = new URLSearchParams({});
@@ -202,8 +210,9 @@ export class WtsCoreService {
 		}
 	}
 
-	static async getContactByPhone(phoneNumber: string, includeDetails: Array<string>, token: string): Promise<any> {
-		let url = `${Constants.baseUrl}/core/v1/contact/phonenumber/${phoneNumber}`;
+	static async getContactByPhone(phoneNumber: string, includeDetails: Array<string>, receivedToken: string): Promise<any> {
+		const { token, baseUrl } = Constants.getRequesConfig(receivedToken);
+		let url = `${baseUrl}/core/v1/contact/phonenumber/${phoneNumber}`;
 
 		if(includeDetails.length){
 			const parameters = new URLSearchParams({});
@@ -228,8 +237,9 @@ export class WtsCoreService {
 		}
 	}
 
-	static async createContact(body: any, token: string): Promise<any> {
-		const url = `${Constants.baseUrl}/core/v1/contact`;
+	static async createContact(body: any, receivedToken: string): Promise<any> {
+		const { token, baseUrl } = Constants.getRequesConfig(receivedToken);
+		const url = `${baseUrl}/core/v1/contact`;
 		try {
 			const response = await axios.post(url, body, {
 				headers: {

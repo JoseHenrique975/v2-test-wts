@@ -8,8 +8,9 @@ const axios_1 = __importDefault(require("axios"));
 const constants_types_1 = require("./constants.types");
 const utils_1 = require("../utils");
 class WtsCrmService {
-    static async getAllAnnotation(cardId, token, params) {
-        const url = `${constants_types_1.Constants.baseUrl}/crm/v1/panel/card/${cardId}/note`;
+    static async getAllAnnotation(cardId, receivedToken, params) {
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/crm/v1/panel/card/${cardId}/note`;
         try {
             const response = await (0, utils_1.sendRequestOrAutoPagination)(params, url, token);
             return response;
@@ -18,8 +19,9 @@ class WtsCrmService {
             throw new Error(`Api error: ${error.response.data.text}`);
         }
     }
-    static async createCard(body, token) {
-        const url = `${constants_types_1.Constants.baseUrl}/crm/v1/panel/card`;
+    static async createCard(body, receivedToken) {
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/crm/v1/panel/card`;
         try {
             const response = await axios_1.default.post(url, body, {
                 headers: {
@@ -35,8 +37,10 @@ class WtsCrmService {
             throw new Error(`API request failed: ${error.response.data.text}`);
         }
     }
-    static async createAnnotationText(cardId, body, token) {
-        const url = `${constants_types_1.Constants.baseUrl}/crm/v1/panel/card/${cardId}/note`;
+    static async createAnnotationText(cardId, body, receivedToken) {
+        var _a, _b, _c;
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/crm/v1/panel/card/${cardId}/note`;
         try {
             const response = await axios_1.default.post(url, body, {
                 headers: {
@@ -49,11 +53,13 @@ class WtsCrmService {
             return data;
         }
         catch (error) {
-            throw new Error(`API request failed: ${error.response.data.text}`);
+            throw new Error(`API request failed: ${(_c = (_b = (_a = error === null || error === void 0 ? void 0 : error.response) === null || _a === void 0 ? void 0 : _a.data) === null || _b === void 0 ? void 0 : _b.text) !== null && _c !== void 0 ? _c : error}`);
         }
     }
-    static async createAnnotationFile(cardId, body, token) {
-        const url = `${constants_types_1.Constants.baseUrl}/crm/v1/panel/card/${cardId}/note`;
+    static async createAnnotationFile(cardId, body, receivedToken) {
+        var _a, _b, _c;
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/crm/v1/panel/card/${cardId}/note`;
         try {
             const response = await axios_1.default.post(url, body, {
                 headers: {
@@ -66,11 +72,12 @@ class WtsCrmService {
             return data;
         }
         catch (error) {
-            throw new Error(`API request failed: ${error.response.data.text}`);
+            throw new Error(`API request failed: ${(_c = (_b = (_a = error === null || error === void 0 ? void 0 : error.response) === null || _a === void 0 ? void 0 : _a.data) === null || _b === void 0 ? void 0 : _b.text) !== null && _c !== void 0 ? _c : error}`);
         }
     }
-    static async getAllPanels(params, token) {
-        const url = `${constants_types_1.Constants.baseUrl}/crm/v1/panel`;
+    static async getAllPanels(params, receivedToken) {
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/crm/v1/panel`;
         try {
             const response = await (0, utils_1.sendRequestOrAutoPagination)(params, url, token);
             return response;
@@ -79,8 +86,9 @@ class WtsCrmService {
             throw new Error(`API request failed: ${error.response.data.text}`);
         }
     }
-    static async getPanelById(includeDetails, panelId, token) {
-        let url = `${constants_types_1.Constants.baseUrl}/crm/v1/panel/${panelId}`;
+    static async getPanelById(includeDetails, panelId, receivedToken) {
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        let url = `${baseUrl}/crm/v1/panel/${panelId}`;
         const params = new URLSearchParams({});
         if (includeDetails) {
             const existCard = includeDetails.find((details) => details == 'Cards');
@@ -105,8 +113,9 @@ class WtsCrmService {
             throw new Error(`API request failed: ${error.response.data.text}`);
         }
     }
-    static async getAllCards(parameters, token) {
-        let url = `${constants_types_1.Constants.baseUrl}/crm/v1/panel/card`;
+    static async getAllCards(parameters, receivedToken) {
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        let url = `${baseUrl}/crm/v1/panel/card`;
         const params = new URLSearchParams({});
         params.append('PanelId', parameters.panelId);
         parameters.includeDetails.forEach((details) => params.append('IncludeDetails', details));
@@ -119,8 +128,9 @@ class WtsCrmService {
             throw new Error(`API request failed: ${error.response.data.text}`);
         }
     }
-    static async getCardById(cardId, includeDetails, token) {
-        let url = `${constants_types_1.Constants.baseUrl}/crm/v1/panel/card/${cardId}`;
+    static async getCardById(cardId, includeDetails, receivedToken) {
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        let url = `${baseUrl}/crm/v1/panel/card/${cardId}`;
         if (includeDetails) {
             const params = new URLSearchParams({});
             includeDetails === null || includeDetails === void 0 ? void 0 : includeDetails.forEach((details) => params.append('IncludeDetails', details));
@@ -141,8 +151,9 @@ class WtsCrmService {
             throw new Error(`API request failed: ${error.response.data.text}`);
         }
     }
-    static async duplicateCard(cardId, body, token) {
-        const url = `${constants_types_1.Constants.baseUrl}/crm/v1/panel/card/${cardId}/duplicate`;
+    static async duplicateCard(cardId, body, receivedToken) {
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/crm/v1/panel/card/${cardId}/duplicate`;
         const bodyParams = {
             ...(body.stepId && { copyToStepId: body.stepId }),
             options: {
@@ -165,8 +176,9 @@ class WtsCrmService {
             throw new Error(`API request failed: ${error.response.data.text}`);
         }
     }
-    static async deleteAnnotationCard(cardId, noteId, token) {
-        const url = `${constants_types_1.Constants.baseUrl}/crm/v1/panel/card/${cardId}/note/${noteId}`;
+    static async deleteAnnotationCard(cardId, noteId, receivedToken) {
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/crm/v1/panel/card/${cardId}/note/${noteId}`;
         try {
             const response = await axios_1.default.delete(url, {
                 headers: {
@@ -182,8 +194,9 @@ class WtsCrmService {
             throw new Error(`API request failed: ${error.response.data.text}`);
         }
     }
-    static async updateCard(idCard, bodyParams, token) {
-        const url = `${constants_types_1.Constants.baseUrl}/crm/v1/panel/card/${idCard}`;
+    static async updateCard(idCard, bodyParams, receivedToken) {
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/crm/v1/panel/card/${idCard}`;
         const body = {
             ...(bodyParams.fields && { fields: bodyParams.fields }),
             ...(bodyParams.title && { title: bodyParams.title }),
@@ -215,9 +228,10 @@ class WtsCrmService {
         }
     }
     static async getPanels(otp) {
-        const url = `${constants_types_1.Constants.baseUrl}/crm/v1/panel`;
         const credentials = await otp.getCredentials('wtsApi');
-        const token = credentials === null || credentials === void 0 ? void 0 : credentials.apiKey;
+        const receivedToken = credentials === null || credentials === void 0 ? void 0 : credentials.apiKey;
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/crm/v1/panel`;
         let hasMore = true;
         let pageNumber = 0;
         const result = [];
@@ -253,8 +267,9 @@ class WtsCrmService {
     }
     static async getCustomFieldsPanel(idPanel, ild) {
         const credentials = await ild.getCredentials('wtsApi');
-        const token = credentials === null || credentials === void 0 ? void 0 : credentials.apiKey;
-        const url = `${constants_types_1.Constants.baseUrl}/crm/v1/panel/${idPanel}/custom-fields`;
+        const receivedToken = credentials === null || credentials === void 0 ? void 0 : credentials.apiKey;
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/crm/v1/panel/${idPanel}/custom-fields`;
         try {
             const response = await axios_1.default.get(url, {
                 headers: {
@@ -276,8 +291,9 @@ class WtsCrmService {
     }
     static async getStepsPanelId(panelId, ild) {
         const credentials = await ild.getCredentials('wtsApi');
-        const token = credentials === null || credentials === void 0 ? void 0 : credentials.apiKey;
-        const url = `${constants_types_1.Constants.baseUrl}/crm/v1/panel/${panelId}?IncludeDetails=Steps`;
+        const receivedToken = credentials === null || credentials === void 0 ? void 0 : credentials.apiKey;
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/crm/v1/panel/${panelId}?IncludeDetails=Steps`;
         let steps = [];
         try {
             const response = await axios_1.default.get(url, {
@@ -301,9 +317,10 @@ class WtsCrmService {
         return result;
     }
     static async getTagsPanel(panelId, otp) {
-        const url = `${constants_types_1.Constants.baseUrl}/crm/v1/panel/${panelId}?IncludeDetails=Tags`;
         const credentials = await otp.getCredentials('wtsApi');
-        const token = credentials === null || credentials === void 0 ? void 0 : credentials.apiKey;
+        const receivedToken = credentials === null || credentials === void 0 ? void 0 : credentials.apiKey;
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/crm/v1/panel/${panelId}?IncludeDetails=Tags`;
         let tags = [];
         try {
             const response = await axios_1.default.get(url, {
@@ -336,8 +353,9 @@ class WtsCrmService {
             value: tag.id,
         }));
     }
-    static async getCustomFieldsByPanel(idPanel, token) {
-        const url = `${constants_types_1.Constants.baseUrl}/crm/v1/panel/${idPanel}/custom-fields`;
+    static async getCustomFieldsByPanel(idPanel, receivedToken) {
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/crm/v1/panel/${idPanel}/custom-fields`;
         try {
             const response = await axios_1.default.get(url, {
                 headers: {

@@ -90,8 +90,6 @@ export const panelOperations: INodeProperties[] = [
 
 export const panelFields: INodeProperties[] = [
 
-
-
     {
         displayName: 'Card ID',
         name: 'cardId',

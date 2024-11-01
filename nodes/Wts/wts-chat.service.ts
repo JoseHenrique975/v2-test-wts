@@ -23,8 +23,9 @@ export class WtsChatService {
   //          Requests Operation
   //-----------------------------------------
 
-  static async getMessageById(idMessage: string, token: string): Promise<any> {
-    const url = `${Constants.baseUrl}/chat/v1/message/${idMessage}`;
+  static async getMessageById(idMessage: string, receivedToken: string): Promise<any> {
+    const { token, baseUrl } = Constants.getRequesConfig(receivedToken);
+    const url = `${baseUrl}/chat/v1/message/${idMessage}`;
 
     try {
       const response = await axios.get(url, {
@@ -42,8 +43,9 @@ export class WtsChatService {
     }
   }
 
-  static async getMessageStatus(idMessage: string, token: string): Promise<any> {
-    const url = `${Constants.baseUrl}/chat/v1/message/${idMessage}/status`;
+  static async getMessageStatus(idMessage: string, receivedToken: string): Promise<any> {
+    const { token, baseUrl } = Constants.getRequesConfig(receivedToken);
+    const url = `${baseUrl}/chat/v1/message/${idMessage}/status`;
 
     try {
       const response = await axios.get(url, {
@@ -61,8 +63,9 @@ export class WtsChatService {
     }
   }
 
-  static async getAllMessages(params: any, token: string): Promise<any> {
-    const url = `${Constants.baseUrl}/chat/v1/message`;
+  static async getAllMessages(params: any,  receivedToken: string): Promise<any> {
+    const { token, baseUrl } = Constants.getRequesConfig(receivedToken);
+    const url = `${baseUrl}/chat/v1/message`;
 
     try {
       const response = await sendRequestOrAutoPagination(params, url, token);
@@ -72,8 +75,9 @@ export class WtsChatService {
     }
   }
 
-  static async sendMessageText(body: any, token: string, synchronous: boolean): Promise<any> {
-    const url = synchronous ? `${Constants.baseUrl}/chat/v1/message/send-sync` : `${Constants.baseUrl}/chat/v1/message/send`;
+  static async sendMessageText(body: any, receivedToken: string, synchronous: boolean): Promise<any> {
+    const { token, baseUrl } = Constants.getRequesConfig(receivedToken);
+    const url = synchronous ? `${baseUrl}/chat/v1/message/send-sync` : `${baseUrl}/chat/v1/message/send`;
 
     try {
       const response = await axios.post(url, body, {
@@ -91,8 +95,9 @@ export class WtsChatService {
     }
   }
 
-  static async sendMessageFile(body: any, token: string, synchronous: boolean): Promise<any> {
-    const url = synchronous ? `${Constants.baseUrl}/chat/v1/message/send-sync` : `${Constants.baseUrl}/chat/v1/message/send`;
+  static async sendMessageFile(body: any, receivedToken: string, synchronous: boolean): Promise<any> {
+    const { token, baseUrl } = Constants.getRequesConfig(receivedToken);
+    const url = synchronous ? `${baseUrl}/chat/v1/message/send-sync` : `${baseUrl}/chat/v1/message/send`;
 
     try {
       const response = await axios.post(url, body, {
@@ -110,8 +115,9 @@ export class WtsChatService {
     }
   }
 
-  static async sendMessageTemplate(body: any, token: string, synchronous: boolean): Promise<any> {
-    const url = synchronous ? `${Constants.baseUrl}/chat/v1/message/send-sync` : `${Constants.baseUrl}/chat/v1/message/send`;
+  static async sendMessageTemplate(body: any, receivedToken: string, synchronous: boolean): Promise<any> {
+    const { token, baseUrl } = Constants.getRequesConfig(receivedToken);
+    const url = synchronous ? `${baseUrl}/chat/v1/message/send-sync` : `${baseUrl}/chat/v1/message/send`;
 
     try {
       const response = await axios.post(url, body, {
@@ -133,7 +139,8 @@ export class WtsChatService {
   //                  SESSION
   //----------------------------------------------
 
-  static async getAllSessions(params: any, token: string, urlWithParams: string): Promise<any> {
+  static async getAllSessions(params: any, receivedToken: string, urlWithParams: string): Promise<any> {
+    const { token } = Constants.getRequesConfig(receivedToken);
 
     const parameters = {
       ...params,
@@ -149,10 +156,10 @@ export class WtsChatService {
   }
 
 
-  static async getSessionById(body: any, token: string): Promise<any> {
-    let url = `${Constants.baseUrl}/chat/v1/session/${body.sessionId}`;
+  static async getSessionById(body: any, receivedToken: string): Promise<any> {
+    const { token, baseUrl } = Constants.getRequesConfig(receivedToken);
+    let url = `${baseUrl}/chat/v1/session/${body.sessionId}`;
     const params = new URLSearchParams({});
-
 
     if (body.includeDetails) {
       body.includeDetails.forEach((details: string) => params.append('includeDetails', details));
@@ -171,13 +178,15 @@ export class WtsChatService {
       const data = response.data;
       return data;
     } catch (error) {
-      throw new Error(`API request failed: ${error}`);
+      console.log(error);
+      throw new Error(`API request failed: ${error?.response?.data?.text ?? error}`);
     }
 
   }
 
-  static async updateTransfer(sessionId: string, body: any, token: string): Promise<any> {
-    const url = `${Constants.baseUrl}/chat/v1/session/${sessionId}/transfer`;
+  static async updateTransfer(sessionId: string, body: any, receivedToken: string): Promise<any> {
+    const { token, baseUrl } = Constants.getRequesConfig(receivedToken);
+    const url = `${baseUrl}/chat/v1/session/${sessionId}/transfer`;
     try {
       const response = await axios.put(url, body, {
         headers: {
@@ -195,8 +204,9 @@ export class WtsChatService {
     }
   }
 
-  static async updateStatusSession(sessionId: string, body: any, token: string): Promise<any> {
-    const url = `${Constants.baseUrl}/chat/v1/session/${sessionId}/status`;
+  static async updateStatusSession(sessionId: string, body: any, receivedToken: string): Promise<any> {
+    const { token, baseUrl } = Constants.getRequesConfig(receivedToken);
+    const url = `${baseUrl}/chat/v1/session/${sessionId}/status`;
 
     try {
       const response = await axios.put(url, body, {
@@ -215,8 +225,9 @@ export class WtsChatService {
     }
   }
 
-  static async assignUserToSession(sessionId: string, body: any, token: string) {
-    const url = `${Constants.baseUrl}/chat/v1/session/${sessionId}/assignee`;
+  static async assignUserToSession(sessionId: string, body: any, receivedToken: string) {
+    const { token, baseUrl } = Constants.getRequesConfig(receivedToken);
+    const url = `${baseUrl}/chat/v1/session/${sessionId}/assignee`;
 
     try {
       const response = await axios.put(url, body, {
@@ -234,8 +245,9 @@ export class WtsChatService {
     }
   }
 
-  static async concludeSession(sessionId: string, body: any, token: string) {
-    const url = `${Constants.baseUrl}/chat/v1/session/${sessionId}/complete`;
+  static async concludeSession(sessionId: string, body: any, receivedToken: string) {
+    const { token, baseUrl } = Constants.getRequesConfig(receivedToken);
+    const url = `${baseUrl}/chat/v1/session/${sessionId}/complete`;
 
     try {
       const response = await axios.put(url, body, {
@@ -253,8 +265,9 @@ export class WtsChatService {
     }
   }
 
-  static async updateSession(sessionId: string, body: any, token: string) {
-    const url = `${Constants.baseUrl}/chat/v2/session/${sessionId}/partial`;
+  static async updateSession(sessionId: string, body: any, receivedToken: string) {
+    const { token, baseUrl } = Constants.getRequesConfig(receivedToken);
+    const url = `${baseUrl}/chat/v2/session/${sessionId}/partial`;
 
     const bodyRequest = {
       ...(body.companyId && { companyId: body.companyId }),
@@ -284,8 +297,9 @@ export class WtsChatService {
     }
   }
 
-  static async sendChatbot(body: any, token: string): Promise<any> {
-    const url = `${Constants.baseUrl}/chat/v1/chatbot/send`;
+  static async sendChatbot(body: any, receivedToken: string): Promise<any> {
+    const { token, baseUrl } = Constants.getRequesConfig(receivedToken);
+    const url = `${baseUrl}/chat/v1/chatbot/send`;
 
     const bodyRequest = {
       ...(body.botId && { botId: body.botId }),
@@ -318,8 +332,9 @@ export class WtsChatService {
     }
   }
 
-  static async sendMessageTextSession(sessionId: string, text: string, token: string): Promise<any> {
-    const url = `${Constants.baseUrl}/chat/v1/session/${sessionId}/message`;
+  static async sendMessageTextSession(sessionId: string, text: string, receivedToken: string): Promise<any> {
+    const { token, baseUrl } = Constants.getRequesConfig(receivedToken);
+    const url = `${baseUrl}/chat/v1/session/${sessionId}/message`;
     const body = {
       text
     }
@@ -340,8 +355,9 @@ export class WtsChatService {
     }
   }
 
-  static async sendMessageFileUrlSession(sessionId: string, body: any, token: string): Promise<any> {
-    const url = `${Constants.baseUrl}/chat/v1/session/${sessionId}/message`;
+  static async sendMessageFileUrlSession(sessionId: string, body: any, receivedToken: string): Promise<any> {
+    const { token, baseUrl } = Constants.getRequesConfig(receivedToken);
+    const url = `${baseUrl}/chat/v1/session/${sessionId}/message`;
 
     try {
       const response = await axios.post(url, body, {
@@ -359,8 +375,9 @@ export class WtsChatService {
     }
   }
 
-  static async sendMessageTemplateSession(sessionId: string, body: any, token: string): Promise<any> {
-    const url = `${Constants.baseUrl}/chat/v1/session/${sessionId}/message`;
+  static async sendMessageTemplateSession(sessionId: string, body: any, receivedToken: string): Promise<any> {
+    const { token, baseUrl } = Constants.getRequesConfig(receivedToken);
+    const url = `${baseUrl}/chat/v1/session/${sessionId}/message`;
 
     try {
       const response = await axios.post(url, body, {
@@ -378,8 +395,9 @@ export class WtsChatService {
     }
   }
 
-  static async getAllSequences(params: any, token: string): Promise<any> {
-    let url = `${Constants.baseUrl}/chat/v1/sequence`;
+  static async getAllSequences(params: any, receivedToken: string): Promise<any> {
+    const { token, baseUrl } = Constants.getRequesConfig(receivedToken);
+    let url = `${baseUrl}/chat/v1/sequence`;
     const queryParams = new URLSearchParams({});
 
     if (params.includeDetailsSequence) {
@@ -396,8 +414,9 @@ export class WtsChatService {
     }
   }
 
-  static async getContactsBySequence(sequenceId: string, token: string) {
-    const url = `${Constants.baseUrl}/chat/v1/sequence/${sequenceId}/contact`;
+  static async getContactsBySequence(sequenceId: string, receivedToken: string) {
+    const { token, baseUrl } = Constants.getRequesConfig(receivedToken);
+    const url = `${baseUrl}/chat/v1/sequence/${sequenceId}/contact`;
 
     try {
       const response = await axios.get(url, {
@@ -415,8 +434,9 @@ export class WtsChatService {
     }
   }
 
-  static async addContactToSequence(sequenceId: string, body: any, token: string) {
-    const url = `${Constants.baseUrl}/chat/v1/sequence/${sequenceId}/contact`;
+  static async addContactToSequence(sequenceId: string, body: any, receivedToken: string) {
+    const { token, baseUrl } = Constants.getRequesConfig(receivedToken);
+    const url = `${baseUrl}/chat/v1/sequence/${sequenceId}/contact`;
 
     try {
       const response = await axios.post(url, body, {
@@ -434,8 +454,9 @@ export class WtsChatService {
     }
   }
 
-  static async removeContactToSequence(sequenceId: string, body: any, token: string) {
-    const url = `${Constants.baseUrl}/chat/v1/sequence/${sequenceId}/contact`;
+  static async removeContactToSequence(sequenceId: string, body: any, receivedToken: string) {
+    const { token, baseUrl } = Constants.getRequesConfig(receivedToken);
+    const url = `${baseUrl}/chat/v1/sequence/${sequenceId}/contact`;
 
     try {
       const response = await axios.delete(url, {
@@ -455,8 +476,9 @@ export class WtsChatService {
     }
   }
 
-  static async addContactsToSequence(sequenceId: string, body: any, token: string) {
-    const url = `${Constants.baseUrl}/chat/v1/sequence/${sequenceId}/contact/batch`;
+  static async addContactsToSequence(sequenceId: string, body: any, receivedToken: string) {
+    const { token, baseUrl } = Constants.getRequesConfig(receivedToken);
+    const url = `${baseUrl}/chat/v1/sequence/${sequenceId}/contact/batch`;
 
     try {
       const response = await axios.post(url, body, {
@@ -474,8 +496,9 @@ export class WtsChatService {
     }
   }
 
-  static async removeContactsToSequence(sequenceId: string, body: any, token: string) {
-    const url = `${Constants.baseUrl}/chat/v1/sequence/${sequenceId}/contact/batch`;
+  static async removeContactsToSequence(sequenceId: string, body: any, receivedToken: string) {
+    const { token, baseUrl } = Constants.getRequesConfig(receivedToken);
+    const url = `${baseUrl}/chat/v1/sequence/${sequenceId}/contact/batch`;
 
     try {
       const response = await axios.delete(url, {
@@ -523,9 +546,10 @@ export class WtsChatService {
   static async getChannelsIds(
     otp: ILoadOptionsFunctions,
   ): Promise<Array<{ name: string; value: string }>> {
-    const url = `${Constants.baseUrl}/chat/v1/channel`;
     const credentials = await otp.getCredentials('wtsApi');
-    const token = credentials?.apiKey as string;
+    const receivedToken = credentials?.apiKey as string;
+    const { token, baseUrl } = Constants.getRequesConfig(receivedToken);
+    const url = `${baseUrl}/chat/v1/channel`;
 
     try {
       const response = await axios.get(url, {
@@ -549,10 +573,11 @@ export class WtsChatService {
   }
 
   static async getBots(otp: ILoadOptionsFunctions): Promise<Array<{ name: string; value: string }>> {
-    const url = `${Constants.baseUrl}/chat/v1/chatbot`;
-
     const credentials = await otp.getCredentials('wtsApi');
-    const token = credentials?.apiKey as string;
+    const receivedToken = credentials?.apiKey as string;
+
+    const { token, baseUrl } = Constants.getRequesConfig(receivedToken);
+    const url = `${baseUrl}/chat/v1/chatbot`;
 
     try {
       const response = await axios.get(url, {
@@ -579,9 +604,10 @@ export class WtsChatService {
 
   static async getTemplates(channelId: string, ild: ILoadOptionsFunctions): Promise<Array<{ name: string; value: string }>> {
     const credentials = await ild.getCredentials('wtsApi');
-    const token = credentials?.apiKey as string;
+    const receivedToken = credentials?.apiKey as string;
 
-    const url = `${Constants.baseUrl}/chat/v1/template?ChannelId=${channelId}&IncludeDetails=Params`;
+    const { token, baseUrl } = Constants.getRequesConfig(receivedToken);
+    const url = `${baseUrl}/chat/v1/template?ChannelId=${channelId}&IncludeDetails=Params`;
 
     const result: any = [];
     let hasMore = true;
@@ -627,8 +653,9 @@ export class WtsChatService {
     }).concat([{ name: 'Undefined', value: notSend }]);
   }
 
-  static async getTemplateIds(channelId: string, token: string, nameTemplate: string): Promise<{ id: string }> {
-    const url = `${Constants.baseUrl}/chat/v1/template?ChannelId=${channelId}`;
+  static async getTemplateIds(channelId: string, receivedToken: string, nameTemplate: string): Promise<{ id: string }> {
+    const { token, baseUrl } = Constants.getRequesConfig(receivedToken);
+    const url = `${baseUrl}/chat/v1/template?ChannelId=${channelId}`;
 
     const result: any = [];
     let hasMore = true;
@@ -665,8 +692,9 @@ export class WtsChatService {
     return resultObj;
   }
 
-  static async getNameTemplates(templateName: string, channelId: string, token: string): Promise<Array<{ name: string; value: string }>> {
-    const url = `${Constants.baseUrl}/chat/v1/template?ChannelId=${channelId}&IncludeDetails=Params&PageSize=100`;
+  static async getNameTemplates(templateName: string, channelId: string, receivedToken: string): Promise<Array<{ name: string; value: string }>> {
+    const { token, baseUrl } = Constants.getRequesConfig(receivedToken);
+    const url = `${baseUrl}/chat/v1/template?ChannelId=${channelId}&IncludeDetails=Params&PageSize=100`;
 
     try {
       const response = await axios.get(url, {
@@ -723,8 +751,9 @@ export class WtsChatService {
   }
 
 
-  static async getUrlFile(bodyFile: { mimeType: string, name: string }, token: string) {
-    const url = `${Constants.baseUrl}/core/v1/file/upload`;
+  static async getUrlFile(bodyFile: { mimeType: string, name: string }, receivedToken: string) {
+    const { token, baseUrl } = Constants.getRequesConfig(receivedToken);
+    const url = `${baseUrl}/core/v1/file/upload`;
 
     const fileRequest = {
       mimeType: bodyFile.mimeType,
@@ -774,8 +803,9 @@ export class WtsChatService {
     }
   }
 
-  static async saveFileS3(filename:string, mimetype: string, keyS3: string, token: string) {
-    const url = `${Constants.baseUrl}/core/v1/file`;
+  static async saveFileS3(filename:string, mimetype: string, keyS3: string, receivedToken: string) {
+    const { token, baseUrl } = Constants.getRequesConfig(receivedToken);
+    const url = `${baseUrl}/core/v1/file`;
 
     const bodyRequest = {      
       name: filename,

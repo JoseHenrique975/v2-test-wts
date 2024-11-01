@@ -165,7 +165,7 @@ export const messageFields: INodeProperties[] = [
     },
 
     {
-        displayName: 'Url Teste Not',
+        displayName: 'Url',
         name: 'urlFile',
         type: 'string',
         default: '',

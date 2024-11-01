@@ -210,6 +210,7 @@ export class WtsChat implements INodeType {
 		const items = this.getInputData();
 		const resource = this.getNodeParameter('resource', 0) as string;
 		const operation = this.getNodeParameter('operation', 0) as string;
+
 		const credentials = await this.getCredentials('wtsApi');
 		const token = credentials?.apiKey as string;
 
@@ -741,7 +742,7 @@ export class WtsChat implements INodeType {
 					const contactId = this.getNodeParameter('contactId', i) as string;
 					const includeDetails = this.getNodeParameter('includeDetails', i) as Array<string>;
 	
-					let urlSession = `${Constants.baseUrl}/chat/v1/session`;
+					let urlSession = `${Constants.getRequesConfig(token).baseUrl}/chat/v1/session`;
 	
 					const params = new URLSearchParams({});
 	
@@ -1837,8 +1838,6 @@ export class WtsChat implements INodeType {
 					}
 				}
 			}
-
-			     console.log("Verificando se tem mais mais uma requisição a ser feita...");
 	             if (i < items.length - 1 && i < 50) {
                         await new Promise(resolve => setTimeout(resolve, delay));
 						console.log("Esperando 3 segundos");

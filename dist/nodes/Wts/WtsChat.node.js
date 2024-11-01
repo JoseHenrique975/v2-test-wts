@@ -589,7 +589,7 @@ class WtsChat {
                     const channelsIds = this.getNodeParameter('channelsIds', i);
                     const contactId = this.getNodeParameter('contactId', i);
                     const includeDetails = this.getNodeParameter('includeDetails', i);
-                    let urlSession = `${constants_types_1.Constants.baseUrl}/chat/v1/session`;
+                    let urlSession = `${constants_types_1.Constants.getRequesConfig(token).baseUrl}/chat/v1/session`;
                     const params = new URLSearchParams({});
                     channelsIds.forEach(id => params.append('ChannelsId', id));
                     statusSession.forEach(status => params.append('Status', status));
@@ -1429,7 +1429,6 @@ class WtsChat {
                     }
                 }
             }
-            console.log("Verificando se tem mais mais uma requisição a ser feita...");
             if (i < items.length - 1 && i < 50) {
                 await new Promise(resolve => setTimeout(resolve, utils_2.delay));
                 console.log("Esperando 3 segundos");

@@ -1,4 +1,7 @@
 export declare class Constants {
-    static baseUrl: string;
+    static getRequesConfig(receivedToken: string): {
+        token: string;
+        baseUrl: string;
+    };
 }
 export declare const notSend = "NOT_SEND";

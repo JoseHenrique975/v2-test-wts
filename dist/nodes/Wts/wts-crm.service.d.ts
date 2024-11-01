@@ -1,16 +1,16 @@
 import { ILoadOptionsFunctions } from 'n8n-workflow';
 export declare class WtsCrmService {
-    static getAllAnnotation(cardId: string, token: string, params: any): Promise<any>;
-    static createCard(body: any, token: string): Promise<any>;
-    static createAnnotationText(cardId: string, body: any, token: string): Promise<any>;
-    static createAnnotationFile(cardId: string, body: any, token: string): Promise<any>;
-    static getAllPanels(params: any, token: string): Promise<any>;
-    static getPanelById(includeDetails: any, panelId: string, token: string): Promise<any>;
-    static getAllCards(parameters: any, token: string): Promise<any>;
-    static getCardById(cardId: string, includeDetails: any, token: string): Promise<any>;
-    static duplicateCard(cardId: string, body: any, token: string): Promise<any>;
-    static deleteAnnotationCard(cardId: string, noteId: string, token: string): Promise<any>;
-    static updateCard(idCard: string, bodyParams: any, token: string): Promise<any>;
+    static getAllAnnotation(cardId: string, receivedToken: string, params: any): Promise<any>;
+    static createCard(body: any, receivedToken: string): Promise<any>;
+    static createAnnotationText(cardId: string, body: any, receivedToken: string): Promise<any>;
+    static createAnnotationFile(cardId: string, body: any, receivedToken: string): Promise<any>;
+    static getAllPanels(params: any, receivedToken: string): Promise<any>;
+    static getPanelById(includeDetails: any, panelId: string, receivedToken: string): Promise<any>;
+    static getAllCards(parameters: any, receivedToken: string): Promise<any>;
+    static getCardById(cardId: string, includeDetails: any, receivedToken: string): Promise<any>;
+    static duplicateCard(cardId: string, body: any, receivedToken: string): Promise<any>;
+    static deleteAnnotationCard(cardId: string, noteId: string, receivedToken: string): Promise<any>;
+    static updateCard(idCard: string, bodyParams: any, receivedToken: string): Promise<any>;
     static getPanels(otp: ILoadOptionsFunctions): Promise<Array<{
         name: string;
         value: any;
@@ -31,7 +31,7 @@ export declare class WtsCrmService {
         name: string;
         value: any;
     }>>;
-    static getCustomFieldsByPanel(idPanel: string, token: string): Promise<Array<{
+    static getCustomFieldsByPanel(idPanel: string, receivedToken: string): Promise<Array<{
         name: string;
         value: string;
     }>>;

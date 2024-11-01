@@ -20,8 +20,8 @@ export declare class WtsCoreService {
         name: string;
         value: string;
     }>>;
-    static getAllContacts(params: any, token: string): Promise<any>;
-    static getContactById(contactId: string, includeDetails: Array<string>, token: string): Promise<any>;
-    static getContactByPhone(phoneNumber: string, includeDetails: Array<string>, token: string): Promise<any>;
-    static createContact(body: any, token: string): Promise<any>;
+    static getAllContacts(params: any, receivedToken: string): Promise<any>;
+    static getContactById(contactId: string, includeDetails: Array<string>, receivedToken: string): Promise<any>;
+    static getContactByPhone(phoneNumber: string, includeDetails: Array<string>, receivedToken: string): Promise<any>;
+    static createContact(body: any, receivedToken: string): Promise<any>;
 }

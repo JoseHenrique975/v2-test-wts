@@ -9,9 +9,10 @@ const constants_types_1 = require("./constants.types");
 const utils_1 = require("../utils");
 class WtsCoreService {
     static async getCustomFields(otp) {
-        const url = `${constants_types_1.Constants.baseUrl}/core/v1/contact/custom-field`;
         const credentials = await otp.getCredentials('wtsApi');
-        const token = credentials === null || credentials === void 0 ? void 0 : credentials.apiKey;
+        const receivedToken = credentials === null || credentials === void 0 ? void 0 : credentials.apiKey;
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/core/v1/contact/custom-field`;
         try {
             const response = await axios_1.default.get(url, {
                 headers: {
@@ -32,9 +33,10 @@ class WtsCoreService {
         }
     }
     static async getTagsIds(otp) {
-        const url = `${constants_types_1.Constants.baseUrl}/core/v1/tag`;
         const credentials = await otp.getCredentials('wtsApi');
-        const token = credentials === null || credentials === void 0 ? void 0 : credentials.apiKey;
+        const receivedToken = credentials === null || credentials === void 0 ? void 0 : credentials.apiKey;
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/core/v1/tag`;
         try {
             const response = await axios_1.default.get(url, {
                 headers: {
@@ -54,9 +56,10 @@ class WtsCoreService {
         }
     }
     static async getUsersIds(otp) {
-        const url = `${constants_types_1.Constants.baseUrl}/core/v1/agent`;
         const credentials = await otp.getCredentials('wtsApi');
-        const token = credentials === null || credentials === void 0 ? void 0 : credentials.apiKey;
+        const receivedToken = credentials === null || credentials === void 0 ? void 0 : credentials.apiKey;
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/core/v1/agent`;
         try {
             const response = await axios_1.default.get(url, {
                 headers: {
@@ -78,9 +81,10 @@ class WtsCoreService {
         }
     }
     static async getDepartmentsIds(otp) {
-        const url = `${constants_types_1.Constants.baseUrl}/core/v1/department`;
         const credentials = await otp.getCredentials('wtsApi');
-        const token = credentials === null || credentials === void 0 ? void 0 : credentials.apiKey;
+        const receivedToken = credentials === null || credentials === void 0 ? void 0 : credentials.apiKey;
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/core/v1/department`;
         try {
             const response = await axios_1.default.get(url, {
                 headers: {
@@ -102,8 +106,9 @@ class WtsCoreService {
     }
     static async getUsersByDepartments(departmentId, ild) {
         const credentials = await ild.getCredentials('wtsApi');
-        const token = credentials === null || credentials === void 0 ? void 0 : credentials.apiKey;
-        const url = `${constants_types_1.Constants.baseUrl}/core/v1/agent`;
+        const receivedToken = credentials === null || credentials === void 0 ? void 0 : credentials.apiKey;
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/core/v1/agent`;
         if (!departmentId) {
             throw new Error(`Choose department`);
         }
@@ -134,9 +139,10 @@ class WtsCoreService {
             throw new Error(`Failed to load users: ${error.response.data.text}`);
         }
     }
-    static async getAllContacts(params, token) {
+    static async getAllContacts(params, receivedToken) {
         var _a;
-        let url = `${constants_types_1.Constants.baseUrl}/core/v1/contact`;
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        let url = `${baseUrl}/core/v1/contact`;
         if (params.includeDetails) {
             const parameters = new URLSearchParams({});
             (_a = params.includeDetails) === null || _a === void 0 ? void 0 : _a.forEach((details) => parameters.append('IncludeDetails', details));
@@ -153,8 +159,9 @@ class WtsCoreService {
             throw new Error(`API request failed: ${error.response.data.text}`);
         }
     }
-    static async getContactById(contactId, includeDetails, token) {
-        let urlContact = `${constants_types_1.Constants.baseUrl}/core/v1/contact/${contactId}`;
+    static async getContactById(contactId, includeDetails, receivedToken) {
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        let urlContact = `${baseUrl}/core/v1/contact/${contactId}`;
         if (includeDetails.length) {
             const parameters = new URLSearchParams({});
             includeDetails === null || includeDetails === void 0 ? void 0 : includeDetails.forEach((details) => parameters.append('IncludeDetails', details));
@@ -175,8 +182,9 @@ class WtsCoreService {
             throw new Error(`API request failed: ${error.response.data.text}`);
         }
     }
-    static async getContactByPhone(phoneNumber, includeDetails, token) {
-        let url = `${constants_types_1.Constants.baseUrl}/core/v1/contact/phonenumber/${phoneNumber}`;
+    static async getContactByPhone(phoneNumber, includeDetails, receivedToken) {
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        let url = `${baseUrl}/core/v1/contact/phonenumber/${phoneNumber}`;
         if (includeDetails.length) {
             const parameters = new URLSearchParams({});
             includeDetails === null || includeDetails === void 0 ? void 0 : includeDetails.forEach((details) => parameters.append('IncludeDetails', details));
@@ -197,8 +205,9 @@ class WtsCoreService {
             throw new Error(`API request failed: ${error.response.data.text}`);
         }
     }
-    static async createContact(body, token) {
-        const url = `${constants_types_1.Constants.baseUrl}/core/v1/contact`;
+    static async createContact(body, receivedToken) {
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/core/v1/contact`;
         try {
             const response = await axios_1.default.post(url, body, {
                 headers: {
