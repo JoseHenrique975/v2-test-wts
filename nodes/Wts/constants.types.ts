@@ -5,13 +5,12 @@ export class Constants {
             baseUrl: ''
         };
         
-        if(receivedToken.includes("staging")){
-            baseUrlAndToken.token = receivedToken.replace("staging", "");
+        if(receivedToken.startsWith("staging_")) {
+            baseUrlAndToken.token = receivedToken.replace("staging_", "");
             baseUrlAndToken.baseUrl = "https://api-staging.helena.run"
         }
-        
-        else if(receivedToken.includes("test")) {
-            baseUrlAndToken.token = receivedToken.replace("test", "");
+        else if(receivedToken.startsWith("test_")) {
+            baseUrlAndToken.token = receivedToken.replace("test_", "");
             baseUrlAndToken.baseUrl = "https://api-test.helena.run";
         }
         else {
