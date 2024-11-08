@@ -17,9 +17,9 @@ export declare class WtsChatService {
     static concludeSession(sessionId: string, body: any, receivedToken: string): Promise<any>;
     static updateSession(sessionId: string, body: any, receivedToken: string): Promise<any>;
     static sendChatbot(body: any, receivedToken: string): Promise<any>;
-    static sendMessageTextSession(sessionId: string, text: string, receivedToken: string): Promise<any>;
-    static sendMessageFileUrlSession(sessionId: string, body: any, receivedToken: string): Promise<any>;
-    static sendMessageTemplateSession(sessionId: string, body: any, receivedToken: string): Promise<any>;
+    static sendMessageTextSession(sessionId: string, text: string, receivedToken: string, synchronous: boolean): Promise<any>;
+    static sendMessageFileUrlSession(sessionId: string, body: any, receivedToken: string, synchronous: boolean): Promise<any>;
+    static sendMessageTemplateSession(sessionId: string, body: any, receivedToken: string, synchronous: boolean): Promise<any>;
     static getAllSequences(params: any, receivedToken: string): Promise<any>;
     static getContactsBySequence(sequenceId: string, receivedToken: string): Promise<any>;
     static addContactToSequence(sequenceId: string, body: any, receivedToken: string): Promise<any>;

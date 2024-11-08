@@ -23,6 +23,13 @@ class WtsCoreService {
             });
             const fields = response.data;
             fields.push({ name: 'Undefined', key: constants_types_1.notSend });
+            fields.sort((a, b) => {
+                if (a.name === 'Undefined')
+                    return -1;
+                if (b.name === 'Undefined')
+                    return 1;
+                return a.name.localeCompare(b.name);
+            });
             return fields.map((field) => ({
                 name: field.name,
                 value: field.key,
@@ -46,6 +53,13 @@ class WtsCoreService {
                 },
             });
             const tags = response.data;
+            tags.sort((a, b) => {
+                if (a.name === 'Undefined')
+                    return -1;
+                if (b.name === 'Undefined')
+                    return 1;
+                return a.name.localeCompare(b.name);
+            });
             return tags.map((tag) => ({
                 name: tag.name,
                 value: tag.id,
@@ -74,6 +88,13 @@ class WtsCoreService {
                 value: user.userId,
             }));
             mappedResult.push({ name: 'Undefined', value: constants_types_1.notSend });
+            mappedResult.sort((a, b) => {
+                if (a.name === 'Undefined')
+                    return -1;
+                if (b.name === 'Undefined')
+                    return 1;
+                return a.name.localeCompare(b.name);
+            });
             return mappedResult;
         }
         catch (error) {
@@ -93,8 +114,15 @@ class WtsCoreService {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            const departments = response.data;
+            const departments = response === null || response === void 0 ? void 0 : response.data;
             departments.push({ name: 'Undefined', id: constants_types_1.notSend });
+            departments.sort((a, b) => {
+                if (a.name === 'Undefined')
+                    return -1;
+                if (b.name === 'Undefined')
+                    return 1;
+                return a.name.localeCompare(b.name);
+            });
             return departments.map((department) => ({
                 name: department.name,
                 value: department.id,
@@ -129,6 +157,13 @@ class WtsCoreService {
                         result.push(user);
                     }
                 });
+            });
+            result.sort((a, b) => {
+                if (a.name === 'Undefined')
+                    return -1;
+                if (b.name === 'Undefined')
+                    return 1;
+                return a.name.localeCompare(b.name);
             });
             return result.map((user) => ({
                 name: user.name,

@@ -13,20 +13,20 @@ exports.sessionOperations = [
         },
         options: [
             {
-                name: 'Assign User',
+                name: 'Transfer to User',
                 value: 'assignUser',
                 action: 'Assign user to session',
                 default: 'session'
             },
             {
-                name: 'Conclude Session',
+                name: 'Complete Session',
                 value: 'concludeSession',
                 action: 'Conclude session',
                 default: 'session'
             },
             {
                 name: 'Get All Sessions',
-                value: 'getAllSessions',
+                value: 'listSessions',
                 action: 'List sessions',
                 default: 'session'
             },
@@ -38,30 +38,30 @@ exports.sessionOperations = [
             },
             {
                 name: 'Send Message File',
-                value: 'sendMessageFileSession',
+                value: 'sendFileBySessionid',
                 action: 'Send message file',
                 default: 'session'
             },
             {
                 name: 'Send Message Template',
-                value: 'sendMessageTemplateSession',
+                value: 'sendTemplateBySessionid',
                 action: 'Send message template',
                 default: 'session'
             },
             {
                 name: 'Send Message Text',
-                value: 'sendMessageTextSession',
+                value: 'sendTextBySessionid',
                 action: 'Send message text',
                 default: 'session'
             },
             {
-                name: 'Update Status Session',
+                name: 'ChangeStatus',
                 value: 'updateStatusSession',
                 action: 'Update status session',
                 default: 'session'
             },
             {
-                name: 'Update Transfer',
+                name: 'Transfer to Department',
                 value: 'updateTransfer',
                 action: 'Update transfer',
                 default: 'session'
@@ -73,7 +73,7 @@ exports.sessionOperations = [
                 default: 'session'
             },
         ],
-        default: 'getAllSessions',
+        default: 'listSessions',
         noDataExpression: true
     },
 ];
@@ -92,7 +92,7 @@ exports.sessionFields = [
         },
     },
     {
-        displayName: 'Channel Names or IDs',
+        displayName: 'Channel',
         name: 'channelsIds',
         type: 'multiOptions',
         default: [],
@@ -104,7 +104,7 @@ exports.sessionFields = [
         displayOptions: {
             show: {
                 resource: ['session'],
-                operation: ['getAllSessions'],
+                operation: ['listSessions'],
             },
         },
     },
@@ -117,7 +117,7 @@ exports.sessionFields = [
         displayOptions: {
             show: {
                 resource: ['session'],
-                operation: ['getAllSessions'],
+                operation: ['listSessions'],
             },
         },
     },
@@ -130,7 +130,7 @@ exports.sessionFields = [
         displayOptions: {
             show: {
                 resource: ['session'],
-                operation: ['getAllSessions'],
+                operation: ['listSessions'],
             },
         },
     },
@@ -143,7 +143,7 @@ exports.sessionFields = [
         displayOptions: {
             show: {
                 resource: ['session'],
-                operation: ['getAllSessions'],
+                operation: ['listSessions'],
             },
         },
     },
@@ -156,7 +156,7 @@ exports.sessionFields = [
         displayOptions: {
             show: {
                 resource: ['session'],
-                operation: ['getAllSessions'],
+                operation: ['listSessions'],
             },
         },
     },
@@ -169,7 +169,7 @@ exports.sessionFields = [
         displayOptions: {
             show: {
                 resource: ['session'],
-                operation: ['getAllSessions'],
+                operation: ['listSessions'],
             },
         },
     },
@@ -182,7 +182,7 @@ exports.sessionFields = [
         displayOptions: {
             show: {
                 resource: ['session'],
-                operation: ['getAllSessions'],
+                operation: ['listSessions'],
             },
         },
     },
@@ -202,12 +202,12 @@ exports.sessionFields = [
         displayOptions: {
             show: {
                 resource: ['session'],
-                operation: ['getAllSessions'],
+                operation: ['listSessions'],
             },
         },
     },
     {
-        displayName: 'Status Session',
+        displayName: 'Status',
         name: 'statusSessionOption',
         type: 'options',
         default: 'UNDEFINED',
@@ -266,7 +266,7 @@ exports.sessionFields = [
         displayOptions: {
             show: {
                 resource: ['session'],
-                operation: ['getAllSessions', 'getSessionById'],
+                operation: ['listSessions', 'getSessionById'],
             },
         },
     },
@@ -284,7 +284,7 @@ exports.sessionFields = [
         },
     },
     {
-        displayName: 'Templates Name or ID',
+        displayName: 'Template',
         name: 'templatesBySession',
         type: 'options',
         typeOptions: {
@@ -300,7 +300,7 @@ exports.sessionFields = [
         displayOptions: {
             show: {
                 resource: ['session'],
-                operation: ['sendMessageTemplateSession'],
+                operation: ['sendTemplateBySessionid'],
             },
         },
     },
@@ -319,7 +319,7 @@ exports.sessionFields = [
                 displayName: 'Params',
                 values: [
                     {
-                        displayName: 'Name or ID',
+                        displayName: 'Name',
                         name: 'name',
                         type: 'options',
                         description: 'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code-examples/expressions/">expression</a>',
@@ -342,7 +342,7 @@ exports.sessionFields = [
         displayOptions: {
             show: {
                 resource: ['session'],
-                operation: ['sendMessageTemplateSession']
+                operation: ['sendTemplateBySessionid']
             },
             hide: {
                 templatesBySession: ['NOT_SEND']
@@ -375,7 +375,7 @@ exports.updateSessionFields = [
         },
     },
     {
-        displayName: 'Departments Name or ID',
+        displayName: 'Department',
         name: 'departmentIdUpdatedSession',
         type: 'options',
         default: 'NOT_SEND',
@@ -396,7 +396,7 @@ exports.updateSessionFields = [
         },
     },
     {
-        displayName: 'User Name or ID',
+        displayName: 'User',
         name: 'userIdByDepartmentUpdateSession',
         type: 'options',
         default: 'NOT_SEND',

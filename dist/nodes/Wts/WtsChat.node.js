@@ -218,7 +218,7 @@ class WtsChat {
                         throw new n8n_workflow_1.NodeApiError(this.getNode(), error);
                     }
                 }
-                else if (operation === 'getAllContacts') {
+                else if (operation === 'listContacts') {
                     const autoPagination = this.getNodeParameter('autoPagination', i);
                     const maxPage = autoPagination ? this.getNodeParameter('maxPage', i) : null;
                     const includeDetails = this.getNodeParameter('includeDetailsContacts', i);
@@ -333,7 +333,7 @@ class WtsChat {
                         throw new n8n_workflow_1.NodeApiError(this.getNode(), error);
                     }
                 }
-                else if (operation === 'getAllMessages') {
+                else if (operation === 'listMessages') {
                     const sessionId = this.getNodeParameter('sessionId', i);
                     const genericParams = (0, utils_1.getParamsGenerics)(this);
                     if (!sessionId) {
@@ -574,7 +574,7 @@ class WtsChat {
                 }
             }
             else if (resource === 'session') {
-                if (operation === 'getAllSessions') {
+                if (operation === 'listSessions') {
                     const genericParams = (0, utils_1.getParamsGenerics)(this);
                     const activeAtAfter = this.getNodeParameter('activeAtAfter', i);
                     const activeAtBefore = this.getNodeParameter('activeAtBefore', i);
@@ -783,9 +783,10 @@ class WtsChat {
                         throw new n8n_workflow_1.NodeApiError(this.getNode(), error);
                     }
                 }
-                else if (operation === 'sendMessageTextSession') {
+                else if (operation === 'sendTextBySessionid') {
                     const sessionId = this.getNodeParameter('sessionId', i);
                     const text = this.getNodeParameter('textMessage', i);
+                    const synchronous = this.getNodeParameter('synchronousMessage', i);
                     if (!sessionId || sessionId.trim() === '') {
                         throw new n8n_workflow_1.NodeApiError(this.getNode(), {
                             message: 'SessionID is empty!',
@@ -793,7 +794,7 @@ class WtsChat {
                         });
                     }
                     try {
-                        const data = await wts_chat_service_1.WtsChatService.sendMessageTextSession(sessionId, text, token);
+                        const data = await wts_chat_service_1.WtsChatService.sendMessageTextSession(sessionId, text, token, synchronous);
                         const items = [{ json: data }];
                         results[i] = items;
                     }
@@ -801,11 +802,12 @@ class WtsChat {
                         throw new n8n_workflow_1.NodeApiError(this.getNode(), error);
                     }
                 }
-                else if (operation === 'sendMessageFileSession') {
+                else if (operation === 'sendFileBySessionid') {
                     const sessionId = this.getNodeParameter('sessionId', i);
                     const fileUrl = (_e = this.getNodeParameter('urlFile', i)) !== null && _e !== void 0 ? _e : null;
                     const fileInputFieldName = (_f = this.getNodeParameter('fileToSend', i)) !== null && _f !== void 0 ? _f : null;
                     const inputData = fileInputFieldName ? this.getInputData(i) : null;
+                    const synchronous = this.getNodeParameter('synchronousMessage', i);
                     if (!sessionId || sessionId.trim() === '') {
                         throw new n8n_workflow_1.NodeApiError(this.getNode(), {
                             message: 'SessionID is empty!',
@@ -841,7 +843,7 @@ class WtsChat {
                         body.fileUrl = null;
                     }
                     try {
-                        const data = await wts_chat_service_1.WtsChatService.sendMessageFileUrlSession(sessionId, body, token);
+                        const data = await wts_chat_service_1.WtsChatService.sendMessageFileUrlSession(sessionId, body, token, synchronous);
                         const items = [{ json: data }];
                         results[i] = items;
                     }
@@ -849,9 +851,10 @@ class WtsChat {
                         throw new n8n_workflow_1.NodeApiError(this.getNode(), error);
                     }
                 }
-                else if (operation === 'sendMessageTemplateSession') {
+                else if (operation === 'sendTemplateBySessionid') {
                     const sessionId = this.getNodeParameter('sessionId', i);
                     const template = this.getNodeParameter('templatesBySession', i);
+                    const synchronous = this.getNodeParameter('synchronousMessage', i);
                     const params = (template && template != constants_types_1.notSend) ? this.getNodeParameter('paramsTemplatesSession', i) : null;
                     if (!sessionId || sessionId.trim() == '') {
                         throw new n8n_workflow_1.NodeApiError(this.getNode(), {
@@ -912,7 +915,7 @@ class WtsChat {
                         body.fileUrl = null;
                     }
                     try {
-                        const data = await wts_chat_service_1.WtsChatService.sendMessageTemplateSession(sessionId, body, token);
+                        const data = await wts_chat_service_1.WtsChatService.sendMessageTemplateSession(sessionId, body, token, synchronous);
                         const items = [{ json: data }];
                         results[i] = items;
                     }
@@ -922,7 +925,7 @@ class WtsChat {
                 }
             }
             else if (resource === 'panel') {
-                if (operation === 'getAllAnnotation') {
+                if (operation === 'listCardAnnotations') {
                     const cardId = this.getNodeParameter('cardId', i);
                     if (!cardId) {
                         throw new n8n_workflow_1.NodeApiError(this.getNode(), {
@@ -948,7 +951,7 @@ class WtsChat {
                     const title = this.getNodeParameter('title', i);
                     const description = this.getNodeParameter('description', i);
                     const position = this.getNodeParameter('position', i);
-                    const userId = this.getNodeParameter('userId', i);
+                    const userId = this.getNodeParameter('responsibleId', i);
                     const tagsPanelIds = this.getNodeParameter('tagsPanel', i);
                     const contactId = this.getNodeParameter('contactId', i);
                     const monetaryAmount = this.getNodeParameter('monetaryAmount', i);
@@ -1081,11 +1084,11 @@ class WtsChat {
                         throw new n8n_workflow_1.NodeApiError(this.getNode(), error);
                     }
                 }
-                else if (operation === 'getAllCards') {
+                else if (operation === 'listCards') {
                     const panelId = this.getNodeParameter('panels', i);
                     const stepId = this.getNodeParameter('stepPanels', i);
                     const contactId = this.getNodeParameter('contactId', i);
-                    const responsibleUserId = this.getNodeParameter('userId', i);
+                    const responsibleUserId = this.getNodeParameter('responsibleId', i);
                     const textFilter = this.getNodeParameter('textFilter', i);
                     const includeArchived = this.getNodeParameter('includeArchived', i);
                     const includeDetails = this.getNodeParameter('includeDetailsGetCards', i);
@@ -1158,7 +1161,7 @@ class WtsChat {
                         throw new n8n_workflow_1.NodeApiError(this.getNode(), error);
                     }
                 }
-                else if (operation === 'deleteAnnotationCard') {
+                else if (operation === 'deleteCardAnnotation') {
                     const cardId = this.getNodeParameter('cardId', i);
                     const noteId = this.getNodeParameter('noteId', i);
                     if (!cardId || !noteId) {
@@ -1314,7 +1317,7 @@ class WtsChat {
                         throw new n8n_workflow_1.NodeApiError(this.getNode(), error);
                     }
                 }
-                if (operation === 'getAllSequences') {
+                if (operation === 'listSequences') {
                     const includeDetailsSequence = this.getNodeParameter('includeDetailsSequence', i);
                     const name = this.getNodeParameter('name', i);
                     const contactId = this.getNodeParameter('contactId', i);

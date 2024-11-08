@@ -33,7 +33,7 @@ export const panelOperations: INodeProperties[] = [
             },
             {
                 name: 'Delete Annotation Card',
-                value: 'deleteAnnotationCard',
+                value: 'deleteCardAnnotation',
                 action: 'Delete annotation card',
                 default: 'panel'
             },
@@ -45,14 +45,14 @@ export const panelOperations: INodeProperties[] = [
             },
             {
                 name: 'Gel All Annotation',
-                value: 'getAllAnnotation',
+                value: 'listCardAnnotations',
                 description: 'Get all notes from a card',
                 action: 'List notes',
                 default: 'panel'
             },
             {
                 name: 'Gel All Cards',
-                value: 'getAllCards',
+                value: 'listCards',
                 description: 'Get all cards from a panel',
                 action: 'List cards',
                 default: 'panel'
@@ -83,7 +83,7 @@ export const panelOperations: INodeProperties[] = [
                 default: 'panel'
             }
         ],
-        default: 'getAllAnnotation',
+        default: 'listCardAnnotations',
         noDataExpression: true
     }
 ]
@@ -100,7 +100,7 @@ export const panelFields: INodeProperties[] = [
         displayOptions: {
             show: {
                 resource: ['panel'],
-                operation: ['getAllAnnotation', 'createAnnotationText', 'createAnnotationFile', 'getCardById', 'duplicateCard', 'deleteAnnotationCard'],
+                operation: ['listCardAnnotations', 'createAnnotationText', 'createAnnotationFile', 'getCardById', 'duplicateCard', 'deleteCardAnnotation'],
             },
         },
     },
@@ -109,7 +109,7 @@ export const panelFields: INodeProperties[] = [
     //          CREATE
     //-------------------------------
     {
-        displayName: 'Panel Name or ID',
+        displayName: 'Panel',
         name: 'panels',
         type: 'options',
         default: 'NOT_SEND',
@@ -124,12 +124,12 @@ export const panelFields: INodeProperties[] = [
         displayOptions: {
             show: {
                 resource: ['panel'],
-                operation: ['createCard', 'getAllCards'],
+                operation: ['createCard', 'listCards'],
             },
         },
     },
     {
-        displayName: 'Step Name or ID',
+        displayName: 'Step',
         name: 'stepPanels',
         type: 'options',
         default: 'NOT_SEND',
@@ -145,12 +145,12 @@ export const panelFields: INodeProperties[] = [
         displayOptions: {
             show: {
                 resource: ['panel'],
-                operation: ['createCard', 'getAllCards'],
+                operation: ['createCard', 'listCards'],
             },
         },
     },
     {
-        displayName: 'Tag Names or IDs',
+        displayName: 'Tags',
         name: 'tagsPanel',
         type: 'multiOptions',
         default: [],
@@ -189,7 +189,7 @@ export const panelFields: INodeProperties[] = [
         displayOptions: {
             show: {
                 resource: ['panel'],
-                operation: ['getAllCards'],
+                operation: ['listCards'],
             },
         },
     },
@@ -202,7 +202,7 @@ export const panelFields: INodeProperties[] = [
         displayOptions: {
             show: {
                 resource: ['panel'],
-                operation: ['getAllCards'],
+                operation: ['listCards'],
             },
         },
     },
@@ -298,7 +298,7 @@ export const panelFields: INodeProperties[] = [
                 displayName: 'Custom Fields',
                 values: [
                     {
-                        displayName: 'Key Name or ID',
+                        displayName: 'Key',
                         name: 'key',
                         type: 'options',
                         default: '',
@@ -376,7 +376,7 @@ export const panelFields: INodeProperties[] = [
         displayOptions: {
             show: {
                 resource: ['panel'],
-                operation: ['getAllCards', 'getCardById'],
+                operation: ['listCards', 'getCardById'],
             },
         },
     },
@@ -513,7 +513,7 @@ export const panelFields: INodeProperties[] = [
         displayOptions: {
             show: {
                 resource: ['panel'],
-                operation: ['deleteAnnotationCard'],
+                operation: ['deleteCardAnnotation'],
             },
         },
     },
@@ -659,7 +659,7 @@ export const updateCardFields: INodeProperties[] = [
                 displayName: 'Custom Fields',
                 values: [
                     {
-                        displayName: 'Key Name or ID',
+                        displayName: 'Key',
                         name: 'key',
                         type: 'options',
                         default: '',
@@ -753,7 +753,7 @@ export const updateCardFields: INodeProperties[] = [
     },
 
     {
-        displayName: 'User Name or ID',
+        displayName: 'User',
         name: 'userIdUpdateCard',
         type: 'options',
         default: 'NOT_SEND',
@@ -791,7 +791,7 @@ export const updateCardFields: INodeProperties[] = [
     },
 
     {
-        displayName: 'Tag Names or IDs',
+        displayName: 'Tags',
         name: 'updateCardTagIdUpdateCard',
         type: 'multiOptions',
         description: 'Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code-examples/expressions/">expression</a>',

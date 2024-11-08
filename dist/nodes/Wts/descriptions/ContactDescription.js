@@ -14,7 +14,7 @@ exports.contactOperations = [
         options: [
             {
                 name: 'Get All Contacts',
-                value: 'getAllContacts',
+                value: 'listContacts',
                 description: 'Fetch all contacts from the API',
                 action: 'List contacts',
                 default: 'contact'
@@ -40,7 +40,7 @@ exports.contactOperations = [
                 default: 'contact'
             }
         ],
-        default: 'getAllContacts',
+        default: 'listContacts',
         noDataExpression: true
     }
 ];
@@ -128,10 +128,10 @@ exports.contactFields = [
                 displayName: 'Custom Fields',
                 values: [
                     {
-                        displayName: 'Key Name or ID',
+                        displayName: 'Key',
                         name: 'key',
                         type: 'options',
-                        default: '',
+                        default: 'NOT_SEND',
                         typeOptions: {
                             loadOptionsMethod: 'getCustomFields',
                         },
@@ -186,7 +186,7 @@ exports.contactFields = [
         displayOptions: {
             show: {
                 resource: ['contact'],
-                operation: ['getAllContacts', 'getContactById', 'getContactByPhone'],
+                operation: ['listContacts', 'getContactById', 'getContactByPhone'],
             },
         },
     },
@@ -218,7 +218,7 @@ exports.contactFields = [
         displayOptions: {
             show: {
                 resource: ['contact'],
-                operation: ['getAllContacts'],
+                operation: ['listContacts'],
             },
         },
     }

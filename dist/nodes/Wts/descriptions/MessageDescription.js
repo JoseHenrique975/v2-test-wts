@@ -14,7 +14,7 @@ exports.messageOperations = [
         options: [
             {
                 name: 'Get All Messages',
-                value: 'getAllMessages',
+                value: 'listMessages',
                 action: 'List messages',
             },
             {
@@ -49,7 +49,7 @@ exports.messageOperations = [
 ];
 exports.messageFields = [
     {
-        displayName: 'From Name or ID',
+        displayName: 'From',
         name: 'channelId',
         type: 'options',
         default: 'NOT_SEND',
@@ -69,7 +69,7 @@ exports.messageFields = [
         },
     },
     {
-        displayName: 'Templates Name or ID',
+        displayName: 'Template',
         name: 'templates',
         type: 'options',
         typeOptions: {
@@ -104,7 +104,7 @@ exports.messageFields = [
                 displayName: 'Params',
                 values: [
                     {
-                        displayName: 'Name or ID',
+                        displayName: 'Name',
                         name: 'name',
                         type: 'options',
                         description: 'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code-examples/expressions/">expression</a>',
@@ -167,7 +167,7 @@ exports.messageFields = [
         displayOptions: {
             show: {
                 resource: ['message', 'session'],
-                operation: ['sendFile', 'sendMessageFileSession', 'sendTemplate', 'sendMessageTemplateSession'],
+                operation: ['sendFile', 'sendFileBySessionid', 'sendTemplate', 'sendTemplateBySessionid'],
             },
         },
     },
@@ -181,7 +181,7 @@ exports.messageFields = [
         displayOptions: {
             show: {
                 resource: ['message', 'session'],
-                operation: ['sendFile', 'sendMessageFileSession', 'sendMessageTemplateSession', 'sendTemplate'],
+                operation: ['sendFile', 'sendFileBySessionid', 'sendTemplateBySessionid', 'sendTemplate'],
             }
         }
     },
@@ -193,8 +193,8 @@ exports.messageFields = [
         default: false,
         displayOptions: {
             show: {
-                resource: ['message'],
-                operation: ['sendText', 'sendFile', 'sendTemplate'],
+                resource: ['message', 'session'],
+                operation: ['sendText', 'sendFile', 'sendTemplate', 'sendTextBySessionid', 'sendTemplateBySessionid', 'sendFileBySessionid'],
             },
         },
     },

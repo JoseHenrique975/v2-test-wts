@@ -13,7 +13,7 @@ export const contactOperations: INodeProperties[] = [
         options: [
             {
                 name: 'Get All Contacts',
-                value: 'getAllContacts',
+                value: 'listContacts',
                 description: 'Fetch all contacts from the API',
                 action: 'List contacts',
                 default: 'contact'
@@ -38,7 +38,7 @@ export const contactOperations: INodeProperties[] = [
                 action: 'Create contact',
                 default: 'contact'
             }],
-        default: 'getAllContacts',
+        default: 'listContacts',
         noDataExpression: true
     }
 ]
@@ -134,10 +134,10 @@ export const contactFields: INodeProperties[] = [
                 displayName: 'Custom Fields',
                 values: [
                     {
-                        displayName: 'Key Name or ID',
+                        displayName: 'Key',
                         name: 'key',
                         type: 'options',
-                        default: '',
+                        default: 'NOT_SEND',
                         typeOptions: {
                             loadOptionsMethod: 'getCustomFields',
                         },
@@ -198,7 +198,7 @@ export const contactFields: INodeProperties[] = [
         displayOptions: {
             show: {
                 resource: ['contact'],
-                operation: ['getAllContacts', 'getContactById', 'getContactByPhone'],
+                operation: ['listContacts', 'getContactById', 'getContactByPhone'],
             },
         },
     },
@@ -231,7 +231,7 @@ export const contactFields: INodeProperties[] = [
         displayOptions: {
             show: {
                 resource: ['contact'],
-                operation: ['getAllContacts'],
+                operation: ['listContacts'],
             },
         },
     }

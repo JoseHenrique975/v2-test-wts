@@ -26,7 +26,7 @@ exports.sequenceOperations = [
             },
             {
                 name: 'Get All Sequences',
-                value: 'getAllSequences',
+                value: 'listSequences',
                 action: 'List sequences',
                 default: 'sequence'
             },
@@ -80,7 +80,7 @@ exports.sequenceFields = [
         displayOptions: {
             show: {
                 resource: ['sequence'],
-                operation: ['getAllSequences']
+                operation: ['listSequences']
             }
         }
     },

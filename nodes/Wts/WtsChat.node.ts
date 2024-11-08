@@ -243,7 +243,7 @@ export class WtsChat implements INodeType {
 						throw new NodeApiError(this.getNode(), error as JsonObject);
 					}
 				}
-				else if (operation === 'getAllContacts') {
+				else if (operation === 'listContacts') {
 					const autoPagination = this.getNodeParameter('autoPagination', i) as boolean;
 					const maxPage = autoPagination ? this.getNodeParameter('maxPage', i) as number : null;
 	
@@ -390,7 +390,7 @@ export class WtsChat implements INodeType {
 						throw new NodeApiError(this.getNode(), error as JsonObject);
 					}
 				}
-				else if (operation === 'getAllMessages') {
+				else if (operation === 'listMessages') {
 					const sessionId = this.getNodeParameter('sessionId', i) as string;
 	
 					const genericParams = getParamsGenerics(this);
@@ -722,7 +722,7 @@ export class WtsChat implements INodeType {
 	
 			else if (resource === 'session') {
 	
-				if (operation === 'getAllSessions') {
+				if (operation === 'listSessions') {
 	
 					const genericParams = getParamsGenerics(this);
 	
@@ -991,9 +991,10 @@ export class WtsChat implements INodeType {
 						throw new NodeApiError(this.getNode(), error as JsonObject);
 					}
 				}
-				else if (operation === 'sendMessageTextSession') {
+				else if (operation === 'sendTextBySessionid') {
 					const sessionId = this.getNodeParameter('sessionId', i) as string;
 					const text = this.getNodeParameter('textMessage', i) as string;
+					const synchronous = this.getNodeParameter('synchronousMessage', i) as boolean;
 	
 					if (!sessionId || sessionId.trim() === '') {
 						throw new NodeApiError(this.getNode(), {
@@ -1003,7 +1004,7 @@ export class WtsChat implements INodeType {
 					}
 	
 					try {
-						const data = await WtsChatService.sendMessageTextSession(sessionId, text, token);
+						const data = await WtsChatService.sendMessageTextSession(sessionId, text, token, synchronous);
 						const items: INodeExecutionData[] = [{ json: data }]
 						results[i] = items;
 					}
@@ -1011,11 +1012,12 @@ export class WtsChat implements INodeType {
 						throw new NodeApiError(this.getNode(), error as JsonObject);
 					}
 				}
-				else if (operation === 'sendMessageFileSession') {
+				else if (operation === 'sendFileBySessionid') {
 					const sessionId = this.getNodeParameter('sessionId', i) as string;
 					const fileUrl = this.getNodeParameter('urlFile', i) as string ?? null;
 					const fileInputFieldName = this.getNodeParameter('fileToSend', i) as string ?? null;
 					const inputData = fileInputFieldName ? this.getInputData(i) as any : null;
+					const synchronous = this.getNodeParameter('synchronousMessage', i) as boolean;
 	
 					if (!sessionId || sessionId.trim() === '') {
 						throw new NodeApiError(this.getNode(), {
@@ -1081,7 +1083,7 @@ export class WtsChat implements INodeType {
 					}
 	
 					try {
-						const data = await WtsChatService.sendMessageFileUrlSession(sessionId, body, token);
+						const data = await WtsChatService.sendMessageFileUrlSession(sessionId, body, token, synchronous);
 						const items: INodeExecutionData[] = [{ json: data }]
 						results[i] = items;
 					}
@@ -1090,9 +1092,10 @@ export class WtsChat implements INodeType {
 					}
 	
 				}
-				else if (operation === 'sendMessageTemplateSession') {
+				else if (operation === 'sendTemplateBySessionid') {
 					const sessionId = this.getNodeParameter('sessionId', i) as string;
 					const template = this.getNodeParameter('templatesBySession', i) as string;
+					const synchronous = this.getNodeParameter('synchronousMessage', i) as boolean;
 					const params = (template && template != notSend) ? this.getNodeParameter('paramsTemplatesSession', i) as { paramsTemplatesValues: { name: string, value: string }[] } : null;
 	
 					if (!sessionId || sessionId.trim() == '') {
@@ -1178,7 +1181,7 @@ export class WtsChat implements INodeType {
 					}
 	
 					try {
-						const data = await WtsChatService.sendMessageTemplateSession(sessionId, body, token);
+						const data = await WtsChatService.sendMessageTemplateSession(sessionId, body, token, synchronous);
 						const items: INodeExecutionData[] = [{ json: data }]
 						results[i] = items;
 					}
@@ -1190,7 +1193,7 @@ export class WtsChat implements INodeType {
 	
 	
 			else if (resource === 'panel') {
-				if (operation === 'getAllAnnotation') {
+				if (operation === 'listCardAnnotations') {
 					const cardId = this.getNodeParameter('cardId', i) as string;
 	
 					if (!cardId) {
@@ -1224,7 +1227,7 @@ export class WtsChat implements INodeType {
 					const title = this.getNodeParameter('title', i) as string;
 					const description = this.getNodeParameter('description', i) as string;
 					const position = this.getNodeParameter('position', i) as number;
-					const userId = this.getNodeParameter('userId', i) as string;
+					const userId = this.getNodeParameter('responsibleId', i) as string;
 					const tagsPanelIds = this.getNodeParameter('tagsPanel', i) as Array<string>;
 					const contactId = this.getNodeParameter('contactId', i) as Array<string>;
 					const monetaryAmount = this.getNodeParameter('monetaryAmount', i) as string;
@@ -1406,12 +1409,12 @@ export class WtsChat implements INodeType {
 					}
 				}
 	
-				else if (operation === 'getAllCards') {
+				else if (operation === 'listCards') {
 	
 					const panelId = this.getNodeParameter('panels', i) as string;
 					const stepId = this.getNodeParameter('stepPanels', i) as string;
 					const contactId = this.getNodeParameter('contactId', i) as string;
-					const responsibleUserId = this.getNodeParameter('userId', i) as string;
+					const responsibleUserId = this.getNodeParameter('responsibleId', i) as string;
 					const textFilter = this.getNodeParameter('textFilter', i) as string;
 					const includeArchived = this.getNodeParameter('includeArchived', i) as boolean;
 					const includeDetails = this.getNodeParameter('includeDetailsGetCards', i) as Array<string>;
@@ -1499,7 +1502,7 @@ export class WtsChat implements INodeType {
 					}
 				}
 	
-				else if (operation === 'deleteAnnotationCard') {
+				else if (operation === 'deleteCardAnnotation') {
 					const cardId = this.getNodeParameter('cardId', i) as string;
 					const noteId = this.getNodeParameter('noteId', i) as string;
 	
@@ -1704,7 +1707,7 @@ export class WtsChat implements INodeType {
 					}
 				}
 	
-				if (operation === 'getAllSequences') {
+				if (operation === 'listSequences') {
 					const includeDetailsSequence = this.getNodeParameter('includeDetailsSequence', i) as Array<string>;
 					const name = this.getNodeParameter('name', i) as string;
 					const contactId = this.getNodeParameter('contactId', i) as string;

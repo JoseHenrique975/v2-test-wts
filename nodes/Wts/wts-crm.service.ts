@@ -307,7 +307,11 @@ export class WtsCrmService {
             value: panel.id
         }));
         mappedResult.push({name: 'Undefined', value: notSend});
-        return mappedResult;
+        return mappedResult.sort((a:any, b:any) => {
+            if (a.name === 'Undefined') return -1; 
+            if (b.name === 'Undefined') return 1; 
+            return a.name.localeCompare(b.name);
+        });
     }
 
     static async getCustomFieldsPanel(idPanel: string, ild: ILoadOptionsFunctions): Promise<Array<{ name: string; value: string }>> {
@@ -332,7 +336,11 @@ export class WtsCrmService {
             return result.map((customFieldPanel: any) => ({
                 name: customFieldPanel.name,
                 value: customFieldPanel.key
-            }));
+            })).sort((a:any, b:any) => {
+				if (a.name === 'Undefined') return -1; 
+                if (b.name === 'Undefined') return 1; 
+			    return a.name.localeCompare(b.name)
+            });
         }
         catch (error) {
             throw new Error(`Failed to load custom fields panels: ${error.response.data.text}`);
@@ -367,7 +375,11 @@ export class WtsCrmService {
             value: step.id
         }));
         result.push({name: 'Undefined', value: notSend});
-        return result;
+        return result.sort((a:any, b:any) => {
+            if (a.name === 'Undefined') return -1; 
+            if (b.name === 'Undefined') return 1; 
+            return a.name.localeCompare(b.name);
+        });
     }
 
     static async getTagsPanel(panelId: string, otp: ILoadOptionsFunctions): Promise<Array<{ name: string; value: any }>> {
@@ -395,7 +407,11 @@ export class WtsCrmService {
         return tags?.map((tag: any) => ({
             name: tag.name,
             value: tag.id
-        }));
+        })).sort((a:any, b:any) => {
+            if (a.name === 'Undefined') return -1; 
+            if (b.name === 'Undefined') return 1; 
+            return a.name.localeCompare(b.name);
+        });
     }
 
     static async getTagsByIdCard(idCard: string, otp: ILoadOptionsFunctions): Promise<Array<{ name: string; value: any }>> {
@@ -411,7 +427,11 @@ export class WtsCrmService {
         return panel?.tags?.map((tag: { name: string; id: string }) => ({
             name: tag.name,
             value: tag.id,
-        }));
+        })).sort((a:any, b:any) => {
+            if (a.name === 'Undefined') return -1; 
+            if (b.name === 'Undefined') return 1; 
+            return a.name.localeCompare(b.name);
+        });
     }
 
     static async getCustomFieldsByPanel(idPanel: string, receivedToken: string): Promise<Array<{ name: string, value: string }>> {
@@ -431,7 +451,11 @@ export class WtsCrmService {
             return data.map((customField: any) => ({
                 name: customField.name,
                 value: customField.key
-            }));
+            })).sort((a:any, b:any) => {
+                if (a.name === 'Undefined') return -1; 
+                if (b.name === 'Undefined') return 1; 
+                return a.name.localeCompare(b.name);
+            });
         } catch (error) {
             throw new ErrorEvent(`Failed to load custom fields: ${error.message}`);
         }

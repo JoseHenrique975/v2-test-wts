@@ -14,7 +14,7 @@ exports.commonFields = [
         displayOptions: {
             show: {
                 resource: ['message', 'panel', 'session'],
-                operation: ['sendText', 'createAnnotationText', 'sendMessageTextSession'],
+                operation: ['sendText', 'createAnnotationText', 'sendTextBySessionid'],
             },
         },
     },
@@ -27,12 +27,12 @@ exports.commonFields = [
         displayOptions: {
             show: {
                 resource: ['contact', 'sequence'],
-                operation: ['createContact', 'getAllSequences'],
+                operation: ['createContact', 'listSequences'],
             },
         },
     },
     {
-        displayName: 'Tag Names or IDs',
+        displayName: 'Tags',
         name: 'tagIds',
         type: 'multiOptions',
         description: 'Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code-examples/expressions/">expression</a>',
@@ -43,7 +43,7 @@ exports.commonFields = [
         displayOptions: {
             show: {
                 resource: ['contact', 'session'],
-                operation: ['createContact', 'getAllSessions'],
+                operation: ['createContact', 'listSessions'],
             },
         },
     },
@@ -56,12 +56,12 @@ exports.commonFields = [
         displayOptions: {
             show: {
                 resource: ['message', 'session', 'panel', 'chatbot'],
-                operation: ['getAllMessages', 'updateTransfer', 'updateStatusSession', 'sendChatbot', 'getSessionById', 'assignUser', 'concludeSession', 'updateSession', 'sendMessageTextSession', 'sendMessageFileSession', 'sendMessageTemplateSession'],
+                operation: ['listMessages', 'updateTransfer', 'updateStatusSession', 'sendChatbot', 'getSessionById', 'assignUser', 'concludeSession', 'updateSession', 'sendTextBySessionid', 'sendFileBySessionid', 'sendTemplateBySessionid'],
             },
         },
     },
     {
-        displayName: 'Bots Name or ID',
+        displayName: 'Chatbot',
         name: 'botId',
         type: 'options',
         default: 'NOT_SEND',
@@ -81,7 +81,7 @@ exports.commonFields = [
         },
     },
     {
-        displayName: 'User Name or ID',
+        displayName: 'User',
         name: 'userId',
         type: 'options',
         default: 'NOT_SEND',
@@ -96,12 +96,32 @@ exports.commonFields = [
         displayOptions: {
             show: {
                 resource: ['session', 'panel'],
-                operation: ['getAllSessions', 'createCard', 'getAllCards', 'assignUser'],
+                operation: ['listSessions', 'assignUser'],
             },
         },
     },
     {
-        displayName: 'Departments Name or ID',
+        displayName: 'Responsible',
+        name: 'responsibleId',
+        type: 'options',
+        default: 'NOT_SEND',
+        placeholder: 'Choose user',
+        description: 'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code-examples/expressions/">expression</a>',
+        typeOptions: {
+            loadOptionsMethod: 'getUsersIds',
+        },
+        options: [
+            { name: 'Undefined', value: 'NOT_SEND' }
+        ],
+        displayOptions: {
+            show: {
+                resource: ['session', 'panel'],
+                operation: ['createCard', 'listCards'],
+            },
+        },
+    },
+    {
+        displayName: 'Department',
         name: 'departmentId',
         type: 'options',
         default: 'NOT_SEND',
@@ -116,12 +136,12 @@ exports.commonFields = [
         displayOptions: {
             show: {
                 resource: ['message', 'session'],
-                operation: ['sendText', 'getAllSessions', 'sendFile', 'sendTemplate', 'updateTransfer'],
+                operation: ['sendText', 'listSessions', 'sendFile', 'sendTemplate', 'updateTransfer'],
             },
         },
     },
     {
-        displayName: 'User Name or ID',
+        displayName: 'User',
         name: 'userIdByDepartment',
         type: 'options',
         default: 'NOT_SEND',
@@ -153,7 +173,7 @@ exports.commonFields = [
         displayOptions: {
             show: {
                 resource: ['session', 'panel', 'sequence'],
-                operation: ['getAllSessions', 'createCard', 'getAllCards', 'getAllSequences', 'addContactToSequence', 'removeContactToSequence'],
+                operation: ['listSessions', 'createCard', 'listCards', 'listSequences', 'addContactToSequence', 'removeContactToSequence'],
             },
         },
     },
@@ -199,7 +219,7 @@ exports.commonFields = [
 ];
 exports.metadataFields = [
     {
-        displayName: 'Metada',
+        displayName: 'Metadata',
         name: 'metadata',
         placeholder: 'Add metada',
         type: 'fixedCollection',
@@ -245,7 +265,7 @@ exports.dateFields = [
         displayOptions: {
             show: {
                 resource: ['message', 'session', 'panel', 'sequence', 'contact'],
-                operation: ['getAllMessages', 'getAllSessions', 'getAllPanels', 'getAllCards', 'getAllSequences', 'getAllContacts', 'getAllAnnotation'],
+                operation: ['listMessages', 'listSessions', 'getAllPanels', 'listCards', 'listSequences', 'listContacts', 'listCardAnnotations'],
             },
         },
     },
@@ -258,7 +278,7 @@ exports.dateFields = [
         displayOptions: {
             show: {
                 resource: ['message', 'session', 'panel', 'sequence', 'contact'],
-                operation: ['getAllMessages', 'getAllSessions', 'getAllPanels', 'getAllCards', 'getAllSequences', 'getAllContacts', 'getAllAnnotation'],
+                operation: ['listMessages', 'listSessions', 'getAllPanels', 'listCards', 'listSequences', 'listContacts', 'listCardAnnotations'],
             },
         },
     },
@@ -271,7 +291,7 @@ exports.dateFields = [
         displayOptions: {
             show: {
                 resource: ['message', 'session', 'panel', 'sequence', 'contact'],
-                operation: ['getAllMessages', 'getAllSessions', 'getAllPanels', 'getAllCards', 'getAllSequences', 'getAllContacts', 'getAllAnnotation'],
+                operation: ['listMessages', 'listSessions', 'getAllPanels', 'listCards', 'listSequences', 'listContacts', 'listCardAnnotations'],
             },
         },
     },
@@ -284,7 +304,7 @@ exports.dateFields = [
         displayOptions: {
             show: {
                 resource: ['message', 'session', 'panel', 'sequence', 'contact'],
-                operation: ['getAllMessages', 'getAllSessions', 'getAllPanels', 'getAllCards', 'getAllSequences', 'getAllContacts', 'getAllAnnotation'],
+                operation: ['listMessages', 'listSessions', 'getAllPanels', 'listCards', 'listSequences', 'listContacts', 'listCardAnnotations'],
             },
         },
     },
@@ -299,7 +319,7 @@ exports.pageFields = [
         displayOptions: {
             show: {
                 resource: ['session', 'contact', 'message', 'panel', 'sequence'],
-                operation: ['getAllSessions', 'getAllContacts', 'getAllMessages', 'getAllAnnotation', 'getAllCards', 'getAllPanels', 'getAllSequences'],
+                operation: ['listSessions', 'listContacts', 'listMessages', 'listCardAnnotations', 'listCards', 'getAllPanels', 'listSequences'],
             },
         },
     },
@@ -317,7 +337,7 @@ exports.pageFields = [
         displayOptions: {
             show: {
                 resource: ['session', 'contact', 'message', 'panel', 'sequence'],
-                operation: ['getAllSessions', 'getAllContacts', 'getAllMessages', 'getAllAnnotation', 'getAllCards', 'getAllPanels', 'getAllSequences'],
+                operation: ['listSessions', 'listContacts', 'listMessages', 'listCardAnnotations', 'listCards', 'getAllPanels', 'listSequences'],
                 autoPagination: [true],
             },
         },
@@ -334,7 +354,7 @@ exports.pageFields = [
         displayOptions: {
             show: {
                 resource: ['contact', 'message', 'session', 'panel', 'sequence'],
-                operation: ['getAllContacts', 'getAllMessages', , 'getAllAnnotation', 'getAllPanels', 'getAllCards', 'getAllSequences', 'getAllSessions'],
+                operation: ['listContacts', 'listMessages', , 'listCardAnnotations', 'getAllPanels', 'listCards', 'listSequences', 'listSessions'],
                 autoPagination: [false],
             },
         },
@@ -348,7 +368,7 @@ exports.pageFields = [
         displayOptions: {
             show: {
                 resource: ['contact', 'message', 'session', 'panel', 'sequence'],
-                operation: ['getAllContacts', 'getAllMessages', , 'getAllAnnotation', 'getAllPanels', 'getAllCards', 'getAllSequences', 'getAllSessions'],
+                operation: ['listContacts', 'listMessages', , 'listCardAnnotations', 'getAllPanels', 'listCards', 'listSequences', 'listSessions'],
                 autoPagination: [false],
             },
         },
@@ -367,7 +387,7 @@ exports.pageFields = [
         displayOptions: {
             show: {
                 resource: ['contact', 'message', 'session', 'panel', 'sequence'],
-                operation: ['getAllContacts', 'getAllMessages', 'getAllSessions', 'getAllAnnotation', 'getAllPanels', 'getAllCards', 'getAllSequences'],
+                operation: ['listContacts', 'listMessages', 'listSessions', 'listCardAnnotations', 'getAllPanels', 'listCards', 'listSequences'],
             },
         },
     },
@@ -384,7 +404,7 @@ exports.pageFields = [
         displayOptions: {
             show: {
                 resource: ['contact', 'message', 'session', 'panel', 'sequence'],
-                operation: ['getAllContacts', 'getAllMessages', 'getAllSessions', 'getAllAnnotation', 'getAllPanels', 'getAllCards', 'getAllSequences'],
+                operation: ['listContacts', 'listMessages', 'listSessions', 'listCardAnnotations', 'getAllPanels', 'listCards', 'listSequences'],
             },
         },
     },

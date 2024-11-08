@@ -14,7 +14,7 @@ export const messageOperations: INodeProperties[] = [
         options: [
             {
                 name: 'Get All Messages',
-                value: 'getAllMessages',
+                value: 'listMessages',
                 action: 'List messages',
             },
             {
@@ -51,7 +51,7 @@ export const messageOperations: INodeProperties[] = [
 export const messageFields: INodeProperties[] = [
 
     {
-        displayName: 'From Name or ID',
+        displayName: 'From',
         name: 'channelId',
         type: 'options',
         default: 'NOT_SEND',
@@ -72,7 +72,7 @@ export const messageFields: INodeProperties[] = [
     },
 
     {
-        displayName: 'Templates Name or ID',
+        displayName: 'Template',
         name: 'templates',
         type: 'options',
         typeOptions: {
@@ -108,7 +108,7 @@ export const messageFields: INodeProperties[] = [
                 displayName: 'Params',
                 values: [
                     {
-                        displayName: 'Name or ID',
+                        displayName: 'Name',
                         name: 'name',
                         type: 'options',
                         description: 'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code-examples/expressions/">expression</a>',
@@ -174,7 +174,7 @@ export const messageFields: INodeProperties[] = [
         displayOptions: {
             show: {
                 resource: ['message', 'session'],
-                operation: ['sendFile', 'sendMessageFileSession', 'sendTemplate', 'sendMessageTemplateSession'],
+                operation: ['sendFile', 'sendFileBySessionid', 'sendTemplate', 'sendTemplateBySessionid'],
             },
         },
     },
@@ -189,7 +189,7 @@ export const messageFields: INodeProperties[] = [
         displayOptions: {
             show: {
                 resource: ['message', 'session'],
-                operation: ['sendFile', 'sendMessageFileSession', 'sendMessageTemplateSession', 'sendTemplate'],
+                operation: ['sendFile', 'sendFileBySessionid', 'sendTemplateBySessionid', 'sendTemplate'],
             }
         }
     },
@@ -206,8 +206,8 @@ export const messageFields: INodeProperties[] = [
         default: false,
         displayOptions: {
             show: {
-                resource: ['message'],
-                operation: ['sendText', 'sendFile', 'sendTemplate'],
+                resource: ['message', 'session'],
+                operation: ['sendText', 'sendFile', 'sendTemplate', 'sendTextBySessionid', 'sendTemplateBySessionid', 'sendFileBySessionid'],
             },
         },
     },

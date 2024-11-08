@@ -332,9 +332,10 @@ export class WtsChatService {
     }
   }
 
-  static async sendMessageTextSession(sessionId: string, text: string, receivedToken: string): Promise<any> {
+  static async sendMessageTextSession(sessionId: string, text: string, receivedToken: string, synchronous: boolean): Promise<any> {
     const { token, baseUrl } = Constants.getRequesConfig(receivedToken);
-    const url = `${baseUrl}/chat/v1/session/${sessionId}/message`;
+    const url =  synchronous ? `${baseUrl}/chat/v1/session/${sessionId}/message/sync` : `${baseUrl}/chat/v1/session/${sessionId}/message`;
+
     const body = {
       text
     }
@@ -355,9 +356,9 @@ export class WtsChatService {
     }
   }
 
-  static async sendMessageFileUrlSession(sessionId: string, body: any, receivedToken: string): Promise<any> {
+  static async sendMessageFileUrlSession(sessionId: string, body: any, receivedToken: string, synchronous: boolean): Promise<any> {
     const { token, baseUrl } = Constants.getRequesConfig(receivedToken);
-    const url = `${baseUrl}/chat/v1/session/${sessionId}/message`;
+    const url = synchronous ? `${baseUrl}/chat/v1/session/${sessionId}/message/sync` : `${baseUrl}/chat/v1/session/${sessionId}/message`;
 
     try {
       const response = await axios.post(url, body, {
@@ -375,9 +376,9 @@ export class WtsChatService {
     }
   }
 
-  static async sendMessageTemplateSession(sessionId: string, body: any, receivedToken: string): Promise<any> {
+  static async sendMessageTemplateSession(sessionId: string, body: any, receivedToken: string, synchronous: boolean): Promise<any> {
     const { token, baseUrl } = Constants.getRequesConfig(receivedToken);
-    const url = `${baseUrl}/chat/v1/session/${sessionId}/message`;
+    const url = synchronous ? `${baseUrl}/chat/v1/session/${sessionId}/message/sync` : `${baseUrl}/chat/v1/session/${sessionId}/message`;
 
     try {
       const response = await axios.post(url, body, {
@@ -562,11 +563,15 @@ export class WtsChatService {
 
       const channels = response?.data || [];
       channels.push({ name: 'Undefined', id: notSend});
-
+     
       return channels.map((channel: any) => ({
         name:  channel.identity ? (channel.identity.humanId + ' ' + channel.identity.platform) : 'Undefined',
         value: channel.id,
-      }));
+      })).sort((a: any, b:any) => {
+        if (a.name === 'Undefined') return -1;
+        if (b.name === 'Undefined') return 1;
+        return a.name.localeCompare(b.name)
+      });
     } catch (error) {
       throw new Error(`Failed to load channels: ${error.response.data.text}`);
     }
@@ -589,7 +594,14 @@ export class WtsChatService {
       });
 
       const data = response?.data;
-      data.items?.push({name: 'Undefined', id: notSend})
+      data.items?.push({name: 'Undefined', id: notSend});
+      
+			data.items.sort((a:any, b:any) => {
+				if (a.name === 'Undefined') return -1; 
+        if (b.name === 'Undefined') return 1; 
+			    return a.name.localeCompare(b.name)
+			});
+
 
       return data.items.map((bot: any) => ({
         name: bot.name,
@@ -650,7 +662,11 @@ export class WtsChatService {
           params: template?.params
         })
       };
-    }).concat([{ name: 'Undefined', value: notSend }]);
+    }).concat([{ name: 'Undefined', value: notSend }]).sort((a:any, b:any) => {
+      if (a.name === 'Undefined') return -1; 
+      if (b.name === 'Undefined') return 1; 
+        return a.name.localeCompare(b.name)
+      });
   }
 
   static async getTemplateIds(channelId: string, receivedToken: string, nameTemplate: string): Promise<{ id: string }> {
@@ -715,7 +731,11 @@ export class WtsChatService {
         value: p.name
       })));
 
-      return result
+      return result.sort((a:any, b:any) => {
+        if(a.name === 'Undefined') return -1;
+        if(b.name === 'Undefined') return 1;
+        return a.name.localeCompare(b.name);
+      });
     } catch (error) {
       throw new Error(`Failed to load template parameters: ${error.response.data.text}`);
     }

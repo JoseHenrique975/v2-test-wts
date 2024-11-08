@@ -263,7 +263,13 @@ class WtsCrmService {
             value: panel.id
         }));
         mappedResult.push({ name: 'Undefined', value: constants_types_1.notSend });
-        return mappedResult;
+        return mappedResult.sort((a, b) => {
+            if (a.name === 'Undefined')
+                return -1;
+            if (b.name === 'Undefined')
+                return 1;
+            return a.name.localeCompare(b.name);
+        });
     }
     static async getCustomFieldsPanel(idPanel, ild) {
         const credentials = await ild.getCredentials('wtsApi');
@@ -283,7 +289,13 @@ class WtsCrmService {
             return result.map((customFieldPanel) => ({
                 name: customFieldPanel.name,
                 value: customFieldPanel.key
-            }));
+            })).sort((a, b) => {
+                if (a.name === 'Undefined')
+                    return -1;
+                if (b.name === 'Undefined')
+                    return 1;
+                return a.name.localeCompare(b.name);
+            });
         }
         catch (error) {
             throw new Error(`Failed to load custom fields panels: ${error.response.data.text}`);
@@ -314,7 +326,13 @@ class WtsCrmService {
             value: step.id
         }));
         result.push({ name: 'Undefined', value: constants_types_1.notSend });
-        return result;
+        return result.sort((a, b) => {
+            if (a.name === 'Undefined')
+                return -1;
+            if (b.name === 'Undefined')
+                return 1;
+            return a.name.localeCompare(b.name);
+        });
     }
     static async getTagsPanel(panelId, otp) {
         const credentials = await otp.getCredentials('wtsApi');
@@ -339,7 +357,13 @@ class WtsCrmService {
         return tags === null || tags === void 0 ? void 0 : tags.map((tag) => ({
             name: tag.name,
             value: tag.id
-        }));
+        })).sort((a, b) => {
+            if (a.name === 'Undefined')
+                return -1;
+            if (b.name === 'Undefined')
+                return 1;
+            return a.name.localeCompare(b.name);
+        });
     }
     static async getTagsByIdCard(idCard, otp) {
         var _a;
@@ -351,7 +375,13 @@ class WtsCrmService {
         return (_a = panel === null || panel === void 0 ? void 0 : panel.tags) === null || _a === void 0 ? void 0 : _a.map((tag) => ({
             name: tag.name,
             value: tag.id,
-        }));
+        })).sort((a, b) => {
+            if (a.name === 'Undefined')
+                return -1;
+            if (b.name === 'Undefined')
+                return 1;
+            return a.name.localeCompare(b.name);
+        });
     }
     static async getCustomFieldsByPanel(idPanel, receivedToken) {
         const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
@@ -368,7 +398,13 @@ class WtsCrmService {
             return data.map((customField) => ({
                 name: customField.name,
                 value: customField.key
-            }));
+            })).sort((a, b) => {
+                if (a.name === 'Undefined')
+                    return -1;
+                if (b.name === 'Undefined')
+                    return 1;
+                return a.name.localeCompare(b.name);
+            });
         }
         catch (error) {
             throw new ErrorEvent(`Failed to load custom fields: ${error.message}`);

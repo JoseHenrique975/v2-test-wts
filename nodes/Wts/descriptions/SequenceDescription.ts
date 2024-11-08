@@ -25,7 +25,7 @@ export const sequenceOperations: INodeProperties[] = [
             },
             {
                 name: 'Get All Sequences',
-                value: 'getAllSequences',
+                value: 'listSequences',
                 action: 'List sequences',
                 default: 'sequence'
             },
@@ -83,7 +83,7 @@ export const sequenceFields: INodeProperties[] = [
         displayOptions: {
             show: {
                 resource: ['sequence'],
-                operation: ['getAllSequences']
+                operation: ['listSequences']
             }
         }
     },

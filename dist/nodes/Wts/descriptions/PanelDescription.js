@@ -33,7 +33,7 @@ exports.panelOperations = [
             },
             {
                 name: 'Delete Annotation Card',
-                value: 'deleteAnnotationCard',
+                value: 'deleteCardAnnotation',
                 action: 'Delete annotation card',
                 default: 'panel'
             },
@@ -45,14 +45,14 @@ exports.panelOperations = [
             },
             {
                 name: 'Gel All Annotation',
-                value: 'getAllAnnotation',
+                value: 'listCardAnnotations',
                 description: 'Get all notes from a card',
                 action: 'List notes',
                 default: 'panel'
             },
             {
                 name: 'Gel All Cards',
-                value: 'getAllCards',
+                value: 'listCards',
                 description: 'Get all cards from a panel',
                 action: 'List cards',
                 default: 'panel'
@@ -82,7 +82,7 @@ exports.panelOperations = [
                 default: 'panel'
             }
         ],
-        default: 'getAllAnnotation',
+        default: 'listCardAnnotations',
         noDataExpression: true
     }
 ];
@@ -96,12 +96,12 @@ exports.panelFields = [
         displayOptions: {
             show: {
                 resource: ['panel'],
-                operation: ['getAllAnnotation', 'createAnnotationText', 'createAnnotationFile', 'getCardById', 'duplicateCard', 'deleteAnnotationCard'],
+                operation: ['listCardAnnotations', 'createAnnotationText', 'createAnnotationFile', 'getCardById', 'duplicateCard', 'deleteCardAnnotation'],
             },
         },
     },
     {
-        displayName: 'Panel Name or ID',
+        displayName: 'Panel',
         name: 'panels',
         type: 'options',
         default: 'NOT_SEND',
@@ -116,12 +116,12 @@ exports.panelFields = [
         displayOptions: {
             show: {
                 resource: ['panel'],
-                operation: ['createCard', 'getAllCards'],
+                operation: ['createCard', 'listCards'],
             },
         },
     },
     {
-        displayName: 'Step Name or ID',
+        displayName: 'Step',
         name: 'stepPanels',
         type: 'options',
         default: 'NOT_SEND',
@@ -137,12 +137,12 @@ exports.panelFields = [
         displayOptions: {
             show: {
                 resource: ['panel'],
-                operation: ['createCard', 'getAllCards'],
+                operation: ['createCard', 'listCards'],
             },
         },
     },
     {
-        displayName: 'Tag Names or IDs',
+        displayName: 'Tags',
         name: 'tagsPanel',
         type: 'multiOptions',
         default: [],
@@ -181,7 +181,7 @@ exports.panelFields = [
         displayOptions: {
             show: {
                 resource: ['panel'],
-                operation: ['getAllCards'],
+                operation: ['listCards'],
             },
         },
     },
@@ -194,7 +194,7 @@ exports.panelFields = [
         displayOptions: {
             show: {
                 resource: ['panel'],
-                operation: ['getAllCards'],
+                operation: ['listCards'],
             },
         },
     },
@@ -281,7 +281,7 @@ exports.panelFields = [
                 displayName: 'Custom Fields',
                 values: [
                     {
-                        displayName: 'Key Name or ID',
+                        displayName: 'Key',
                         name: 'key',
                         type: 'options',
                         default: '',
@@ -356,7 +356,7 @@ exports.panelFields = [
         displayOptions: {
             show: {
                 resource: ['panel'],
-                operation: ['getAllCards', 'getCardById'],
+                operation: ['listCards', 'getCardById'],
             },
         },
     },
@@ -485,7 +485,7 @@ exports.panelFields = [
         displayOptions: {
             show: {
                 resource: ['panel'],
-                operation: ['deleteAnnotationCard'],
+                operation: ['deleteCardAnnotation'],
             },
         },
     },
@@ -623,7 +623,7 @@ exports.updateCardFields = [
                 displayName: 'Custom Fields',
                 values: [
                     {
-                        displayName: 'Key Name or ID',
+                        displayName: 'Key',
                         name: 'key',
                         type: 'options',
                         default: '',
@@ -711,7 +711,7 @@ exports.updateCardFields = [
         },
     },
     {
-        displayName: 'User Name or ID',
+        displayName: 'User',
         name: 'userIdUpdateCard',
         type: 'options',
         default: 'NOT_SEND',
@@ -746,7 +746,7 @@ exports.updateCardFields = [
         },
     },
     {
-        displayName: 'Tag Names or IDs',
+        displayName: 'Tags',
         name: 'updateCardTagIdUpdateCard',
         type: 'multiOptions',
         description: 'Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code-examples/expressions/">expression</a>',

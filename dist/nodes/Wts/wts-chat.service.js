@@ -291,9 +291,9 @@ class WtsChatService {
             throw new Error(`API request failed: ${error.response.data.text}`);
         }
     }
-    static async sendMessageTextSession(sessionId, text, receivedToken) {
+    static async sendMessageTextSession(sessionId, text, receivedToken, synchronous) {
         const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
-        const url = `${baseUrl}/chat/v1/session/${sessionId}/message`;
+        const url = synchronous ? `${baseUrl}/chat/v1/session/${sessionId}/message/sync` : `${baseUrl}/chat/v1/session/${sessionId}/message`;
         const body = {
             text
         };
@@ -312,9 +312,9 @@ class WtsChatService {
             throw new Error(`API request failed: ${error.response.data.text}`);
         }
     }
-    static async sendMessageFileUrlSession(sessionId, body, receivedToken) {
+    static async sendMessageFileUrlSession(sessionId, body, receivedToken, synchronous) {
         const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
-        const url = `${baseUrl}/chat/v1/session/${sessionId}/message`;
+        const url = synchronous ? `${baseUrl}/chat/v1/session/${sessionId}/message/sync` : `${baseUrl}/chat/v1/session/${sessionId}/message`;
         try {
             const response = await axios_1.default.post(url, body, {
                 headers: {
@@ -330,9 +330,9 @@ class WtsChatService {
             throw new Error(`API request failed: ${error.response.data.text}`);
         }
     }
-    static async sendMessageTemplateSession(sessionId, body, receivedToken) {
+    static async sendMessageTemplateSession(sessionId, body, receivedToken, synchronous) {
         const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
-        const url = `${baseUrl}/chat/v1/session/${sessionId}/message`;
+        const url = synchronous ? `${baseUrl}/chat/v1/session/${sessionId}/message/sync` : `${baseUrl}/chat/v1/session/${sessionId}/message`;
         try {
             const response = await axios_1.default.post(url, body, {
                 headers: {
@@ -490,7 +490,13 @@ class WtsChatService {
             return channels.map((channel) => ({
                 name: channel.identity ? (channel.identity.humanId + ' ' + channel.identity.platform) : 'Undefined',
                 value: channel.id,
-            }));
+            })).sort((a, b) => {
+                if (a.name === 'Undefined')
+                    return -1;
+                if (b.name === 'Undefined')
+                    return 1;
+                return a.name.localeCompare(b.name);
+            });
         }
         catch (error) {
             throw new Error(`Failed to load channels: ${error.response.data.text}`);
@@ -512,6 +518,13 @@ class WtsChatService {
             });
             const data = response === null || response === void 0 ? void 0 : response.data;
             (_a = data.items) === null || _a === void 0 ? void 0 : _a.push({ name: 'Undefined', id: constants_types_1.notSend });
+            data.items.sort((a, b) => {
+                if (a.name === 'Undefined')
+                    return -1;
+                if (b.name === 'Undefined')
+                    return 1;
+                return a.name.localeCompare(b.name);
+            });
             return data.items.map((bot) => ({
                 name: bot.name,
                 value: bot.id
@@ -561,7 +574,13 @@ class WtsChatService {
                     params: template === null || template === void 0 ? void 0 : template.params
                 })
             };
-        }).concat([{ name: 'Undefined', value: constants_types_1.notSend }]);
+        }).concat([{ name: 'Undefined', value: constants_types_1.notSend }]).sort((a, b) => {
+            if (a.name === 'Undefined')
+                return -1;
+            if (b.name === 'Undefined')
+                return 1;
+            return a.name.localeCompare(b.name);
+        });
     }
     static async getTemplateIds(channelId, receivedToken, nameTemplate) {
         const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
@@ -617,7 +636,13 @@ class WtsChatService {
                     value: p.name
                 }));
             });
-            return result;
+            return result.sort((a, b) => {
+                if (a.name === 'Undefined')
+                    return -1;
+                if (b.name === 'Undefined')
+                    return 1;
+                return a.name.localeCompare(b.name);
+            });
         }
         catch (error) {
             throw new Error(`Failed to load template parameters: ${error.response.data.text}`);

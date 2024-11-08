@@ -25,6 +25,12 @@ export class WtsCoreService {
 			});
 			const fields = response.data;
 			fields.push({name: 'Undefined', key: notSend})
+		    
+			fields.sort((a:any, b:any) => {
+				if (a.name === 'Undefined') return -1; 
+                if (b.name === 'Undefined') return 1; 
+			    return a.name.localeCompare(b.name)
+			});
 
 			return fields.map((field: { key: string; name: string }) => ({
 				name: field.name,
@@ -52,6 +58,12 @@ export class WtsCoreService {
 
 			const tags = response.data;
 
+			tags.sort((a:any, b:any) => {
+				if (a.name === 'Undefined') return -1; 
+                if (b.name === 'Undefined') return 1; 
+			    return a.name.localeCompare(b.name)
+			});
+
 			return tags.map((tag: { name: string; id: string }) => ({
 				name: tag.name,
 				value: tag.id,
@@ -78,12 +90,16 @@ export class WtsCoreService {
 			});
 
 			const users = response.data;
-			
 			const mappedResult = users.map((user: any) => ({
 				name: user.name,
 				value: user.userId,
 			}));
 			mappedResult.push({name: 'Undefined', value: notSend});
+			mappedResult.sort((a: any, b:any) => {
+				if (a.name === 'Undefined') return -1; 
+                if (b.name === 'Undefined') return 1;
+				return a.name.localeCompare(b.name)
+			});
 			return mappedResult;
 		} catch (error) {
 			throw new Error(`Failed to load users: ${error.response.data.text}`);
@@ -106,8 +122,14 @@ export class WtsCoreService {
 				},
 			});
 
-			const departments = response.data;
-			departments.push({name: 'Undefined', id: notSend})
+			const departments = response?.data;
+	
+			departments.push({name: 'Undefined', id: notSend});
+			departments.sort((a: any, b:any) => {
+				if(a.name === 'Undefined')return -1;
+				if(b.name === 'Undefined')return 1;
+				return a.name.localeCompare(b.name)
+		    });
 
 			return departments.map((department: { name: string; id: string }) => ({
 				name: department.name,
@@ -149,6 +171,12 @@ export class WtsCoreService {
 					}
 				})
 			});
+
+			result.sort((a: any, b:any) => {
+				if(a.name === 'Undefined')return -1;
+				if(b.name === 'Undefined')return 1;
+				return a.name.localeCompare(b.name)
+		    });
 
 			return result.map((user: any) => ({
 				name: user.name,
