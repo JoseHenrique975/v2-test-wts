@@ -13,9 +13,9 @@ export const sessionOperations: INodeProperties[] = [
         },
         options: [
             {
-                name: 'Transfer to User',
-                value: 'assignUser',
-                action: 'Assign user to session',
+                name: 'ChangeStatus',
+                value: 'updateStatusSession',
+                action: 'Update status session',
                 default: 'session'
             },
             {
@@ -55,15 +55,15 @@ export const sessionOperations: INodeProperties[] = [
                 default: 'session'
             },
             {
-                name: 'ChangeStatus',
-                value: 'updateStatusSession',
-                action: 'Update status session',
-                default: 'session'
-            },
-            {
                 name: 'Transfer to Department',
                 value: 'updateTransfer',
                 action: 'Update transfer',
+                default: 'session'
+            },
+            {
+                name: 'Transfer to User',
+                value: 'assignUser',
+                action: 'Assign user to session',
                 default: 'session'
             },
             {
@@ -96,7 +96,7 @@ export const sessionFields: INodeProperties[] = [
     },
 
     {
-        displayName: 'Channel',
+        displayName: 'Channel Names or IDs',
         name: 'channelsIds',
         type: 'multiOptions',
         default: [],
@@ -295,7 +295,7 @@ export const sessionFields: INodeProperties[] = [
     },
 
     {
-        displayName: 'Template',
+        displayName: 'Template Name or ID',
         name: 'templatesBySession',
         type: 'options',
         typeOptions: {
@@ -331,7 +331,7 @@ export const sessionFields: INodeProperties[] = [
                 displayName: 'Params',
                 values: [
                     {
-                        displayName: 'Name',
+                        displayName: 'Name or ID',
                         name: 'name',
                         type: 'options',
                         description: 'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code-examples/expressions/">expression</a>',
@@ -389,7 +389,7 @@ export const updateSessionFields: INodeProperties[] = [
     },
 
     {
-        displayName: 'Department',
+        displayName: 'Department Name or ID',
         name: 'departmentIdUpdatedSession',
         type: 'options',
         default: 'NOT_SEND',
@@ -411,7 +411,7 @@ export const updateSessionFields: INodeProperties[] = [
     },
 
     {
-        displayName: 'User',
+        displayName: 'User Name or ID',
         name: 'userIdByDepartmentUpdateSession',
         type: 'options',
         default: 'NOT_SEND',

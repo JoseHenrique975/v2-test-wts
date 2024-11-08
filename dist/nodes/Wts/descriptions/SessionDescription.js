@@ -13,9 +13,9 @@ exports.sessionOperations = [
         },
         options: [
             {
-                name: 'Transfer to User',
-                value: 'assignUser',
-                action: 'Assign user to session',
+                name: 'ChangeStatus',
+                value: 'updateStatusSession',
+                action: 'Update status session',
                 default: 'session'
             },
             {
@@ -55,15 +55,15 @@ exports.sessionOperations = [
                 default: 'session'
             },
             {
-                name: 'ChangeStatus',
-                value: 'updateStatusSession',
-                action: 'Update status session',
-                default: 'session'
-            },
-            {
                 name: 'Transfer to Department',
                 value: 'updateTransfer',
                 action: 'Update transfer',
+                default: 'session'
+            },
+            {
+                name: 'Transfer to User',
+                value: 'assignUser',
+                action: 'Assign user to session',
                 default: 'session'
             },
             {
@@ -92,7 +92,7 @@ exports.sessionFields = [
         },
     },
     {
-        displayName: 'Channel',
+        displayName: 'Channel Names or IDs',
         name: 'channelsIds',
         type: 'multiOptions',
         default: [],
@@ -284,7 +284,7 @@ exports.sessionFields = [
         },
     },
     {
-        displayName: 'Template',
+        displayName: 'Template Name or ID',
         name: 'templatesBySession',
         type: 'options',
         typeOptions: {
@@ -319,7 +319,7 @@ exports.sessionFields = [
                 displayName: 'Params',
                 values: [
                     {
-                        displayName: 'Name',
+                        displayName: 'Name or ID',
                         name: 'name',
                         type: 'options',
                         description: 'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code-examples/expressions/">expression</a>',
@@ -375,7 +375,7 @@ exports.updateSessionFields = [
         },
     },
     {
-        displayName: 'Department',
+        displayName: 'Department Name or ID',
         name: 'departmentIdUpdatedSession',
         type: 'options',
         default: 'NOT_SEND',
@@ -396,7 +396,7 @@ exports.updateSessionFields = [
         },
     },
     {
-        displayName: 'User',
+        displayName: 'User Name or ID',
         name: 'userIdByDepartmentUpdateSession',
         type: 'options',
         default: 'NOT_SEND',

@@ -101,7 +101,7 @@ exports.panelFields = [
         },
     },
     {
-        displayName: 'Panel',
+        displayName: 'Panel Name or ID',
         name: 'panels',
         type: 'options',
         default: 'NOT_SEND',
@@ -121,7 +121,7 @@ exports.panelFields = [
         },
     },
     {
-        displayName: 'Step',
+        displayName: 'Step Name or ID',
         name: 'stepPanels',
         type: 'options',
         default: 'NOT_SEND',
@@ -142,7 +142,7 @@ exports.panelFields = [
         },
     },
     {
-        displayName: 'Tags',
+        displayName: 'Tag Names or IDs',
         name: 'tagsPanel',
         type: 'multiOptions',
         default: [],
@@ -281,7 +281,7 @@ exports.panelFields = [
                 displayName: 'Custom Fields',
                 values: [
                     {
-                        displayName: 'Key',
+                        displayName: 'Key Name or ID',
                         name: 'key',
                         type: 'options',
                         default: '',
@@ -623,7 +623,7 @@ exports.updateCardFields = [
                 displayName: 'Custom Fields',
                 values: [
                     {
-                        displayName: 'Key',
+                        displayName: 'Key Name or ID',
                         name: 'key',
                         type: 'options',
                         default: '',
@@ -711,7 +711,7 @@ exports.updateCardFields = [
         },
     },
     {
-        displayName: 'User',
+        displayName: 'User Name or ID',
         name: 'userIdUpdateCard',
         type: 'options',
         default: 'NOT_SEND',
@@ -746,7 +746,7 @@ exports.updateCardFields = [
         },
     },
     {
-        displayName: 'Tags',
+        displayName: 'Tag Names or IDs',
         name: 'updateCardTagIdUpdateCard',
         type: 'multiOptions',
         description: 'Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code-examples/expressions/">expression</a>',

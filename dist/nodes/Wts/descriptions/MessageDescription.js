@@ -49,7 +49,7 @@ exports.messageOperations = [
 ];
 exports.messageFields = [
     {
-        displayName: 'From',
+        displayName: 'From Name or ID',
         name: 'channelId',
         type: 'options',
         default: 'NOT_SEND',
@@ -69,7 +69,7 @@ exports.messageFields = [
         },
     },
     {
-        displayName: 'Template',
+        displayName: 'Template Name or ID',
         name: 'templates',
         type: 'options',
         typeOptions: {
@@ -104,7 +104,7 @@ exports.messageFields = [
                 displayName: 'Params',
                 values: [
                     {
-                        displayName: 'Name',
+                        displayName: 'Name or ID',
                         name: 'name',
                         type: 'options',
                         description: 'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code-examples/expressions/">expression</a>',

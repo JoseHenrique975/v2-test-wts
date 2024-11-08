@@ -32,7 +32,7 @@ exports.commonFields = [
         },
     },
     {
-        displayName: 'Tags',
+        displayName: 'Tag Names or IDs',
         name: 'tagIds',
         type: 'multiOptions',
         description: 'Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code-examples/expressions/">expression</a>',
@@ -61,7 +61,7 @@ exports.commonFields = [
         },
     },
     {
-        displayName: 'Chatbot',
+        displayName: 'Chatbot Name or ID',
         name: 'botId',
         type: 'options',
         default: 'NOT_SEND',
@@ -81,7 +81,7 @@ exports.commonFields = [
         },
     },
     {
-        displayName: 'User',
+        displayName: 'User Name or ID',
         name: 'userId',
         type: 'options',
         default: 'NOT_SEND',
@@ -101,7 +101,7 @@ exports.commonFields = [
         },
     },
     {
-        displayName: 'Responsible',
+        displayName: 'Responsible Name or ID',
         name: 'responsibleId',
         type: 'options',
         default: 'NOT_SEND',
@@ -121,7 +121,7 @@ exports.commonFields = [
         },
     },
     {
-        displayName: 'Department',
+        displayName: 'Department Name or ID',
         name: 'departmentId',
         type: 'options',
         default: 'NOT_SEND',
@@ -141,7 +141,7 @@ exports.commonFields = [
         },
     },
     {
-        displayName: 'User',
+        displayName: 'User Name or ID',
         name: 'userIdByDepartment',
         type: 'options',
         default: 'NOT_SEND',

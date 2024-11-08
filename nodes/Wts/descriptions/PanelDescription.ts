@@ -109,7 +109,7 @@ export const panelFields: INodeProperties[] = [
     //          CREATE
     //-------------------------------
     {
-        displayName: 'Panel',
+        displayName: 'Panel Name or ID',
         name: 'panels',
         type: 'options',
         default: 'NOT_SEND',
@@ -129,7 +129,7 @@ export const panelFields: INodeProperties[] = [
         },
     },
     {
-        displayName: 'Step',
+        displayName: 'Step Name or ID',
         name: 'stepPanels',
         type: 'options',
         default: 'NOT_SEND',
@@ -150,7 +150,7 @@ export const panelFields: INodeProperties[] = [
         },
     },
     {
-        displayName: 'Tags',
+        displayName: 'Tag Names or IDs',
         name: 'tagsPanel',
         type: 'multiOptions',
         default: [],
@@ -298,7 +298,7 @@ export const panelFields: INodeProperties[] = [
                 displayName: 'Custom Fields',
                 values: [
                     {
-                        displayName: 'Key',
+                        displayName: 'Key Name or ID',
                         name: 'key',
                         type: 'options',
                         default: '',
@@ -659,7 +659,7 @@ export const updateCardFields: INodeProperties[] = [
                 displayName: 'Custom Fields',
                 values: [
                     {
-                        displayName: 'Key',
+                        displayName: 'Key Name or ID',
                         name: 'key',
                         type: 'options',
                         default: '',
@@ -753,7 +753,7 @@ export const updateCardFields: INodeProperties[] = [
     },
 
     {
-        displayName: 'User',
+        displayName: 'User Name or ID',
         name: 'userIdUpdateCard',
         type: 'options',
         default: 'NOT_SEND',
@@ -791,7 +791,7 @@ export const updateCardFields: INodeProperties[] = [
     },
 
     {
-        displayName: 'Tags',
+        displayName: 'Tag Names or IDs',
         name: 'updateCardTagIdUpdateCard',
         type: 'multiOptions',
         description: 'Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code-examples/expressions/">expression</a>',

@@ -134,10 +134,10 @@ export const contactFields: INodeProperties[] = [
                 displayName: 'Custom Fields',
                 values: [
                     {
-                        displayName: 'Key',
+                        displayName: 'Key Name or ID',
                         name: 'key',
                         type: 'options',
-                        default: 'NOT_SEND',
+                        default: '',
                         typeOptions: {
                             loadOptionsMethod: 'getCustomFields',
                         },
