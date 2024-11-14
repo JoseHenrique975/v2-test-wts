@@ -37,21 +37,21 @@ export const sessionOperations: INodeProperties[] = [
                 default: 'session'
             },
             {
-                name: 'Send Message File',
+                name: 'Send File In Session',
                 value: 'sendFileBySessionid',
-                action: 'Send message file',
+                action: 'Send file in session',
                 default: 'session'
             },
             {
-                name: 'Send Message Template',
+                name: 'Send Template In Session',
                 value: 'sendTemplateBySessionid',
-                action: 'Send message template',
+                action: 'Send template in session',
                 default: 'session'
             },
             {
-                name: 'Send Message Text',
+                name: 'Send Text In Session',
                 value: 'sendTextBySessionid',
-                action: 'Send message text',
+                action: 'Send text in session',
                 default: 'session'
             },
             {
