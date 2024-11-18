@@ -583,36 +583,95 @@ export class WtsChatService {
 
     const { token, baseUrl } = Constants.getRequesConfig(receivedToken);
     const url = `${baseUrl}/chat/v1/chatbot`;
+    let hasMore: boolean = true;
+    let pageNumber: number = 0;
+    const result: any = [];
 
+    while (hasMore) {
+      pageNumber += 1;
+      try {
+        const response = await axios.get(url, {
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          params: {
+            pageNumber,
+          }
+        });
+
+        const data = response?.data;
+        result.push(...data.items);
+
+        if (!data.hasMorePages) {
+          hasMore = false;
+        }
+
+      } catch (error) {
+        throw new Error(`Failed to load bots: ${error?.response?.data?.text}`);
+      }
+    }
+    const mappedResult = result.map((bot: any) => ({
+      name: bot.name,
+      value: bot.id
+    }));
+    mappedResult.push({ name: 'Undefined', value: notSend });
+    return mappedResult.sort((a: any, b: any) => {
+      if (a.name === 'Undefined') return -1;
+      if (b.name === 'Undefined') return 1;
+      return a.name.localeCompare(b.name)
+    });
+  }
+
+  static async getChatbots(otp: ILoadOptionsFunctions): Promise<Array<{ name: string; value: string }>> {
+    const credentials = await otp.getCredentials('wtsApi');
+    const receivedToken = credentials?.apiKey as string;
+
+    const { token, baseUrl } = Constants.getRequesConfig(receivedToken);
+    const url = `${baseUrl}/chat/v1/chatbot?Types=Automation`;
+    let hasMore: boolean = true;
+    let pageNumber: number = 0;
+    const result: any = [];
+
+    while(hasMore){
+     pageNumber += 1;
     try {
       const response = await axios.get(url, {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
+        },
+        params: {
+          pageNumber,
+
         }
       });
 
       const data = response?.data;
-      data.items?.push({name: 'Undefined', id: notSend});
+      result.push(...data.items);
+
+      if(!data.hasMorePages) {
+        hasMore = false;
+      }
       
-			data.items.sort((a:any, b:any) => {
-				if (a.name === 'Undefined') return -1; 
-        if (b.name === 'Undefined') return 1; 
-			    return a.name.localeCompare(b.name)
-			});
-
-
-      return data.items.map((bot: any) => ({
-        name: bot.name,
-        value: bot.id
-      }));
+    }catch (error) {
+      throw new Error(`Failed to load bots: ${error?.response?.data?.text}`);
     }
-    catch (error) {
-      throw new Error(`Failed to load bots: ${error.response.data.text}`);
     }
+
+    const mappedResult = result.map((bot: any) => ({
+      name: bot.name,
+      value: bot.id
+    }));
+    mappedResult.push({name: 'Undefined', value: notSend});
+    return 	mappedResult.sort((a:any, b:any) => {
+      if (a.name === 'Undefined') return -1; 
+      if (b.name === 'Undefined') return 1; 
+      return a.name.localeCompare(b.name)
+    });
   }
-
 
   static async getTemplates(channelId: string, ild: ILoadOptionsFunctions): Promise<Array<{ name: string; value: string }>> {
     const credentials = await ild.getCredentials('wtsApi');

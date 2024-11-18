@@ -154,6 +154,9 @@ class WtsChat {
                 async getBots() {
                     return await wts_chat_service_1.WtsChatService.getBots(this);
                 },
+                async getChatbots() {
+                    return await wts_chat_service_1.WtsChatService.getChatbots(this);
+                },
                 async getTemplatesSession() {
                     const sessionId = this.getNodeParameter('sessionId');
                     const template = await wts_chat_service_1.WtsChatService.getTemplatesSession(sessionId, this);
@@ -1243,7 +1246,7 @@ class WtsChat {
             }
             else if (resource === 'chatbot') {
                 if (operation === 'sendChatbot') {
-                    const botId = this.getNodeParameter('botId', i);
+                    const botId = this.getNodeParameter('chatbotId', i);
                     const from = this.getNodeParameter('channelId', i);
                     const to = this.getNodeParameter('numberToSend', i);
                     const sessionId = this.getNodeParameter('sessionId', i);

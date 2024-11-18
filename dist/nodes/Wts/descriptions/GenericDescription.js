@@ -62,6 +62,26 @@ exports.commonFields = [
     },
     {
         displayName: 'Chatbot Name or ID',
+        name: 'chatbotId',
+        type: 'options',
+        default: 'NOT_SEND',
+        placeholder: 'Choose bot',
+        description: 'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code-examples/expressions/">expression</a>',
+        typeOptions: {
+            loadOptionsMethod: 'getChatbots',
+        },
+        options: [
+            { name: 'Undefined', value: 'NOT_SEND' }
+        ],
+        displayOptions: {
+            show: {
+                resource: ['chatbot'],
+                operation: ['sendChatbot'],
+            },
+        },
+    },
+    {
+        displayName: 'Chatbot Name or ID',
         name: 'botId',
         type: 'options',
         default: 'NOT_SEND',
@@ -76,7 +96,7 @@ exports.commonFields = [
         displayOptions: {
             show: {
                 resource: ['message', 'chatbot'],
-                operation: ['sendText', 'sendFile', 'sendTemplate', 'sendChatbot'],
+                operation: ['sendText', 'sendFile', 'sendTemplate'],
             },
         },
     },

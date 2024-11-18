@@ -172,6 +172,10 @@ export class WtsChat implements INodeType {
 				return await WtsChatService.getBots(this);
 			},
 
+			async getChatbots(this: ILoadOptionsFunctions): Promise<Array<{ name: string; value: string }>> {
+				return await WtsChatService.getChatbots(this);
+			},
+
 			async getTemplatesSession(this: ILoadOptionsFunctions): Promise<Array<{ name: string; value: string }>> {
 				const sessionId = this.getNodeParameter('sessionId') as string;
 				const template = await WtsChatService.getTemplatesSession(sessionId, this);
@@ -1609,7 +1613,7 @@ export class WtsChat implements INodeType {
 			}
 			else if (resource === 'chatbot') {
 				if (operation === 'sendChatbot') {
-					const botId = this.getNodeParameter('botId', i) as string;
+					const botId = this.getNodeParameter('chatbotId', i) as string;
 					const from = this.getNodeParameter('channelId', i) as string;
 					const to = this.getNodeParameter('numberToSend', i) as string;
 					const sessionId = this.getNodeParameter('sessionId', i) as string;

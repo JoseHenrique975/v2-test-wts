@@ -503,36 +503,94 @@ class WtsChatService {
         }
     }
     static async getBots(otp) {
-        var _a;
+        var _a, _b;
         const credentials = await otp.getCredentials('wtsApi');
         const receivedToken = credentials === null || credentials === void 0 ? void 0 : credentials.apiKey;
         const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
         const url = `${baseUrl}/chat/v1/chatbot`;
-        try {
-            const response = await axios_1.default.get(url, {
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
+        let hasMore = true;
+        let pageNumber = 0;
+        const result = [];
+        while (hasMore) {
+            pageNumber += 1;
+            try {
+                const response = await axios_1.default.get(url, {
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                    params: {
+                        pageNumber,
+                    }
+                });
+                const data = response === null || response === void 0 ? void 0 : response.data;
+                result.push(...data.items);
+                if (!data.hasMorePages) {
+                    hasMore = false;
                 }
-            });
-            const data = response === null || response === void 0 ? void 0 : response.data;
-            (_a = data.items) === null || _a === void 0 ? void 0 : _a.push({ name: 'Undefined', id: constants_types_1.notSend });
-            data.items.sort((a, b) => {
-                if (a.name === 'Undefined')
-                    return -1;
-                if (b.name === 'Undefined')
-                    return 1;
-                return a.name.localeCompare(b.name);
-            });
-            return data.items.map((bot) => ({
-                name: bot.name,
-                value: bot.id
-            }));
+            }
+            catch (error) {
+                throw new Error(`Failed to load bots: ${(_b = (_a = error === null || error === void 0 ? void 0 : error.response) === null || _a === void 0 ? void 0 : _a.data) === null || _b === void 0 ? void 0 : _b.text}`);
+            }
         }
-        catch (error) {
-            throw new Error(`Failed to load bots: ${error.response.data.text}`);
+        const mappedResult = result.map((bot) => ({
+            name: bot.name,
+            value: bot.id
+        }));
+        mappedResult.push({ name: 'Undefined', value: constants_types_1.notSend });
+        return mappedResult.sort((a, b) => {
+            if (a.name === 'Undefined')
+                return -1;
+            if (b.name === 'Undefined')
+                return 1;
+            return a.name.localeCompare(b.name);
+        });
+    }
+    static async getChatbots(otp) {
+        var _a, _b;
+        const credentials = await otp.getCredentials('wtsApi');
+        const receivedToken = credentials === null || credentials === void 0 ? void 0 : credentials.apiKey;
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/chat/v1/chatbot?Types=Automation`;
+        let hasMore = true;
+        let pageNumber = 0;
+        const result = [];
+        while (hasMore) {
+            pageNumber += 1;
+            try {
+                const response = await axios_1.default.get(url, {
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                    params: {
+                        pageNumber,
+                    }
+                });
+                const data = response === null || response === void 0 ? void 0 : response.data;
+                result.push(...data.items);
+                if (!data.hasMorePages) {
+                    hasMore = false;
+                }
+            }
+            catch (error) {
+                throw new Error(`Failed to load bots: ${(_b = (_a = error === null || error === void 0 ? void 0 : error.response) === null || _a === void 0 ? void 0 : _a.data) === null || _b === void 0 ? void 0 : _b.text}`);
+            }
         }
+        const mappedResult = result.map((bot) => ({
+            name: bot.name,
+            value: bot.id
+        }));
+        mappedResult.push({ name: 'Undefined', value: constants_types_1.notSend });
+        return mappedResult.sort((a, b) => {
+            if (a.name === 'Undefined')
+                return -1;
+            if (b.name === 'Undefined')
+                return 1;
+            return a.name.localeCompare(b.name);
+        });
     }
     static async getTemplates(channelId, ild) {
         const credentials = await ild.getCredentials('wtsApi');

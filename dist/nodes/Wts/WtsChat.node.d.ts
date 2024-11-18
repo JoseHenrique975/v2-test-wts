@@ -59,6 +59,10 @@ export declare class WtsChat implements INodeType {
                 name: string;
                 value: string;
             }>>;
+            getChatbots(this: ILoadOptionsFunctions): Promise<Array<{
+                name: string;
+                value: string;
+            }>>;
             getTemplatesSession(this: ILoadOptionsFunctions): Promise<Array<{
                 name: string;
                 value: string;

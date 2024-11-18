@@ -35,6 +35,10 @@ export declare class WtsChatService {
         name: string;
         value: string;
     }>>;
+    static getChatbots(otp: ILoadOptionsFunctions): Promise<Array<{
+        name: string;
+        value: string;
+    }>>;
     static getTemplates(channelId: string, ild: ILoadOptionsFunctions): Promise<Array<{
         name: string;
         value: string;
