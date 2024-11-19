@@ -21,7 +21,7 @@ class WtsChat {
         this.description = {
             displayName: 'WTS Chat',
             name: 'wtsChat',
-            icon: 'file:images/wtslogo.svg',
+            icon: { light: 'file:images/wtslogo.svg', dark: 'file:images/wtslogodarkmode.svg' },
             group: ['transform'],
             version: [1],
             subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',

@@ -95,7 +95,7 @@ exports.commonFields = [
         ],
         displayOptions: {
             show: {
-                resource: ['message', 'chatbot'],
+                resource: ['message'],
                 operation: ['sendText', 'sendFile', 'sendTemplate'],
             },
         },
