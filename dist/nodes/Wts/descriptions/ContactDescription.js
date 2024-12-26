@@ -13,6 +13,12 @@ exports.contactOperations = [
         },
         options: [
             {
+                name: 'Create Contact',
+                value: 'createContact',
+                action: 'Create contact',
+                default: 'contact'
+            },
+            {
                 name: 'Get All Contacts',
                 value: 'listContacts',
                 description: 'Fetch all contacts from the API',
@@ -34,15 +40,8 @@ exports.contactOperations = [
                 default: 'contact'
             },
             {
-                name: 'Create Contact',
-                value: 'createContact',
-                action: 'Create contact',
-                default: 'contact'
-            },
-            {
                 name: 'Update Contact',
                 value: 'updateContact',
-                description: 'Update Contact',
                 action: 'Update contact',
                 default: 'contact'
             }
@@ -253,12 +252,12 @@ exports.contactFields = [
                 value: 'Instagram'
             },
             {
-                name: 'Name',
-                value: 'Name',
-            },
-            {
                 name: 'Metadata',
                 value: 'Metadata'
+            },
+            {
+                name: 'Name',
+                value: 'Name',
             },
             {
                 name: 'PhoneNumber',
@@ -380,7 +379,7 @@ exports.contactFields = [
         },
     },
     {
-        displayName: 'Portfolios',
+        displayName: 'Portfolio Names or IDs',
         name: 'portfoliosUpdateContact',
         type: 'multiOptions',
         description: 'Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code-examples/expressions/">expression</a>',
@@ -398,7 +397,7 @@ exports.contactFields = [
         },
     },
     {
-        displayName: 'Sequences',
+        displayName: 'Sequence Names or IDs',
         name: 'sequencesUpdateContact',
         type: 'multiOptions',
         description: 'Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code-examples/expressions/">expression</a>',
@@ -421,7 +420,7 @@ exports.contactFields = [
         type: 'options',
         default: 'NOT_SEND',
         placeholder: 'Choose status contact',
-        description: 'Status of contacts to be listed.',
+        description: 'Status of contacts to be listed',
         options: [
             {
                 name: 'Active',
@@ -490,7 +489,6 @@ exports.contactFields = [
                         name: 'value',
                         type: 'string',
                         default: '',
-                        description: '',
                     },
                 ],
             },
