@@ -101,6 +101,38 @@ class WtsCoreService {
             throw new Error(`Failed to load users: ${error.response.data.text}`);
         }
     }
+    static async getUsersIdsUpdate(otp) {
+        const credentials = await otp.getCredentials('wtsApi');
+        const receivedToken = credentials === null || credentials === void 0 ? void 0 : credentials.apiKey;
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/core/v1/agent`;
+        try {
+            const response = await axios_1.default.get(url, {
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            const users = response.data;
+            const mappedResult = users.map((user) => ({
+                name: user.name,
+                value: user.userId,
+            }));
+            mappedResult.push({ name: 'Empty', value: constants_types_1.notSend });
+            mappedResult.sort((a, b) => {
+                if (a.name === 'Empty')
+                    return -1;
+                if (b.name === 'Empty')
+                    return 1;
+                return a.name.localeCompare(b.name);
+            });
+            return mappedResult;
+        }
+        catch (error) {
+            throw new Error(`Failed to load users: ${error.response.data.text}`);
+        }
+    }
     static async getDepartmentsIds(otp) {
         const credentials = await otp.getCredentials('wtsApi');
         const receivedToken = credentials === null || credentials === void 0 ? void 0 : credentials.apiKey;
@@ -120,6 +152,37 @@ class WtsCoreService {
                 if (a.name === 'Undefined')
                     return -1;
                 if (b.name === 'Undefined')
+                    return 1;
+                return a.name.localeCompare(b.name);
+            });
+            return departments.map((department) => ({
+                name: department.name,
+                value: department.id,
+            }));
+        }
+        catch (error) {
+            throw new Error(`Failed to load departments: ${error.response.data.text}`);
+        }
+    }
+    static async getDepartmentsIdsUpdate(otp) {
+        const credentials = await otp.getCredentials('wtsApi');
+        const receivedToken = credentials === null || credentials === void 0 ? void 0 : credentials.apiKey;
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/core/v1/department`;
+        try {
+            const response = await axios_1.default.get(url, {
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            const departments = response === null || response === void 0 ? void 0 : response.data;
+            departments.push({ name: 'Empty', id: constants_types_1.notSend });
+            departments.sort((a, b) => {
+                if (a.name === 'Empty')
+                    return -1;
+                if (b.name === 'Empty')
                     return 1;
                 return a.name.localeCompare(b.name);
             });
@@ -172,6 +235,100 @@ class WtsCoreService {
         }
         catch (error) {
             throw new Error(`Failed to load users: ${error.response.data.text}`);
+        }
+    }
+    static async getTagsAndUpdate(ild) {
+        const credentials = await ild.getCredentials('wtsApi');
+        const receivedToken = credentials === null || credentials === void 0 ? void 0 : credentials.apiKey;
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/core/v1/tag`;
+        try {
+            const response = await axios_1.default.get(url, {
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            const tags = response.data;
+            const result = tags;
+            result.sort((a, b) => {
+                return a.name.localeCompare(b.name);
+            });
+            return result.map((tag) => ({
+                name: tag.name,
+                value: tag.id,
+            }));
+        }
+        catch (error) {
+            throw new Error(`Failed to load tags: ${error.response.data.text}`);
+        }
+    }
+    static async getPortfolio(ild) {
+        const credentials = await ild.getCredentials('wtsApi');
+        const receivedToken = credentials === null || credentials === void 0 ? void 0 : credentials.apiKey;
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/core/v1/portfolio`;
+        let hasMore = true;
+        let pageNumber = 0;
+        const pageSize = 100;
+        const result = [];
+        while (hasMore) {
+            pageNumber += 1;
+            try {
+                const response = await axios_1.default.get(url, {
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                    params: {
+                        pageNumber,
+                        pageSize
+                    }
+                });
+                const data = response === null || response === void 0 ? void 0 : response.data;
+                result.push(...data.items);
+                if (!data.hasMorePages) {
+                    hasMore = false;
+                }
+            }
+            catch (error) {
+                throw new Error(`Failed to load portfolio: ${error.response.data.text}`);
+            }
+        }
+        const mappedResult = result.map((portfolio) => ({
+            name: portfolio.name,
+            value: portfolio.id
+        }));
+        return mappedResult.sort((a, b) => {
+            return a.name.localeCompare(b.name);
+        });
+    }
+    static async getCustomFieldsUpdate(otp) {
+        const credentials = await otp.getCredentials('wtsApi');
+        const receivedToken = credentials === null || credentials === void 0 ? void 0 : credentials.apiKey;
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/core/v1/contact/custom-field`;
+        try {
+            const response = await axios_1.default.get(url, {
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            const fields = response.data;
+            fields.sort((a, b) => {
+                return a.name.localeCompare(b.name);
+            });
+            return fields.map((field) => ({
+                name: field.name,
+                value: field.key,
+            }));
+        }
+        catch (error) {
+            throw new Error(`Failed to load custom fields: ${error.response.data.text}`);
         }
     }
     static async getAllContacts(params, receivedToken) {
@@ -256,6 +413,25 @@ class WtsCoreService {
         }
         catch (error) {
             throw new Error(`API request failed: ${error.response.data.text}`);
+        }
+    }
+    static async updateContact(id, bodyRequest, receivedToken) {
+        var _a, _b;
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/core/v1/contact/${id}`;
+        try {
+            const response = await axios_1.default.put(url, bodyRequest, {
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            const data = response.data;
+            return data;
+        }
+        catch (error) {
+            throw new Error(`API request failed: ${(_b = (_a = error === null || error === void 0 ? void 0 : error.response) === null || _a === void 0 ? void 0 : _a.data) === null || _b === void 0 ? void 0 : _b.text}`);
         }
     }
 }

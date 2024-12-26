@@ -15,11 +15,31 @@ export declare class WtsChat implements INodeType {
                 name: string;
                 value: string;
             }>>;
+            getUsersIdsUpdate(this: ILoadOptionsFunctions): Promise<Array<{
+                name: string;
+                value: string;
+            }>>;
             getDepartmentsIds(this: ILoadOptionsFunctions): Promise<Array<{
                 name: string;
                 value: any;
             }>>;
+            getDepartmentsIdsUpdate(this: ILoadOptionsFunctions): Promise<Array<{
+                name: string;
+                value: any;
+            }>>;
             getUsersByDepartments(this: ILoadOptionsFunctions): Promise<Array<{
+                name: string;
+                value: string;
+            }>>;
+            getTagsAndUpdate(this: ILoadOptionsFunctions): Promise<Array<{
+                name: string;
+                value: string;
+            }>>;
+            getPortfolio(this: ILoadOptionsFunctions): Promise<Array<{
+                name: string;
+                value: string;
+            }>>;
+            getCustomFieldsUpdate(this: ILoadOptionsFunctions): Promise<Array<{
                 name: string;
                 value: string;
             }>>;
@@ -69,6 +89,7 @@ export declare class WtsChat implements INodeType {
             }>>;
             getNamesParamsTemplates(this: ILoadOptionsFunctions): Promise<any>;
             getNameParamsTemplatesSession(this: ILoadOptionsFunctions): Promise<any>;
+            getSequences(this: ILoadOptionsFunctions): Promise<any>;
         };
     };
     execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]>;

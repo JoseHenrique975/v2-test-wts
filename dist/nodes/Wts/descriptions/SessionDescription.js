@@ -21,7 +21,7 @@ exports.sessionOperations = [
             {
                 name: 'Complete Session',
                 value: 'concludeSession',
-                action: 'Conclude session',
+                action: 'Complete session',
                 default: 'session'
             },
             {
@@ -57,13 +57,13 @@ exports.sessionOperations = [
             {
                 name: 'Transfer to Department',
                 value: 'updateTransfer',
-                action: 'Update transfer',
+                action: 'Transfer session',
                 default: 'session'
             },
             {
                 name: 'Transfer to User',
                 value: 'assignUser',
-                action: 'Assign user to session',
+                action: 'Transfer session to user',
                 default: 'session'
             },
             {
@@ -78,19 +78,6 @@ exports.sessionOperations = [
     },
 ];
 exports.sessionFields = [
-    {
-        displayName: 'Company ID',
-        name: 'companyId',
-        type: 'string',
-        default: '',
-        placeholder: 'Enter company code',
-        displayOptions: {
-            show: {
-                resource: ['session'],
-                operation: ['updateSession'],
-            },
-        },
-    },
     {
         displayName: 'Channel Names or IDs',
         name: 'channelsIds',
@@ -382,32 +369,31 @@ exports.updateSessionFields = [
         placeholder: 'Choose department',
         description: 'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code-examples/expressions/">expression</a>',
         typeOptions: {
-            loadOptionsMethod: 'getDepartmentsIds',
+            loadOptionsMethod: 'getDepartmentsIdsUpdate',
         },
         options: [
-            { name: 'Undefined', value: 'NOT_SEND' }
+            { name: 'Empty', value: 'NOT_SEND' }
         ],
         displayOptions: {
             show: {
                 resource: ['session'],
                 operation: ['updateSession'],
-                fieldsUpdate: ['DepartmentId', 'UserId']
+                fieldsUpdate: ['DepartmentId']
             },
         },
     },
     {
         displayName: 'User Name or ID',
-        name: 'userIdByDepartmentUpdateSession',
+        name: 'usersUpdateSession',
         type: 'options',
         default: 'NOT_SEND',
         placeholder: 'Choose user',
         description: 'Update this list of users, every time you change departments, to show users from that department. Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code-examples/expressions/">expression</a>.',
         typeOptions: {
-            loadOptionsMethod: 'getUsersByDepartments',
-            loadOptionsDependsOn: ['departmentIdUpdatedSession'],
+            loadOptionsMethod: 'getUsersIdsUpdate',
         },
         options: [
-            { name: 'Undefined', value: 'NOT_SEND' }
+            { name: 'Empty', value: 'NOT_SEND' }
         ],
         displayOptions: {
             show: {
@@ -467,9 +453,9 @@ exports.updateSessionFields = [
         },
     },
     {
-        displayName: 'Metada',
+        displayName: 'Metadata',
         name: 'metadataUpdateSession',
-        placeholder: 'Add metada',
+        placeholder: 'Add metadata',
         type: 'fixedCollection',
         default: {},
         typeOptions: {

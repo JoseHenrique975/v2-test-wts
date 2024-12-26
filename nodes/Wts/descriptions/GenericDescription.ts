@@ -290,7 +290,7 @@ export const metadataFields: INodeProperties[] = [
     {
         displayName: 'Metadata',
         name: 'metadata',
-        placeholder: 'Add metada',
+        placeholder: 'Add metadata',
         type: 'fixedCollection',
         default: {},
         typeOptions: {
@@ -319,7 +319,7 @@ export const metadataFields: INodeProperties[] = [
         displayOptions: {
             show: {
                 resource: ['contact', 'panel'],
-                operation: ['createContact', 'createCard', 'updateCard'],
+                operation: ['createContact', 'createCard'],
             },
         },
     },

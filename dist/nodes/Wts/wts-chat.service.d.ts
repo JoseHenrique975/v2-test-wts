@@ -54,6 +54,10 @@ export declare class WtsChatService {
         name: string;
         value: string;
     }>>;
+    static getSequences(ild: ILoadOptionsFunctions): Promise<{
+        name: string;
+        value: string;
+    }>;
     static passRequestValues(result: any, data: any): void;
     static getUrlFile(bodyFile: {
         mimeType: string;

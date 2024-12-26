@@ -236,7 +236,6 @@ class WtsChatService {
         const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
         const url = `${baseUrl}/chat/v2/session/${sessionId}/partial`;
         const bodyRequest = {
-            ...(body.companyId && { companyId: body.companyId }),
             ...(body.statusSessionUpdate && { status: body.statusSessionUpdate }),
             ...(body.endAt && { endAt: body.endAt }),
             ...(body.number && { number: body.number }),
@@ -721,6 +720,47 @@ class WtsChatService {
             throw new Error(`Failed to load template parameters: ${error}`);
         }
     }
+    static async getSequences(ild) {
+        const credentials = await ild.getCredentials('wtsApi');
+        const receivedToken = credentials === null || credentials === void 0 ? void 0 : credentials.apiKey;
+        const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
+        const url = `${baseUrl}/chat/v1/sequence`;
+        const result = [];
+        let hasMore = true;
+        let pageNumber = 0;
+        let pageSize = 100;
+        while (hasMore) {
+            pageNumber += 1;
+            try {
+                const response = await axios_1.default.get(url, {
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                    params: {
+                        pageNumber: pageNumber,
+                        pageSize: pageSize
+                    }
+                });
+                const data = response.data;
+                result.push(...data.items);
+                if (!data.hasMorePages) {
+                    hasMore = false;
+                }
+            }
+            catch (error) {
+                throw new Error(`Failed to load sequences: ${error.response.data.text}`);
+            }
+        }
+        const mappedResult = result.map((sequence) => ({
+            name: sequence.name,
+            value: sequence.id
+        }));
+        return mappedResult.sort((a, b) => {
+            return a.name.localeCompare(b.name);
+        });
+    }
     static passRequestValues(result, data) {
         result.totalItems = data.totalItems;
         result.totalPages = data.totalPages;
@@ -762,7 +802,6 @@ class WtsChatService {
             return data;
         }
         catch (error) {
-            console.log(error);
             throw new Error(`API request failed: ${error.response.data.text}`);
         }
     }

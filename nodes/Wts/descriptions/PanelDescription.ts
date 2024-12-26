@@ -47,7 +47,7 @@ export const panelOperations: INodeProperties[] = [
                 name: 'Gel All Annotation',
                 value: 'listCardAnnotations',
                 description: 'Get all notes from a card',
-                action: 'List notes',
+                action: 'List annotations',
                 default: 'panel'
             },
             {
@@ -550,6 +550,10 @@ export const updateCardFields: INodeProperties[] = [
                 value: 'DueDate',
             },
             {
+                name: 'Metadata',
+                value: 'Metadata'
+            },
+            {
                 name: 'MonetaryAmount',
                 value: 'MonetaryAmount',
             },
@@ -760,10 +764,10 @@ export const updateCardFields: INodeProperties[] = [
         placeholder: 'Choose user',
         description: 'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code-examples/expressions/">expression</a>',
         typeOptions: {
-            loadOptionsMethod: 'getUsersIds',
+            loadOptionsMethod: 'getUsersIdsUpdate',
         },
         options: [
-            {name:'Undefined', value: 'NOT_SEND'}
+            {name:'Empty', value: 'NOT_SEND'}
         ],
         displayOptions: {
             show: {
@@ -837,6 +841,44 @@ export const updateCardFields: INodeProperties[] = [
                 resource: ['panel'],
                 operation: ['updateCard'],
                 fieldsUpdateCard: ['SessionId']
+            },
+        },
+    },
+
+    {
+        displayName: 'Metadata',
+        name: 'metadataUpdateCard',
+        placeholder: 'Add metadata',
+        type: 'fixedCollection',
+        default: {},
+        typeOptions: {
+            multipleValues: true,
+        },
+        options: [
+            {
+                name: 'metadata',
+                displayName: 'Metadata',
+                values: [
+                    {
+                        displayName: 'Key',
+                        name: 'key',
+                        type: 'string',
+                        default: '',
+                    },
+                    {
+                        displayName: 'Value',
+                        name: 'value',
+                        type: 'string',
+                        default: '',
+                    },
+                ],
+            },
+        ],
+        displayOptions: {
+            show: {
+                resource: ['panel'],
+                operation: ['updateCard'],
+                fieldsUpdateCard: ['Metadata']
             },
         },
     },

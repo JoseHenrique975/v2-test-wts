@@ -270,7 +270,6 @@ export class WtsChatService {
     const url = `${baseUrl}/chat/v2/session/${sessionId}/partial`;
 
     const bodyRequest = {
-      ...(body.companyId && { companyId: body.companyId }),
       ...(body.statusSessionUpdate && { status: body.statusSessionUpdate }),
       ...(body.endAt && { endAt: body.endAt }),
       ...(body.number && { number: body.number }),
@@ -819,6 +818,58 @@ export class WtsChatService {
     }
   }
 
+  static async getSequences(ild: ILoadOptionsFunctions): Promise<{ name: string, value: string }> {
+    const credentials = await ild.getCredentials('wtsApi');
+		const receivedToken = credentials?.apiKey as string;
+
+    const { token, baseUrl } = Constants.getRequesConfig(receivedToken);
+    const url = `${baseUrl}/chat/v1/sequence`;
+
+    const result: any = [];
+    let hasMore = true;
+    let pageNumber = 0;
+    let pageSize = 100;
+
+    while (hasMore) {
+      pageNumber += 1;
+      try {
+        const response = await axios.get(url, {
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          params: {
+            pageNumber: pageNumber,
+            pageSize: pageSize
+          }
+        });
+
+        const data = response.data;
+        result.push(...data.items);
+
+        if (!data.hasMorePages) {
+          hasMore = false;
+        }
+
+      }
+      catch (error) {
+        throw new Error(`Failed to load sequences: ${error.response.data.text}`);
+      }
+    }
+
+    const mappedResult = result.map((sequence: any) => ({
+			name: sequence.name,
+			value: sequence.id
+		  }));
+		  //mappedResult.push({ name: 'Empty', value: notSend });
+		  return mappedResult.sort((a: any, b: any) => {
+			//if (a.name === 'Empty') return -1;
+			//if (b.name === 'Empty') return 1;
+			return a.name.localeCompare(b.name)
+		  });
+  }
+
   //----------------------//
   //--------UTILS--------//
   static passRequestValues(result: any, data: any) {
@@ -877,7 +928,6 @@ export class WtsChatService {
       const data = response;
       return data;
     } catch (error) {
-      console.log(error);
       throw new Error(`API request failed: ${error.response.data.text}`);
     }
   }

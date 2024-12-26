@@ -112,14 +112,33 @@ export class WtsChat implements INodeType {
 				return await WtsCoreService.getUsersIds(this);
 			},
 
+			async getUsersIdsUpdate(this: ILoadOptionsFunctions): Promise<Array<{ name: string; value: string }>> {
+				return await WtsCoreService.getUsersIdsUpdate(this);
+			},
+
 			async getDepartmentsIds(this: ILoadOptionsFunctions): Promise<Array<{ name: string, value: any }>> {
 				return await WtsCoreService.getDepartmentsIds(this);
 			},
 
+			async getDepartmentsIdsUpdate(this: ILoadOptionsFunctions): Promise<Array<{name: string, value: any}>> {
+				return await WtsCoreService.getDepartmentsIdsUpdate(this);
+			},
 
 			async getUsersByDepartments(this: ILoadOptionsFunctions): Promise<Array<{ name: string; value: string }>> {
 				const departmentId = this.getCurrentNodeParameter('departmentId') as string ?? this.getNodeParameter('departmentIdUpdatedSession') as string;
 				return await WtsCoreService.getUsersByDepartments(departmentId, this);
+			},
+
+			async getTagsAndUpdate(this: ILoadOptionsFunctions): Promise<Array<{ name: string; value: string }>> {
+				return await WtsCoreService.getTagsAndUpdate(this);
+			},
+
+			async getPortfolio(this: ILoadOptionsFunctions): Promise<Array<{ name: string; value: string }>> {
+				return await WtsCoreService.getPortfolio(this);
+			},
+
+			async getCustomFieldsUpdate(this: ILoadOptionsFunctions): Promise<Array<{ name: string, value: string }>> {
+				return await WtsCoreService.getCustomFieldsUpdate(this);
 			},
 
 			/*----CRM----*/
@@ -204,6 +223,10 @@ export class WtsChat implements INodeType {
 						value: param.name
 					};
 				});
+			},
+
+			async getSequences(this: ILoadOptionsFunctions): Promise<any> {
+			   return await WtsChatService.getSequences(this);
 			}
 
 		},
@@ -360,6 +383,97 @@ export class WtsChat implements INodeType {
 					} catch (error) {
 						throw new NodeApiError(this.getNode(), error as JsonObject);
 					}
+				}
+				else if(operation === 'updateContact') {0
+                  const contactId = this.getNodeParameter('contactId', i) as string;
+				  let fields = this.getNodeParameter('fieldsUpdateContact', i) as Array<string>;
+
+				  const name = fields.includes('Name') ? this.getNodeParameter('nameUpdateContact', i) as string : null;
+				  const phonenumber = fields.includes('PhoneNumber') ? this.getNodeParameter('phonenumberUpdateContact', i) as string : null;
+				  const email = fields.includes('Email') ? this.getNodeParameter('emailUpdateContact', i) as string : null;
+				  const instagram = fields.includes('Instagram') ? this.getNodeParameter('instagramUpdateContact', i) as string : null;
+				  const annotation = fields.includes('Annotation') ? this.getNodeParameter('annotationUpdateContact', i) as string : null;
+				  const tagIds = fields.includes('Tags') ? this.getNodeParameter('tagsUpdateContact', i) as Array<string> : null;
+				  const portfolios = fields.includes('Portfolio') ? this.getNodeParameter('portfoliosUpdateContact', i) as Array<string> : null;
+                  const sequences = fields.includes('SequenceIds') ? this.getNodeParameter('sequencesUpdateContact', i) as Array<string> : null;
+				  const status = fields.includes('Status') ? this.getNodeParameter('statusUpdateContact', i) as string : null;
+				  const pictureUrl = fields.includes('PictureUrl') ? this.getNodeParameter('pictureUrlUpdateContact', i) as string : null;
+
+				  const source = fields.includes('Utm') ? this.getNodeParameter('sourceUtmUpdateContact', i) as string : null;
+				  const medium = fields.includes('Utm') ? this.getNodeParameter('mediumUtmUpdateContact', i) as string : null;
+				  const campaign = fields.includes('Utm') ? this.getNodeParameter('campaignUtmUpdateContact', i) as string : null;
+				  const content = fields.includes('Utm') ? this.getNodeParameter('contentUtmUpdateContact', i) as string : null;
+				  const headline = fields.includes('Utm') ? this.getNodeParameter('headlineUtmUpdateContact', i) as string : null;
+				  const term = fields.includes('Utm') ? this.getNodeParameter('termUtmUpdateContact', i) as string : null;
+				  const referralUrl = fields.includes('Utm') ? this.getNodeParameter('referralUrlUtmUpdateContact', i) as string : null;
+
+				  const customFields = fields.includes('CustomFields') ? this.getNodeParameter('customFieldsUpdateContact', i) as {customFields: { key: string; value: string }[];} : null;
+				  const metadata = fields.includes('Metadata') ? this.getNodeParameter('metadataUpdateContact', i) as {
+					metadata: { key: string; value: string }[];
+				} : null;
+
+				const metadataObject = metadata?.metadata?.reduce(
+					(acc: { [key: string]: string }, metadata) => {
+						acc[metadata.key] = metadata.value;
+						return acc;
+					},
+					{},
+				);
+
+				  const customFieldsObject = customFields?.customFields?.reduce(
+					(acc: { [key: string]: string }, field) => {
+						acc[field.key] = field.value;
+						return acc;
+					},
+				 	{},
+					);
+
+				  if(!contactId && contactId.trim() === ""){
+					throw new NodeApiError(this.getNode(), {
+						message: 'ContactID is empty, please fill it in',
+						description: 'ContactID is empty, please fill it in',
+					});
+				  }
+
+				  if(fields.includes('Metadata')){
+					fields = fields.filter(field => field != 'Metadata');
+				  }
+
+				  const bodyRequest = {
+					fields,
+					name,
+					phonenumber,
+					email,
+					instagram,
+					annotation,
+					tagIds,
+					...(portfolios && { portfolioIds : portfolios}),
+					...(sequences && { sequenceIds: sequences }),
+					...(status && status != notSend && { status: status}),
+					pictureUrl,
+					...(customFieldsObject && { customFields: customFieldsObject }),
+					...(metadataObject && { metadata: metadataObject }),
+					utm: {
+						source,
+						medium,
+						campaign,
+						content,
+						headline,
+						term,
+						referralUrl
+					}
+				  }
+
+
+				  try {
+
+					const data = await WtsCoreService.updateContact(contactId, bodyRequest, token);
+					const items: INodeExecutionData[] = [{ json: data, },];
+					results[i] = items;
+
+				  } catch(error){
+					throw new NodeApiError(this.getNode(), error as JsonObject);
+				  }
 				}
 	
 			}
@@ -952,15 +1066,14 @@ export class WtsChat implements INodeType {
 				else if (operation === 'updateSession') {
 					const fields = this.getNodeParameter('fieldsUpdate', i) as Array<string>;
 					const sessionId = this.getNodeParameter('sessionId', i) as string;
-					const companyId = this.getNodeParameter('companyId', i) as string;
 	
 					const statusSessionUpdate = fields.includes('Status') ? this.getNodeParameter('statusUpdateSessionOption', i) as string : null;
 	
 					const endAt = fields.includes('EndAt') ? this.getNodeParameter('endAt', i) as string : null;
 					const number = fields.includes('Number') ? this.getNodeParameter('number', i) as string : null;
 	
-					const departmentId = (fields.includes('DepartmentId') || fields.includes('UserId')) ? this.getNodeParameter('departmentIdUpdatedSession', i) as string : null;
-					const userId = fields.includes('UserId') ? this.getNodeParameter('userIdByDepartmentUpdateSession', i) as string : null;
+					const departmentId = fields.includes('DepartmentId') ? this.getNodeParameter('departmentIdUpdatedSession', i) as string : null;
+					const userId = fields.includes('UserId') ? this.getNodeParameter('usersUpdateSession', i) as string : null;
 	
 					const metadata = fields.includes('Metadata') ? this.getNodeParameter('metadataUpdateSession', i) as {
 						metadata: { key: string; value: string }[];
@@ -982,7 +1095,6 @@ export class WtsChat implements INodeType {
 					}
 	
 					const body = {
-						companyId,
 						...(statusSessionUpdate != 'UNDEFINED' && { statusSessionUpdate }), endAt,
 						number, ...(departmentId != notSend && { departmentId }), ...(userId != notSend && { userId }), metadataObject, fields
 					}
@@ -1529,7 +1641,7 @@ export class WtsChat implements INodeType {
 				}
 				else if (resource === 'panel' && operation === 'updateCard') {
 					const cardId = this.getNodeParameter('cardIdUpdateCard', i) as string;
-					const fields = this.getNodeParameter('fieldsUpdateCard', i) as Array<string>;
+					let fields = this.getNodeParameter('fieldsUpdateCard', i) as Array<string>;
 	
 					const title = fields.includes('Title') ? this.getNodeParameter('titleCardUpdateCard', i) as string : null;
 					const includeArchived = fields.includes('Archived') ? this.getNodeParameter('includeArchivedUpdateCard', i) as boolean : null;
@@ -1545,9 +1657,9 @@ export class WtsChat implements INodeType {
 					const updateCardTagId = fields.includes('TagIds') ? this.getNodeParameter('updateCardTagIdUpdateCard', i) as Array<string> : null;
 					const userId = fields.includes('ResponsibleUserId') ? this.getNodeParameter('userIdUpdateCard', i) as string : null;
 	
-					const metadata = this.getNodeParameter('metadata', i) as {
+					const metadata = fields.includes('Metadata') ? this.getNodeParameter('metadataUpdateCard', i) as {
 						metadata: { key: string; value: string }[];
-					};
+					} : null;
 	
 					const customFields = fields.includes('CustomFields') ? this.getNodeParameter('customFieldsCardUpdateCard', i) as {
 						customFields: { key: string; value: string }[]
@@ -1581,6 +1693,10 @@ export class WtsChat implements INodeType {
 							message: 'Fill in Fields',
 							description: 'Fill in all fields',
 						});
+					}
+                     
+					if(fields.includes('Metadata')) {
+					   fields = fields.filter(field => field != 'Metadata');
 					}
 	
 					const body = {

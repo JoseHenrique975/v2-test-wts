@@ -106,13 +106,28 @@ class WtsChat {
                 async getUsersIds() {
                     return await wts_core_service_1.WtsCoreService.getUsersIds(this);
                 },
+                async getUsersIdsUpdate() {
+                    return await wts_core_service_1.WtsCoreService.getUsersIdsUpdate(this);
+                },
                 async getDepartmentsIds() {
                     return await wts_core_service_1.WtsCoreService.getDepartmentsIds(this);
+                },
+                async getDepartmentsIdsUpdate() {
+                    return await wts_core_service_1.WtsCoreService.getDepartmentsIdsUpdate(this);
                 },
                 async getUsersByDepartments() {
                     var _a;
                     const departmentId = (_a = this.getCurrentNodeParameter('departmentId')) !== null && _a !== void 0 ? _a : this.getNodeParameter('departmentIdUpdatedSession');
                     return await wts_core_service_1.WtsCoreService.getUsersByDepartments(departmentId, this);
+                },
+                async getTagsAndUpdate() {
+                    return await wts_core_service_1.WtsCoreService.getTagsAndUpdate(this);
+                },
+                async getPortfolio() {
+                    return await wts_core_service_1.WtsCoreService.getPortfolio(this);
+                },
+                async getCustomFieldsUpdate() {
+                    return await wts_core_service_1.WtsCoreService.getCustomFieldsUpdate(this);
                 },
                 async getPanels() {
                     return await wts_crm_service_1.WtsCrmService.getPanels(this);
@@ -183,12 +198,15 @@ class WtsChat {
                             value: param.name
                         };
                     });
+                },
+                async getSequences() {
+                    return await wts_chat_service_1.WtsChatService.getSequences(this);
                 }
             },
         };
     }
     async execute() {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p;
         const results = [[]];
         const items = this.getInputData();
         const resource = this.getNodeParameter('resource', 0);
@@ -308,6 +326,79 @@ class WtsChat {
                         throw new n8n_workflow_1.NodeApiError(this.getNode(), error);
                     }
                 }
+                else if (operation === 'updateContact') {
+                    0;
+                    const contactId = this.getNodeParameter('contactId', i);
+                    let fields = this.getNodeParameter('fieldsUpdateContact', i);
+                    const name = fields.includes('Name') ? this.getNodeParameter('nameUpdateContact', i) : null;
+                    const phonenumber = fields.includes('PhoneNumber') ? this.getNodeParameter('phonenumberUpdateContact', i) : null;
+                    const email = fields.includes('Email') ? this.getNodeParameter('emailUpdateContact', i) : null;
+                    const instagram = fields.includes('Instagram') ? this.getNodeParameter('instagramUpdateContact', i) : null;
+                    const annotation = fields.includes('Annotation') ? this.getNodeParameter('annotationUpdateContact', i) : null;
+                    const tagIds = fields.includes('Tags') ? this.getNodeParameter('tagsUpdateContact', i) : null;
+                    const portfolios = fields.includes('Portfolio') ? this.getNodeParameter('portfoliosUpdateContact', i) : null;
+                    const sequences = fields.includes('SequenceIds') ? this.getNodeParameter('sequencesUpdateContact', i) : null;
+                    const status = fields.includes('Status') ? this.getNodeParameter('statusUpdateContact', i) : null;
+                    const pictureUrl = fields.includes('PictureUrl') ? this.getNodeParameter('pictureUrlUpdateContact', i) : null;
+                    const source = fields.includes('Utm') ? this.getNodeParameter('sourceUtmUpdateContact', i) : null;
+                    const medium = fields.includes('Utm') ? this.getNodeParameter('mediumUtmUpdateContact', i) : null;
+                    const campaign = fields.includes('Utm') ? this.getNodeParameter('campaignUtmUpdateContact', i) : null;
+                    const content = fields.includes('Utm') ? this.getNodeParameter('contentUtmUpdateContact', i) : null;
+                    const headline = fields.includes('Utm') ? this.getNodeParameter('headlineUtmUpdateContact', i) : null;
+                    const term = fields.includes('Utm') ? this.getNodeParameter('termUtmUpdateContact', i) : null;
+                    const referralUrl = fields.includes('Utm') ? this.getNodeParameter('referralUrlUtmUpdateContact', i) : null;
+                    const customFields = fields.includes('CustomFields') ? this.getNodeParameter('customFieldsUpdateContact', i) : null;
+                    const metadata = fields.includes('Metadata') ? this.getNodeParameter('metadataUpdateContact', i) : null;
+                    const metadataObject = (_c = metadata === null || metadata === void 0 ? void 0 : metadata.metadata) === null || _c === void 0 ? void 0 : _c.reduce((acc, metadata) => {
+                        acc[metadata.key] = metadata.value;
+                        return acc;
+                    }, {});
+                    const customFieldsObject = (_d = customFields === null || customFields === void 0 ? void 0 : customFields.customFields) === null || _d === void 0 ? void 0 : _d.reduce((acc, field) => {
+                        acc[field.key] = field.value;
+                        return acc;
+                    }, {});
+                    if (!contactId && contactId.trim() === "") {
+                        throw new n8n_workflow_1.NodeApiError(this.getNode(), {
+                            message: 'ContactID is empty, please fill it in',
+                            description: 'ContactID is empty, please fill it in',
+                        });
+                    }
+                    if (fields.includes('Metadata')) {
+                        fields = fields.filter(field => field != 'Metadata');
+                    }
+                    const bodyRequest = {
+                        fields,
+                        name,
+                        phonenumber,
+                        email,
+                        instagram,
+                        annotation,
+                        tagIds,
+                        ...(portfolios && { portfolioIds: portfolios }),
+                        ...(sequences && { sequenceIds: sequences }),
+                        ...(status && status != constants_types_1.notSend && { status: status }),
+                        pictureUrl,
+                        ...(customFieldsObject && { customFields: customFieldsObject }),
+                        ...(metadataObject && { metadata: metadataObject }),
+                        utm: {
+                            source,
+                            medium,
+                            campaign,
+                            content,
+                            headline,
+                            term,
+                            referralUrl
+                        }
+                    };
+                    try {
+                        const data = await wts_core_service_1.WtsCoreService.updateContact(contactId, bodyRequest, token);
+                        const items = [{ json: data, },];
+                        results[i] = items;
+                    }
+                    catch (error) {
+                        throw new n8n_workflow_1.NodeApiError(this.getNode(), error);
+                    }
+                }
             }
             else if (resource === 'message') {
                 if (operation === 'getMessageById') {
@@ -415,7 +506,7 @@ class WtsChat {
                 else if (operation === 'sendFile') {
                     const fileInputFieldName = this.getNodeParameter('fileToSend', i);
                     const inputData = this.getInputData(0);
-                    const fileUrl = (_c = this.getNodeParameter('urlFile', i)) !== null && _c !== void 0 ? _c : null;
+                    const fileUrl = (_e = this.getNodeParameter('urlFile', i)) !== null && _e !== void 0 ? _e : null;
                     const synchronous = this.getNodeParameter('synchronousMessage', i);
                     const from = this.getNodeParameter('channelId', i);
                     const to = this.getNodeParameter('numberToSend', i);
@@ -755,14 +846,13 @@ class WtsChat {
                 else if (operation === 'updateSession') {
                     const fields = this.getNodeParameter('fieldsUpdate', i);
                     const sessionId = this.getNodeParameter('sessionId', i);
-                    const companyId = this.getNodeParameter('companyId', i);
                     const statusSessionUpdate = fields.includes('Status') ? this.getNodeParameter('statusUpdateSessionOption', i) : null;
                     const endAt = fields.includes('EndAt') ? this.getNodeParameter('endAt', i) : null;
                     const number = fields.includes('Number') ? this.getNodeParameter('number', i) : null;
-                    const departmentId = (fields.includes('DepartmentId') || fields.includes('UserId')) ? this.getNodeParameter('departmentIdUpdatedSession', i) : null;
-                    const userId = fields.includes('UserId') ? this.getNodeParameter('userIdByDepartmentUpdateSession', i) : null;
+                    const departmentId = fields.includes('DepartmentId') ? this.getNodeParameter('departmentIdUpdatedSession', i) : null;
+                    const userId = fields.includes('UserId') ? this.getNodeParameter('usersUpdateSession', i) : null;
                     const metadata = fields.includes('Metadata') ? this.getNodeParameter('metadataUpdateSession', i) : null;
-                    const metadataObject = (_d = metadata === null || metadata === void 0 ? void 0 : metadata.metadata) === null || _d === void 0 ? void 0 : _d.reduce((acc, metadata) => {
+                    const metadataObject = (_f = metadata === null || metadata === void 0 ? void 0 : metadata.metadata) === null || _f === void 0 ? void 0 : _f.reduce((acc, metadata) => {
                         acc[metadata.key] = metadata.value;
                         return acc;
                     }, {});
@@ -773,7 +863,6 @@ class WtsChat {
                         });
                     }
                     const body = {
-                        companyId,
                         ...(statusSessionUpdate != 'UNDEFINED' && { statusSessionUpdate }), endAt,
                         number, ...(departmentId != constants_types_1.notSend && { departmentId }), ...(userId != constants_types_1.notSend && { userId }), metadataObject, fields
                     };
@@ -807,8 +896,8 @@ class WtsChat {
                 }
                 else if (operation === 'sendFileBySessionid') {
                     const sessionId = this.getNodeParameter('sessionId', i);
-                    const fileUrl = (_e = this.getNodeParameter('urlFile', i)) !== null && _e !== void 0 ? _e : null;
-                    const fileInputFieldName = (_f = this.getNodeParameter('fileToSend', i)) !== null && _f !== void 0 ? _f : null;
+                    const fileUrl = (_g = this.getNodeParameter('urlFile', i)) !== null && _g !== void 0 ? _g : null;
+                    const fileInputFieldName = (_h = this.getNodeParameter('fileToSend', i)) !== null && _h !== void 0 ? _h : null;
                     const inputData = fileInputFieldName ? this.getInputData(i) : null;
                     const synchronous = this.getNodeParameter('synchronousMessage', i);
                     if (!sessionId || sessionId.trim() === '') {
@@ -960,11 +1049,11 @@ class WtsChat {
                     const monetaryAmount = this.getNodeParameter('monetaryAmount', i);
                     const customFields = this.getNodeParameter('customFieldsPanel', i);
                     const metadata = this.getNodeParameter('metadata', i);
-                    const customFieldsObject = (_g = customFields === null || customFields === void 0 ? void 0 : customFields.customFields) === null || _g === void 0 ? void 0 : _g.reduce((acc, field) => {
+                    const customFieldsObject = (_j = customFields === null || customFields === void 0 ? void 0 : customFields.customFields) === null || _j === void 0 ? void 0 : _j.reduce((acc, field) => {
                         acc[field.key] = field.value;
                         return acc;
                     }, {});
-                    const metadataObject = (_h = metadata === null || metadata === void 0 ? void 0 : metadata.metadata) === null || _h === void 0 ? void 0 : _h.reduce((acc, metadata) => {
+                    const metadataObject = (_k = metadata === null || metadata === void 0 ? void 0 : metadata.metadata) === null || _k === void 0 ? void 0 : _k.reduce((acc, metadata) => {
                         acc[metadata.key] = metadata.value;
                         return acc;
                     }, {});
@@ -1184,7 +1273,7 @@ class WtsChat {
                 }
                 else if (resource === 'panel' && operation === 'updateCard') {
                     const cardId = this.getNodeParameter('cardIdUpdateCard', i);
-                    const fields = this.getNodeParameter('fieldsUpdateCard', i);
+                    let fields = this.getNodeParameter('fieldsUpdateCard', i);
                     const title = fields.includes('Title') ? this.getNodeParameter('titleCardUpdateCard', i) : null;
                     const includeArchived = fields.includes('Archived') ? this.getNodeParameter('includeArchivedUpdateCard', i) : null;
                     const description = fields.includes('Description') ? this.getNodeParameter('descriptionUpdateCard', i) : null;
@@ -1196,13 +1285,13 @@ class WtsChat {
                     const dueDate = fields.includes('DueDate') ? this.getNodeParameter('dueDateUpdateCard', i) : null;
                     const updateCardTagId = fields.includes('TagIds') ? this.getNodeParameter('updateCardTagIdUpdateCard', i) : null;
                     const userId = fields.includes('ResponsibleUserId') ? this.getNodeParameter('userIdUpdateCard', i) : null;
-                    const metadata = this.getNodeParameter('metadata', i);
+                    const metadata = fields.includes('Metadata') ? this.getNodeParameter('metadataUpdateCard', i) : null;
                     const customFields = fields.includes('CustomFields') ? this.getNodeParameter('customFieldsCardUpdateCard', i) : null;
-                    const customFieldsObject = (_j = customFields === null || customFields === void 0 ? void 0 : customFields.customFields) === null || _j === void 0 ? void 0 : _j.reduce((acc, field) => {
+                    const customFieldsObject = (_l = customFields === null || customFields === void 0 ? void 0 : customFields.customFields) === null || _l === void 0 ? void 0 : _l.reduce((acc, field) => {
                         acc[field.key] = field.value;
                         return acc;
                     }, {});
-                    const metadataObject = (_k = metadata === null || metadata === void 0 ? void 0 : metadata.metadata) === null || _k === void 0 ? void 0 : _k.reduce((acc, metadata) => {
+                    const metadataObject = (_m = metadata === null || metadata === void 0 ? void 0 : metadata.metadata) === null || _m === void 0 ? void 0 : _m.reduce((acc, metadata) => {
                         acc[metadata.key] = metadata.value;
                         return acc;
                     }, {});
@@ -1217,6 +1306,9 @@ class WtsChat {
                             message: 'Fill in Fields',
                             description: 'Fill in all fields',
                         });
+                    }
+                    if (fields.includes('Metadata')) {
+                        fields = fields.filter(field => field != 'Metadata');
                     }
                     const body = {
                         cardId: cardId,
@@ -1273,11 +1365,11 @@ class WtsChat {
                             description: 'Fill in the From field'
                         });
                     }
-                    const sessionMetadata = (_l = sessionMetadatas === null || sessionMetadatas === void 0 ? void 0 : sessionMetadatas.sessionMetadata) === null || _l === void 0 ? void 0 : _l.reduce((acc, field) => {
+                    const sessionMetadata = (_o = sessionMetadatas === null || sessionMetadatas === void 0 ? void 0 : sessionMetadatas.sessionMetadata) === null || _o === void 0 ? void 0 : _o.reduce((acc, field) => {
                         acc[field.key] = field.value;
                         return acc;
                     }, {});
-                    const contactMetadata = (_m = contactMetadatas === null || contactMetadatas === void 0 ? void 0 : contactMetadatas.contactMetadata) === null || _m === void 0 ? void 0 : _m.reduce((acc, field) => {
+                    const contactMetadata = (_p = contactMetadatas === null || contactMetadatas === void 0 ? void 0 : contactMetadatas.contactMetadata) === null || _p === void 0 ? void 0 : _p.reduce((acc, field) => {
                         acc[field.key] = field.value;
                         return acc;
                     }, {});
