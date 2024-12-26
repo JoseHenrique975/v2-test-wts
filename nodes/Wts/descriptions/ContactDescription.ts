@@ -12,6 +12,12 @@ export const contactOperations: INodeProperties[] = [
         },
         options: [
             {
+                name: 'Create Contact',
+                value: 'createContact',
+                action: 'Create contact',
+                default: 'contact'
+            },
+            {
                 name: 'Get All Contacts',
                 value: 'listContacts',
                 description: 'Fetch all contacts from the API',
@@ -33,15 +39,8 @@ export const contactOperations: INodeProperties[] = [
                 default: 'contact'
             },
             {
-                name: 'Create Contact',
-                value: 'createContact',
-                action: 'Create contact',
-                default: 'contact'
-            },
-            {
                 name: 'Update Contact',
                 value: 'updateContact',
-                description: 'Update Contact',
                 action: 'Update contact',
                 default: 'contact'
             }
@@ -270,12 +269,12 @@ export const contactFields: INodeProperties[] = [
                 value: 'Instagram'
             },
             {
-                name: 'Name',
-                value: 'Name',
-            },
-            {
                 name: 'Metadata',
                 value: 'Metadata'
+            },
+            {
+                name: 'Name',
+                value: 'Name',
             },
             {
                 name: 'PhoneNumber',
@@ -404,7 +403,7 @@ export const contactFields: INodeProperties[] = [
     },
 
     {
-        displayName: 'Portfolios',
+        displayName: 'Portfolio Names or IDs',
         name: 'portfoliosUpdateContact',
         type: 'multiOptions',
         description: 'Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code-examples/expressions/">expression</a>',
@@ -423,7 +422,7 @@ export const contactFields: INodeProperties[] = [
     },
 
     {
-        displayName: 'Sequences',
+        displayName: 'Sequence Names or IDs',
         name: 'sequencesUpdateContact',
         type: 'multiOptions',
         description: 'Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code-examples/expressions/">expression</a>',
@@ -447,7 +446,7 @@ export const contactFields: INodeProperties[] = [
         type: 'options',
         default: 'NOT_SEND',
         placeholder: 'Choose status contact',
-        description: 'Status of contacts to be listed.',
+        description: 'Status of contacts to be listed',
         options: [
             {
                 name: 'Active',
@@ -518,7 +517,7 @@ export const contactFields: INodeProperties[] = [
                         name: 'value',
                         type: 'string',
                         default: '',
-                        description: '',
+
                     },
                 ],
             },
