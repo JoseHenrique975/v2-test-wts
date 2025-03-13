@@ -901,7 +901,7 @@ export class WtsChat implements INodeType {
 					}
 				}
 	
-				else if (operation === 'updateTransfer') {
+				else if (operation === 'transferSession') {
 					const sessionId = this.getNodeParameter('sessionId', i) as string;
 					const departmentId = this.getNodeParameter('departmentId', i) as string;
 					const userId = departmentId != notSend ? this.getNodeParameter('userIdByDepartment', i) as string : null;
@@ -912,14 +912,14 @@ export class WtsChat implements INodeType {
 							description: 'Fill in the "sessionId" field',
 						});
 					}
-	
+	/*
 					if (departmentId == notSend || userId == notSend) {
 						throw new NodeApiError(this.getNode(), {
 							message: 'The transfer destination user or department must be defined',
 							description: 'The transfer destination user or department must be defined',
 						});
 					}
-	
+	*/
 					/*
 					 if(!departmentId || !userId){
 						 throw new NodeApiError(this.getNode(), {
@@ -930,6 +930,9 @@ export class WtsChat implements INodeType {
 					 */
 	
 					let type = departmentId && userId ? 'USER' : 'DEPARTMENT';
+					if(departmentId != notSend && userId == notSend) {
+						type = 'DEPARTMENT'
+					}
 	
 					const body = {
 						type: type,
@@ -1008,9 +1011,9 @@ export class WtsChat implements INodeType {
 					}
 				}
 	
-				else if (operation === 'assignUser') {
+				else if (operation === 'transferToUser') {
 					const sessionId = this.getNodeParameter('sessionId', i) as string;
-					const userId = this.getNodeParameter('userId', i) as string;
+					const userId = this.getNodeParameter('userId', i) as string | null;
 	
 					if (!sessionId || sessionId.trim() === '') {
 						throw new NodeApiError(this.getNode(), {
@@ -1018,18 +1021,18 @@ export class WtsChat implements INodeType {
 							description: 'Fill in the SessionID field'
 						});
 					}
-	
+					
 					if (!userId || userId == notSend) {
 						throw new NodeApiError(this.getNode(), {
 							message: 'UserID is empty!',
-							description: 'Choose user'
+							description: 'Choose a valid user'
 						});
 					}
 	
 					const body = {
-						userId
+						...(userId != notSend && {userId})
 					}
-	
+
 					try {
 						const data = await WtsChatService.assignUserToSession(sessionId, body, token);
 						const items: INodeExecutionData[] = [{ json: data }];

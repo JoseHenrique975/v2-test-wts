@@ -713,7 +713,7 @@ class WtsChat {
                         throw new n8n_workflow_1.NodeApiError(this.getNode(), error);
                     }
                 }
-                else if (operation === 'updateTransfer') {
+                else if (operation === 'transferSession') {
                     const sessionId = this.getNodeParameter('sessionId', i);
                     const departmentId = this.getNodeParameter('departmentId', i);
                     const userId = departmentId != constants_types_1.notSend ? this.getNodeParameter('userIdByDepartment', i) : null;
@@ -723,13 +723,10 @@ class WtsChat {
                             description: 'Fill in the "sessionId" field',
                         });
                     }
-                    if (departmentId == constants_types_1.notSend || userId == constants_types_1.notSend) {
-                        throw new n8n_workflow_1.NodeApiError(this.getNode(), {
-                            message: 'The transfer destination user or department must be defined',
-                            description: 'The transfer destination user or department must be defined',
-                        });
-                    }
                     let type = departmentId && userId ? 'USER' : 'DEPARTMENT';
+                    if (departmentId != constants_types_1.notSend && userId == constants_types_1.notSend) {
+                        type = 'DEPARTMENT';
+                    }
                     const body = {
                         type: type,
                         ...(departmentId != constants_types_1.notSend && { newDepartmentId: departmentId }),
@@ -795,7 +792,7 @@ class WtsChat {
                         throw new n8n_workflow_1.NodeApiError(this.getNode(), error);
                     }
                 }
-                else if (operation === 'assignUser') {
+                else if (operation === 'transferToUser') {
                     const sessionId = this.getNodeParameter('sessionId', i);
                     const userId = this.getNodeParameter('userId', i);
                     if (!sessionId || sessionId.trim() === '') {
@@ -807,11 +804,11 @@ class WtsChat {
                     if (!userId || userId == constants_types_1.notSend) {
                         throw new n8n_workflow_1.NodeApiError(this.getNode(), {
                             message: 'UserID is empty!',
-                            description: 'Choose user'
+                            description: 'Choose a valid user'
                         });
                     }
                     const body = {
-                        userId
+                        ...(userId != constants_types_1.notSend && { userId })
                     };
                     try {
                         const data = await wts_chat_service_1.WtsChatService.assignUserToSession(sessionId, body, token);

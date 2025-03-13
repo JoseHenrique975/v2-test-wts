@@ -55,14 +55,14 @@ export const sessionOperations: INodeProperties[] = [
                 default: 'session'
             },
             {
-                name: 'Transfer to Department',
-                value: 'updateTransfer',
+                name: 'Transfer Session',
+                value: 'transferSession',
                 action: 'Transfer session',
                 default: 'session'
             },
             {
                 name: 'Transfer to User',
-                value: 'assignUser',
+                value: 'transferToUser',
                 action: 'Transfer session to user',
                 default: 'session'
             },

@@ -56,7 +56,7 @@ exports.commonFields = [
         displayOptions: {
             show: {
                 resource: ['message', 'session', 'panel', 'chatbot'],
-                operation: ['listMessages', 'updateTransfer', 'updateStatusSession', 'sendChatbot', 'getSessionById', 'assignUser', 'concludeSession', 'updateSession', 'sendTextBySessionid', 'sendFileBySessionid', 'sendTemplateBySessionid'],
+                operation: ['listMessages', 'transferSession', 'updateStatusSession', 'sendChatbot', 'getSessionById', 'transferToUser', 'concludeSession', 'updateSession', 'sendTextBySessionid', 'sendFileBySessionid', 'sendTemplateBySessionid'],
             },
         },
     },
@@ -116,7 +116,7 @@ exports.commonFields = [
         displayOptions: {
             show: {
                 resource: ['session', 'panel'],
-                operation: ['listSessions', 'assignUser'],
+                operation: ['listSessions', 'transferToUser'],
             },
         },
     },
@@ -156,7 +156,7 @@ exports.commonFields = [
         displayOptions: {
             show: {
                 resource: ['message', 'session'],
-                operation: ['sendText', 'listSessions', 'sendFile', 'sendTemplate', 'updateTransfer'],
+                operation: ['sendText', 'listSessions', 'sendFile', 'sendTemplate', 'transferSession'],
             },
         },
     },
@@ -177,7 +177,7 @@ exports.commonFields = [
         displayOptions: {
             show: {
                 resource: ['message', 'session'],
-                operation: ['sendText', 'sendFile', 'sendTemplate', 'updateTransfer']
+                operation: ['sendText', 'sendFile', 'sendTemplate', 'transferSession']
             },
             hide: {
                 departmentId: ['NOT_SEND']
