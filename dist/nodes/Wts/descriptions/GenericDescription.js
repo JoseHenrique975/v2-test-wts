@@ -161,7 +161,7 @@ exports.commonFields = [
         },
     },
     {
-        displayName: 'User Name or ID',
+        displayName: 'User ID',
         name: 'userIdByDepartment',
         type: 'options',
         default: 'NOT_SEND',
