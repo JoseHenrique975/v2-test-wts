@@ -263,7 +263,7 @@ class WtsChatService {
         const { token, baseUrl } = constants_types_1.Constants.getRequesConfig(receivedToken);
         const url = `${baseUrl}/chat/v1/chatbot/send`;
         const bodyRequest = {
-            ...(body.botId && { botId: body.botId }),
+            ...(body.botKey && { botKey: body.botKey }),
             ...(body.from && { from: body.from }),
             ...(body.to && { to: body.to }),
             ...(body.sessionId && { sessionId: body.sessionId }),
@@ -580,7 +580,7 @@ class WtsChatService {
         }
         const mappedResult = result.map((bot) => ({
             name: bot.name,
-            value: bot.id
+            value: bot.key
         }));
         mappedResult.push({ name: 'Undefined', value: constants_types_1.notSend });
         return mappedResult.sort((a, b) => {

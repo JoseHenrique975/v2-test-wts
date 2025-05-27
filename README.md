@@ -5,12 +5,41 @@ Este é um nó Wts Chat, que permite que você use o Wts Chat em seus fluxos de 
 Vai facilitar suas automações com a plataforma Wts Chat, de forma rápida, prática e eficiente.
 Permitindo que os usuários criem contatos, notas em um cartão, enviem mensagens de texto, modelos e muito mais.
 
+# Release Notes
+📌Release Notes - Versão 2.0.1 n8n-node-wts - 14/03/2025📌
+
+A versão 2.0.1 do nó do Wts Chat traz uma série de melhorias e ajustes em módulos existentes. Confira abaixo as mudanças importantes desta atualização:
+
+Módulo Atualizar Card
+Novidade: O campo Metadata agora é uma opção editável. Você pode optar por alterar somente este campo, se necessário, sem a necessidade de modificar outros dados do card.
+ Se o Custom Field for campo de multiseleção, é possível selecionar mais de uma opção. As opções selecionadas devem ser separadas por vírgulas, como 1, 2, 3, permitindo uma maior flexibilidade na escolha de múltiplos valores.
+
+Módulo Atualizar Conversa
+Novidade: Agora é possível passar um valor vazio com a opção 'Empty'. Com essa mudança, você pode alterar individualmente:
+- Usuário: Passando 'Empty', o campo do usuário pode ser atualizado separadamente.
+- Departamento: Também é possível modificar o departamento sem alterar o usuário.
+- Usuário e Departamento: Agora você pode modificar ambos simultaneamente.
+- Remoção: O campo 'CompanyId' foi excluído da atualização de conversa.
+
+Módulo Transferir Conversa Para Usuário
+- Alteração de nome: O nome do módulo foi atualizado de 'Assign user to session' para 'Transfer session to user' para refletir melhor a ação realizada.
+
+Módulo Concluir Conversa
+- Alteração de nome: O nome do módulo foi alterado de 'Conclude session' para 'Complete session'.
+
+Módulo Listar Anotações
+- Alteração de nome: O nome do módulo foi alterado de 'List notes' para 'List annotations'.
+
 <h1></h1>
 <h3>📌 Recurso: Contato</h3>
 
 <details>
   <summary>✅ <b> Criar Contato</b></summary>
 </details>
+
+<details>
+  <summary>✅ <b> Atualizar Contato</b></summary>
+</details> 
 
 <details>
   <summary>✅ <b> Buscar Contato por ID</b></summary>

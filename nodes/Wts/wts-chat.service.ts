@@ -301,7 +301,7 @@ export class WtsChatService {
     const url = `${baseUrl}/chat/v1/chatbot/send`;
 
     const bodyRequest = {
-      ...(body.botId && { botId: body.botId }),
+      ...(body.botKey && { botKey: body.botKey }),
       ...(body.from && { from: body.from }),
       ...(body.to && { to: body.to }),
       ...(body.sessionId && { sessionId: body.sessionId }),
@@ -662,7 +662,7 @@ export class WtsChatService {
 
     const mappedResult = result.map((bot: any) => ({
       name: bot.name,
-      value: bot.id
+      value: bot.key
     }));
     mappedResult.push({name: 'Undefined', value: notSend});
     return 	mappedResult.sort((a:any, b:any) => {

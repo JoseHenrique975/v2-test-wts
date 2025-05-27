@@ -384,7 +384,7 @@ export class WtsChat implements INodeType {
 						throw new NodeApiError(this.getNode(), error as JsonObject);
 					}
 				}
-				else if(operation === 'updateContact') {0
+				else if(operation === 'updateContact') {
                   const contactId = this.getNodeParameter('contactId', i) as string;
 				  let fields = this.getNodeParameter('fieldsUpdateContact', i) as Array<string>;
 
@@ -1732,7 +1732,7 @@ export class WtsChat implements INodeType {
 			}
 			else if (resource === 'chatbot') {
 				if (operation === 'sendChatbot') {
-					const botId = this.getNodeParameter('chatbotId', i) as string;
+					const botKey = this.getNodeParameter('chatbotId', i) as string;
 					const from = this.getNodeParameter('channelId', i) as string;
 					const to = this.getNodeParameter('numberToSend', i) as string;
 					const sessionId = this.getNodeParameter('sessionId', i) as string;
@@ -1748,7 +1748,7 @@ export class WtsChat implements INodeType {
 					const contactMetadatas = this.getNodeParameter('contactMetadatas', i) as {
 						contactMetadata: { key: string; value: string }[];
 					};
-	
+	/*
 					if (!botId || botId == notSend) {
 						throw new NodeApiError(this.getNode(), {
 							message: 'Choose a bot',
@@ -1769,7 +1769,7 @@ export class WtsChat implements INodeType {
 							description: 'Fill in the From field'
 						});
 					}
-	
+	*/
 					const sessionMetadata = sessionMetadatas?.sessionMetadata?.reduce(
 						(acc: { [key: string]: string }, field) => {
 							acc[field.key] = field.value;
@@ -1787,9 +1787,9 @@ export class WtsChat implements INodeType {
 					);
 	
 					const body = {
-						botId,
-						from,
-						to,
+						...(botKey != notSend && { botKey: botKey }),
+						...(from != notSend && { from : from}),
+						...(to != notSend && { to: to}),
 						sessionId,
 						skipIfBotInExecution,
 						skipIfInProgress,

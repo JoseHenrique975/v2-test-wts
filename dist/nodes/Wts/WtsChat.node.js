@@ -327,7 +327,6 @@ class WtsChat {
                     }
                 }
                 else if (operation === 'updateContact') {
-                    0;
                     const contactId = this.getNodeParameter('contactId', i);
                     let fields = this.getNodeParameter('fieldsUpdateContact', i);
                     const name = fields.includes('Name') ? this.getNodeParameter('nameUpdateContact', i) : null;
@@ -1335,7 +1334,7 @@ class WtsChat {
             }
             else if (resource === 'chatbot') {
                 if (operation === 'sendChatbot') {
-                    const botId = this.getNodeParameter('chatbotId', i);
+                    const botKey = this.getNodeParameter('chatbotId', i);
                     const from = this.getNodeParameter('channelId', i);
                     const to = this.getNodeParameter('numberToSend', i);
                     const sessionId = this.getNodeParameter('sessionId', i);
@@ -1344,24 +1343,6 @@ class WtsChat {
                     const forceStartSession = this.getNodeParameter('forceStartSession', i);
                     const sessionMetadatas = this.getNodeParameter('sessionMetadatas', i);
                     const contactMetadatas = this.getNodeParameter('contactMetadatas', i);
-                    if (!botId || botId == constants_types_1.notSend) {
-                        throw new n8n_workflow_1.NodeApiError(this.getNode(), {
-                            message: 'Choose a bot',
-                            description: 'Fill in the Bots ID field'
-                        });
-                    }
-                    if (!to) {
-                        throw new n8n_workflow_1.NodeApiError(this.getNode(), {
-                            message: 'Set an Instagram number or username for sending',
-                            description: 'Fill in the To field'
-                        });
-                    }
-                    if (!from || from == constants_types_1.notSend) {
-                        throw new n8n_workflow_1.NodeApiError(this.getNode(), {
-                            message: 'Choose channel',
-                            description: 'Fill in the From field'
-                        });
-                    }
                     const sessionMetadata = (_o = sessionMetadatas === null || sessionMetadatas === void 0 ? void 0 : sessionMetadatas.sessionMetadata) === null || _o === void 0 ? void 0 : _o.reduce((acc, field) => {
                         acc[field.key] = field.value;
                         return acc;
@@ -1371,9 +1352,9 @@ class WtsChat {
                         return acc;
                     }, {});
                     const body = {
-                        botId,
-                        from,
-                        to,
+                        ...(botKey != constants_types_1.notSend && { botKey: botKey }),
+                        ...(from != constants_types_1.notSend && { from: from }),
+                        ...(to != constants_types_1.notSend && { to: to }),
                         sessionId,
                         skipIfBotInExecution,
                         skipIfInProgress,
